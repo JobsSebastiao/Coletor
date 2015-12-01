@@ -18,7 +18,6 @@ namespace TitaniumColector.Forms
         {
             InitializeComponent();
             this.controlsConfig();
-            
         }
 
         private void mnuAcao_Logout_Click(object sender, EventArgs e)

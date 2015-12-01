@@ -8,6 +8,7 @@ using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlServerCe;
 using System.Windows.Forms;
 using System.Globalization;
+using TitaniumColector.Classes.Procedimentos;
 
 namespace TitaniumColector.Classes.Dao
 {
@@ -252,22 +253,35 @@ namespace TitaniumColector.Classes.Dao
             SqlServerConn.execCommandSql(sql01.ToString());
         }
 
-        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile,String horaFim)
+        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile)
         {
 
-            if(horaFim.ToUpper() != "NULL")
+            try
             {
-                try
-                {
-                    System.Globalization.CultureInfo culture = new CultureInfo("pt-BR");
-                    horaFim = Convert.ToDateTime(horaFim, culture).ToString();
-                }
-                catch (Exception)
-                {
-                    horaFim = DateTime.Now.ToString();
-                }
-
+                sql01 = new StringBuilder();
+                sql01.Append("UPDATE tb1651_Picking_Mobile");
+                sql01.Append(" SET");
+                sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
+                sql01.AppendFormat(",[isinterrompidoPICKINGMOBILE] = {0}", Convert.ToInt16(proposta.IsInterrompido));
+                sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", "NULL");
+                sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ", proposta.Codigo);
+                sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
+                SqlServerConn.execCommandSql(sql01.ToString());
             }
+            catch (Exception e)
+            {
+
+                throw new Exception("Problemas durante atualização de dados da proposta.\n Local : updatePropostaTbPickingMobile", e);
+            }
+
+        }
+
+        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile,bool gravarHoraFim)
+        {
+
+            
+
+
 
             try
             {
@@ -276,15 +290,7 @@ namespace TitaniumColector.Classes.Dao
                 sql01.Append(" SET");
                 sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
                 sql01.AppendFormat(",[isinterrompidoPICKINGMOBILE] = {0}",Convert.ToInt16(proposta.IsInterrompido));
-                if (horaFim.ToUpper() == "NULL")
-                {
-                    sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaFim);
-                }
-                else
-                {
-                    sql01.AppendFormat(",[horafimPICKINGMOBILE] = '{0}'", horaFim);
-                }
-
+                sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", DateTime.Now.ToString());
                 sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ", proposta.Codigo);
                 sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
                 SqlServerConn.execCommandSql(sql01.ToString());
@@ -297,58 +303,41 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
-        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile, DateTime horaFim)
+        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile,bool gravarHoraFim,bool gravarPeso)
         {
-            sql01 = new StringBuilder();
-            sql01.Append("UPDATE tb1651_Picking_Mobile");
-            sql01.Append(" SET ");
-            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
-            sql01.AppendFormat(",[horafimPICKINGMOBILE] = '{0}'",horaFim);
-            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0}", proposta.Codigo);
-            sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
-            SqlServerConn.execCommandSql(sql01.ToString());
-        }
 
-        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile,DateTime horaInicio, DateTime horaFim)
-        {
-            sql01 = new StringBuilder();
-            sql01.Append("UPDATE tb1651_Picking_Mobile");
-            sql01.Append("SET");
-            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", statusPKMobile);
-            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaInicio);
-            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaFim);
-            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = ", proposta.Codigo);
-            sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
-            SqlServerConn.execCommandSql(sql01.ToString());
-        }
+            try
+            {
+                sql01 = new StringBuilder();
+                sql01.Append("UPDATE tb1651_Picking_Mobile");
+                sql01.Append(" SET");
+                sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", (int)statusPKMobile);
+                sql01.AppendFormat(",[isinterrompidoPICKINGMOBILE] = {0}", Convert.ToInt16(proposta.IsInterrompido));
+                if(gravarHoraFim)
+                {
+                    sql01.AppendFormat(",[horafimPICKINGMOBILE] = '{0}'", DateTime.Now.ToString());
+                }
+                if(gravarPeso)
+                {
+                    sql01.AppendFormat(",[pesototalprodutosPICKINGMOBILE] = {0}", Convert.ToDouble(ProcedimentosLiberacao.PesoTotalProdutos));
+                    sql01.AppendFormat(",[pesototalembalagensPICKINGMOBILE] = {0}", Convert.ToDouble(ProcedimentosLiberacao.PesoTotalEmbalagens));
+                    sql01.AppendFormat(",[pesototalPICKINGMOBILE] = {0}", Convert.ToDouble(ProcedimentosLiberacao.PesoTotalPedido));
+                }
+                sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = {0} ", proposta.Codigo);
+                sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
+                SqlServerConn.execCommandSql(sql01.ToString());
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Problemas durante atualização de dados da proposta. ", e);
+            }
 
-        public void updatePropostaTbPickingMobile(Proposta proposta, Proposta.StatusLiberacao statusPKMobile, String horaInicio, String horaFim)
-        {
-            
-
-            sql01 = new StringBuilder();
-            sql01.Append("UPDATE tb1651_Picking_Mobile");
-            sql01.Append("SET");
-            sql01.AppendFormat("[statusPICKINGMOBILE] = {0}", statusPKMobile);
-            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", (horaInicio != null)?horaInicio: "[horafimPICKINGMOBILE]" );
-            sql01.AppendFormat(",[horafimPICKINGMOBILE] = {0}", horaFim);
-            sql01.AppendFormat(" WHERE propostaPICKINGMOBILE = ", proposta.Codigo);
-            sql01.AppendFormat(" AND codigoPICKINGMOBILE = {0}", proposta.CodigoPikingMobile);
-            SqlServerConn.execCommandSql(sql01.ToString());
         }
 
         /// <summary>
         /// Preenche um objeto List com informações sobre a proposta que está sendo trabalhada.
         /// </summary>
         /// <returns>Objeto List do tipo String com informações da atual proposta na base de dados mobile.</returns>
-        /// <remarks>
-        ///            O list contém as seguintes informações
-        ///            list.Add(dr["CodProp"].ToString());
-        ///            list.Add(dr["NumProp"].ToString());
-        ///            list.Add(dr["nomeCLIENTE"].ToString());
-        ///            list.Add(dr["qtdPECAS"].ToString());
-        ///            list.Add(dr["qtdITENS"].ToString());
-        /// </remarks>
         public List<String> fillInformacoesProposta()
         {
             List<String> list = new List<String>();
@@ -473,8 +462,8 @@ namespace TitaniumColector.Classes.Dao
                     insertPropostaTbPickingMobile(proposta.Codigo, usuarioProposta, statusLiberacao, horaInicio);
                 }
                 else
-                {
-                    updatePropostaTbPickingMobile(proposta, statusLiberacao, "NULL");
+                {   //passou na verificação
+                    updatePropostaTbPickingMobile(proposta,statusLiberacao);
                 }
 
             }

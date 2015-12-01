@@ -54,7 +54,7 @@ namespace TitaniumColector.Forms
         void mnuOpcoes_Terminar_Click(object sender, System.EventArgs e)
         {
             try
-            {
+            {   //passou na validação
                 this.newLogin(new FrmAcao());
             }
             catch (Exception ex)
@@ -176,7 +176,7 @@ namespace TitaniumColector.Forms
             {
                 daoProposta = new DaoProposta();
                 ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO,true,false);
                 daoProposta = null;
                 MainConfig.UserOn.registrarAcesso(Usuario.statusLogin.NAOLOGADO);
                 this.Dispose();
@@ -191,7 +191,7 @@ namespace TitaniumColector.Forms
 
                 daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
                 ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO,true,true);
                 daoItemProposta.updateItemPropostaRetorno();
                 MainConfig.UserOn.registrarAcesso(Usuario.statusLogin.NAOLOGADO);
                 this.Dispose();
@@ -209,6 +209,8 @@ namespace TitaniumColector.Forms
             FrmVolumes frmVolumes = new FrmVolumes();
             frmVolumes.ShowDialog();
             this.lbQtdVolumes.Text = ProcedimentosLiberacao.TotalVolumes.ToString();
+            //atualiza peso total pedido
+            ProcedimentosLiberacao.atualizarPesoTotalPedido();
         }
 
     #endregion
@@ -277,7 +279,7 @@ namespace TitaniumColector.Forms
             catch (SqlCeException sqlEx)
             {
                 ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
                 StringBuilder strBuilder = new StringBuilder();
                 strBuilder.Append("Ocorreram problemas durante uma transação de dados.\n");
                 strBuilder.Append("O procedimento não pode ser concluído.\n");
@@ -288,7 +290,7 @@ namespace TitaniumColector.Forms
             catch (Exception ex)
             {
                 ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
                 StringBuilder strBuilder = new StringBuilder();
                 strBuilder.Append("Ocorreram problemas durante a carga de dados para a Base Mobile \n");
                 strBuilder.AppendFormat("Error : {0}", ex.Message);
@@ -545,7 +547,7 @@ namespace TitaniumColector.Forms
     #endregion
 
     #region "MÉTODOS GERAIS"
-
+        
         /// <summary>
         /// Limpa todos os campos que possuem valores manipuláveis.
         /// </summary>
@@ -684,7 +686,7 @@ namespace TitaniumColector.Forms
                     daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
 
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO,true,true);
                     daoItemProposta.updateItemPropostaRetorno();
                     this.Dispose();
                     this.Close();
@@ -694,7 +696,7 @@ namespace TitaniumColector.Forms
                 {
                     daoProposta = new DaoProposta();
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
                     daoProposta = null;
                     this.Dispose();
                     this.Close();
@@ -716,7 +718,7 @@ namespace TitaniumColector.Forms
 
                 if (showQuestion)
                 {
-                    resp = MessageBox.Show("Deseja salvar as altereções relalizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                    resp = MessageBox.Show("Deseja salvar as altereções realizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 }
                 else
                 {
@@ -728,7 +730,7 @@ namespace TitaniumColector.Forms
                     daoItemProposta = new DaoProdutoProposta();
                     daoProposta = new DaoProposta();
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,true);
                     daoItemProposta.updateItemPropostaRetorno();
                     this.Dispose();
                     this.Close();
@@ -738,7 +740,7 @@ namespace TitaniumColector.Forms
                 {
                     daoProposta = new DaoProposta();
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, "null");
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
                     daoProposta = null;
                     this.Dispose();
                     this.Close();

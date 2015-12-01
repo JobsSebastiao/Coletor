@@ -944,9 +944,9 @@ namespace TitaniumColector.Classes.Procedimentos
 
         }
 
-        private static void atualizarPesoTotalPedido()
+        public static void atualizarPesoTotalPedido()
         {
-           ProcedimentosLiberacao.PesoTotalPedido = ProcedimentosLiberacao.PesoTotalEmbalagens + PesoTotalProdutos;
+            ProcedimentosLiberacao.PesoTotalPedido = ProcedimentosLiberacao.PesoTotalEmbalagens + ProcedimentosLiberacao.PesoTotalProdutos;
         }
 
         #region "Descontinuado"
