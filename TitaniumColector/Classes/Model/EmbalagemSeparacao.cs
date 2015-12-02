@@ -67,7 +67,7 @@ namespace TitaniumColector.Classes.Model
 
         public Double PesoTotal
         {
-            get { return pesoTotal; }
+            get { return Peso * Quantidade; }
             set { pesoTotal = value; }
         }
 
@@ -98,5 +98,6 @@ namespace TitaniumColector.Classes.Model
         {
             return base.Codigo + Convert.ToInt32(base.Padrao)+ base.Nome.Length;
         }
+
     }
 }

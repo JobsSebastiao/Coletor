@@ -53,6 +53,5 @@ namespace TitaniumColector.Classes.Model
         {
             return this.padrao == PadraoEmbalagem.PADRAO;
         }
-
     }
 }

@@ -427,7 +427,7 @@ namespace TitaniumColector
         {
             System.Windows.Forms.MessageBox.Show(msg, head, System.Windows.Forms.MessageBoxButtons.OK,
                                System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1);
-        }
+         }
 
         // Create a bitmap object and fill it with the specified color.   
         // To make it look like a custom image, draw an ellipse in it.

@@ -67,19 +67,24 @@ namespace TitaniumColector.Classes.Utility
             base.OnPaint(e);
         }
 
-        protected override void OnClick(EventArgs e)
+        //protected override void OnClick(EventArgs e)
+        //{
+        //    this.pressed = true;
+        //    Rectangle rec = new Rectangle();
+        //    System.Windows.Forms.PaintEventArgs paintEvent 
+        //        = new System.Windows.Forms.PaintEventArgs(this.CreateGraphics(),rec);
+        //    this.OnPaint(paintEvent);
+        //    base.OnClick(e);
+        //}
+
+        protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {
             this.pressed = true;
             Rectangle rec = new Rectangle();
-            System.Windows.Forms.PaintEventArgs paintEvent 
-                = new System.Windows.Forms.PaintEventArgs(this.CreateGraphics(),rec);
+            System.Windows.Forms.PaintEventArgs paintEvent
+                = new System.Windows.Forms.PaintEventArgs(this.CreateGraphics(), rec);
             this.OnPaint(paintEvent);
-            base.OnClick(e);
-        }
-
-        protected override void OnLostFocus(EventArgs e)
-        {
-            base.OnLostFocus(e);
+            base.OnMouseDown(e);
         }
     }
 }

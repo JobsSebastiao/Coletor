@@ -80,11 +80,6 @@ namespace TitaniumColector
 
         }
 
-        void btnImg_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("show deu certo");
-        }
-
     #region "PRINCIPAIS MÉTODOS DO FORMULÁRIO"
 
         /// <summary>

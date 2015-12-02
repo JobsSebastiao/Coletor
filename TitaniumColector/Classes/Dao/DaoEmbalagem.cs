@@ -182,12 +182,12 @@ namespace TitaniumColector.Classes.Dao
             while ((dr.Read()))
             {
                 objEmbalagem = new EmbalagemSeparacao(
-
-                      Convert.ToInt32(dr["codigoEMBALAGEM"])
-                      , (string)dr["nomeEMBALAGEM"]
-                      , (Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"])
-                      , Convert.ToInt32(dr["produtoEMBALAGEM"])
-                      , Convert.ToDouble(dr["pesoEMBALAGEM"]));
+                                                            Convert.ToInt32(dr["codigoEMBALAGEM"])
+                                                          , (string)dr["nomeEMBALAGEM"]
+                                                          , (Embalagem.PadraoEmbalagem)Convert.ToInt32(dr["padraoEMBALAGEM"])
+                                                          , Convert.ToInt32(dr["produtoEMBALAGEM"])
+                                                          , Convert.ToDouble(dr["pesoEMBALAGEM"])
+                                                      );
 
                 listaEmbalagens.Add(objEmbalagem);
             }
@@ -235,42 +235,51 @@ namespace TitaniumColector.Classes.Dao
         {
             bool isUpdate = false;
             int codigoEmbalagensSeparacao = 0;
-            //RECUPERA O CODIGO DOS VOLUMES JÁ SALVOS PARA A TABELA DE EMBALAGENSSEPARARACAO
-            int[,] infoEmbalagens = recuperaCodigoEmbalagensSeparacao(proposta.Codigo,proposta.CodigoPikingMobile);
-            
-            //VERIFICA TODAS AS EMBALAGENS UTILIZADAS NA SEPARACAO
-            foreach (var item in ProcedimentosLiberacao.ListEmbalagensSeparacao.ToList<EmbalagemSeparacao>())
-            {   
-                
-                if (infoEmbalagens != null)
-                {   
-                    //LOOP NOS CODIGOS RETORNADOS DA BASE ENGINE
-                    for (int i = 0; i < infoEmbalagens.GetLength(0); i++)
-                    {
-                        isUpdate = false;
 
-                        //SE O CODIGO DA EMBALAGEM SENDO VERIFICADA É IGUAL A UM DOS RETORNADOS NA BASE DE DADOS 
-                        //SERÁ FEITO O UPDATE E NÃO O INSERT.
-                        if (item.Codigo == infoEmbalagens[i, 1])
-                        {   
-                            //RECUPERA O CODIGO DA LINHA QUE SOFRERÁ UPDATE
-                            codigoEmbalagensSeparacao = infoEmbalagens[i, 0];
-                            isUpdate = true;
-                            break;
+            try
+            {
+                //RECUPERA O CODIGO DOS VOLUMES JÁ SALVOS PARA A TABELA DE EMBALAGENS SEPARARACAO
+                int[,] infoEmbalagens = recuperaCodigoEmbalagensSeparacao(proposta.Codigo, proposta.CodigoPikingMobile);
+
+                //VERIFICA TODAS AS EMBALAGENS UTILIZADAS NA SEPARACAO
+                foreach (var item in ProcedimentosLiberacao.ListEmbalagensSeparacao.ToList<EmbalagemSeparacao>())
+                {
+                    if (infoEmbalagens != null)
+                    {
+                        //LOOP NOS CODIGOS RETORNADOS DA BASE ENGINE
+                        for (int i = 0; i < infoEmbalagens.GetLength(0); i++)
+                        {
+                            isUpdate = false;
+
+                            //SE O CODIGO DA EMBALAGEM SENDO VERIFICADA É IGUAL A UM DOS RETORNADOS NA BASE DE DADOS 
+                            //SERÁ FEITO O UPDATE E NÃO O INSERT.
+                            if (item.Codigo == infoEmbalagens[i, 1])
+                            {
+                                //RECUPERA O CODIGO DA LINHA QUE SOFRERÁ UPDATE
+                                codigoEmbalagensSeparacao = infoEmbalagens[i, 0];
+                                isUpdate = true;
+                                break;
+                            }
+
                         }
-                        
+                    }
+
+                    if (!isUpdate)
+                    {
+                        insertTb1653EmbalagensSeparacao( proposta.CodigoPikingMobile, item.Codigo, (int)item.Quantidade);
+                    }
+                    else if (isUpdate)
+                    {
+                        updateTb1653EmbalagensSeparacao(codigoEmbalagensSeparacao, proposta.CodigoPikingMobile, (int)item.Quantidade);
                     }
                 }
 
-                if (!isUpdate)
-                {
-                    insertTb1653EmbalagensSeparacao(proposta.Codigo, proposta.CodigoPikingMobile, item.Codigo, (int)item.Quantidade, ProcedimentosLiberacao.PesoTotalProdutos);
-                }
-                else if (isUpdate)
-                {
-                    updateTb1653EmbalagensSeparacao(codigoEmbalagensSeparacao, proposta.CodigoPikingMobile, (int)item.Quantidade, ProcedimentosLiberacao.PesoTotalProdutos);
-                }
             }
+            catch (Exception ex)
+            {   
+                throw new Exception("salvarEmbalagensSeparacao()\n" + ex.Message, ex);
+            }
+            
         }
 
         public int[,] recuperaCodigoEmbalagensSeparacao(Int64 codigoProposta,Int64 codigoPikingMobile)
@@ -299,35 +308,31 @@ namespace TitaniumColector.Classes.Dao
 
                 count++;
             }
-            return embalagens;   //strCodigoEmb.Split(',');
+            return embalagens;  
         }
 
-        public void insertTb1653EmbalagensSeparacao(Int64 codigo,int codigoPickingMobile,int codigoEmbalagem,int quantidadeEmbalagem,Double pesoTotalProdutos) 
+        public void insertTb1653EmbalagensSeparacao(int codigoPickingMobile,int codigoEmbalagem,int quantidadeEmbalagem) 
         {
             try
             {
                 sql01 = new StringBuilder();
 
                 sql01.Append("INSERT INTO [dbo].[tb1653_Picking_Embalagem_Separacoes]");
-                sql01.Append("(propostaEMBALAGEMSEPARACOES");
-                sql01.Append(",pickingmobileEMBALAGEMSEPARACOES");
+                sql01.Append("(pickingmobileEMBALAGEMSEPARACOES");
                 sql01.Append(",embalagemEMBALAGEMSEPARACOES");
-                sql01.Append(",quantidadeEMBALAGEMSEPARACOES");
-                sql01.Append(",pesototalprodutosEMBALAGEMSEPARACOES)");
-                sql01.AppendFormat("VALUES ( {0},",codigo);
-                sql01.AppendFormat("{0},", codigoPickingMobile);
+                sql01.Append(",quantidadeEMBALAGEMSEPARACOES)");
+                sql01.AppendFormat("VALUES ( {0},", codigoPickingMobile);
                 sql01.AppendFormat("{0},", codigoEmbalagem);
-                sql01.AppendFormat("{0},", quantidadeEmbalagem);
-                sql01.AppendFormat("{0})", pesoTotalProdutos);
+                sql01.AppendFormat("{0})", quantidadeEmbalagem);
                 SqlServerConn.execCommandSql(sql01.ToString());
             }
-            catch (Exception e)
-            {
-                throw e as SqlException;
+            catch (SqlCeException ex)
+            {  
+                throw new Exception("insertTb1653EmbalagensSeparacao()\n" + ex.Message,ex);
             }   
         }
 
-        public void updateTb1653EmbalagensSeparacao(int codigoEmbalagensSeparacao,int codigoPickingMobile, int quantidadeEmbalagem, Double pesoTotalProdutos)
+        public void updateTb1653EmbalagensSeparacao(int codigoEmbalagensSeparacao,int codigoPickingMobile, int quantidadeEmbalagem)
         {
             try
             {
@@ -335,17 +340,55 @@ namespace TitaniumColector.Classes.Dao
 
                 sql01.Append(" UPDATE [dbo].[tb1653_Picking_Embalagem_Separacoes]");
                 sql01.AppendFormat(" SET [quantidadeEMBALAGEMSEPARACOES] = {0}", quantidadeEmbalagem);
-                sql01.AppendFormat(" ,[pesototalprodutosEMBALAGEMSEPARACOES] = {0}", pesoTotalProdutos);
                 sql01.AppendFormat(" WHERE [pickingmobileEMBALAGEMSEPARACOES] = {0}", codigoPickingMobile);
                 sql01.AppendFormat(" AND [codigoEMBALAGEMSEPARACOES] = {0}", codigoEmbalagensSeparacao);
                 SqlServerConn.execCommandSql(sql01.ToString());
      
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw e as SqlException;
+                throw new Exception("updateTb1653EmbalagensSeparacao()\n" + ex.Message, ex);
             }
         }
 
+        public List<EmbalagemSeparacao> carregarInformacoesEmbalagensUtilizadas(int codigoPickingMobile,List<EmbalagemSeparacao> embalagens) 
+        {
+
+            sql01 = new StringBuilder();
+            int count = 0;
+            sql01.Append(" SELECT    pesototalprodutosPICKINGMOBILE");
+            sql01.Append(" , pickingmobileEMBALAGEMSEPARACOES");
+            sql01.Append(" , embalagemEMBALAGEMSEPARACOES");
+            sql01.Append(" , quantidadeEMBALAGEMSEPARACOES");
+            sql01.Append(" , SUM (quantidadeEMBALAGEMSEPARACOES) OVER() totalVOLUMES");
+            sql01.Append(" FROM tb1651_Picking_Mobile ");
+            sql01.Append(" INNER JOIN tb1653_Picking_Embalagem_Separacoes ON codigoPICKINGMOBILE = pickingmobileEMBALAGEMSEPARACOES");
+            sql01.Append(" INNER JOIN TB1601_PROPOSTAS ON CODIGOpROPOSTA = propostaPICKINGMOBILE"); 
+            sql01.AppendFormat(" WHERE codigoPICKINGMOBILE = {0}",codigoPickingMobile);
+            sql01.Append(" AND quantidadeEMBALAGEMSEPARACOES > 0");
+
+            SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
+
+            while ((dr.Read()))
+            {
+                if (count == 0)
+                {
+                    count++;
+                    ProcedimentosLiberacao.PesoTotalProdutos = Convert.ToDouble(dr["pesototalprodutosPICKINGMOBILE"]);
+                    ProcedimentosLiberacao.TotalVolumes = Convert.ToInt32(dr["totalVOLUMES"]);
+                }
+
+                foreach (var item in embalagens)
+                {
+                    if ( Convert.ToInt16(dr["embalagemEMBALAGEMSEPARACOES"]) == item.Codigo)
+                    {
+                        item.Quantidade = Convert.ToInt32(dr["quantidadeEMBALAGEMSEPARACOES"]);
+                    } 
+                }
+            }
+
+            return embalagens;
+
+        }
     }
 }

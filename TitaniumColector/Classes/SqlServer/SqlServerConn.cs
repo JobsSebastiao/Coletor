@@ -273,7 +273,7 @@ namespace TitaniumColector.SqlServer
             }
             catch (SqlException )
             {
-                throw new SqlQueryExceptions("Error durante acesso a base de dados!!");
+                throw new SqlQueryExceptions("Error ao tentar executar comando na base de dados!!");
             }
             finally
             {

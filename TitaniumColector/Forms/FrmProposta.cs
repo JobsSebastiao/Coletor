@@ -229,7 +229,9 @@ namespace TitaniumColector.Forms
             daoProposta = new DaoProposta();
             daoProduto = new DaoProduto();
             daoEmbalagem = new DaoEmbalagem();
-            
+
+            ProcedimentosLiberacao.limpar();
+
             try
             {
                 //Limpa a Base.
@@ -260,7 +262,8 @@ namespace TitaniumColector.Forms
                     daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
 
                     //Carrega Informações das Embalagens de Separação.
-                    ProcedimentosLiberacao.ListEmbalagensSeparacao  = daoEmbalagem.carregarEmbalagensSeparacao(); 
+                    //Carrega Quantidade das Embalagens utilizadas nos volumes da separação
+                    ProcedimentosLiberacao.ListEmbalagensSeparacao = daoEmbalagem.carregarInformacoesEmbalagensUtilizadas((Int32)objProposta.CodigoPikingMobile, daoEmbalagem.carregarEmbalagensSeparacao());
 
                 }
                 else
@@ -360,7 +363,7 @@ namespace TitaniumColector.Forms
                 sbMsg.Append("Problemas durante o processamento de informações sobre a proposta.\n");
                 sbMsg.AppendFormat("Error : {0}", ex.Message);
                 MainConfig.errorMessage(sbMsg.ToString(), "Operação Inválida!");
-                throw;
+                return null;
             }
             catch (Exception ex)
             {
@@ -369,7 +372,7 @@ namespace TitaniumColector.Forms
                 sbMsg.AppendFormat("Error : {0}", ex.Message);
                 sbMsg.Append("Contate o Administrador do sistema.");
                 MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
-                throw;
+                return null;
             }
             finally 
             {
@@ -684,7 +687,6 @@ namespace TitaniumColector.Forms
                     daoEmbalagem = new DaoEmbalagem();
 
                     daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
-
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
                     daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO,true,true);
                     daoItemProposta.updateItemPropostaRetorno();
@@ -706,7 +708,8 @@ namespace TitaniumColector.Forms
             }
             catch (Exception ex)
             {
-                throw new Exception("Não foi possível executar o comando solicitado. \n ",ex);
+                //throw new Exception("Não foi possível executar o comando solicitado. \n ",ex);
+                throw new Exception("newLogin() \n" + ex.Message, ex);
             }
         }
 
@@ -729,21 +732,24 @@ namespace TitaniumColector.Forms
                 {
                     daoItemProposta = new DaoProdutoProposta();
                     daoProposta = new DaoProposta();
+                    daoEmbalagem = new DaoEmbalagem();
+
+                    daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,true);
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, true);
                     daoItemProposta.updateItemPropostaRetorno();
-                    this.Dispose();
-                    this.Close();
+                    //this.Dispose();
+                    //this.Close();
                     formulario.Show();
                 }
                 else if (resp == DialogResult.No)
                 {
                     daoProposta = new DaoProposta();
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
+                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
                     daoProposta = null;
-                    this.Dispose();
-                    this.Close();
+                    //this.Dispose();
+                    //this.Close();
                     formulario.Show();
                 }
 
@@ -752,6 +758,16 @@ namespace TitaniumColector.Forms
             catch (Exception ex)
             {
                 throw new Exception("Não foi possível executar o comando solicitado. \n ", ex);
+            }
+            finally 
+            {
+                daoItemProposta = null;
+                daoProposta = null;
+                daoEmbalagem = null;
+
+                this.Dispose();
+                this.Close();
+
             }
         }
 
@@ -778,15 +794,15 @@ namespace TitaniumColector.Forms
                 daoEmbalagem = new DaoEmbalagem();
 
                 daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
-
-                daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
+                //daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.FINALIZADO,true,true);
                 daoItemProposta.updateItemPropostaRetorno();
                 daoProposta.updateVolumeProposta(objProposta.Codigo);
                 daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.CodigoUsuarioLogado);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("finalizarProposta()\n " + ex.Message);
             }
             finally 
             {
@@ -795,7 +811,6 @@ namespace TitaniumColector.Forms
                 this.Dispose();
                 this.Close();
             }
-          
         }
 
     #endregion
@@ -806,180 +821,6 @@ namespace TitaniumColector.Forms
         {
             get { return listInfoProposta; }
             set { listInfoProposta = value; }
-        }
-
-    #endregion
-
-    #region   "NAO UTILIZADOS"
-
-        /// <summary>
-        /// Atualiza o grid a partir de uma List que refência a classe ItemProposta.
-        /// </summary>
-        private void atualizaDataGridItensProposta(List<ProdutoProposta> listItemProposta)
-        {
-
-            //buscaItensBaseMobile();
-
-
-            DataGridTableStyle tbStyle = new DataGridTableStyle();
-            tbStyle.MappingName = "ItemProposta";
-
-            DataGridTextBoxColumn codigoItem = new DataGridTextBoxColumn();
-            codigoItem.MappingName = "codigoITEMPROPOSTA";
-            codigoItem.HeaderText = "Código";
-            codigoItem.Width = 42;
-            tbStyle.GridColumnStyles.Add(codigoItem);
-
-            DataGridTextBoxColumn itemProposta = new DataGridTextBoxColumn();
-            itemProposta.MappingName = "propostaITEMPROPOSTA";
-            itemProposta.HeaderText = "Item";
-            itemProposta.Width = 42;
-            tbStyle.GridColumnStyles.Add(itemProposta);
-
-            DataGridTextBoxColumn nomeItemProposta = new DataGridTextBoxColumn();
-            nomeItemProposta.MappingName = "nomePRODUTO";
-            nomeItemProposta.HeaderText = "Nome";
-            nomeItemProposta.Width = 42;
-            tbStyle.GridColumnStyles.Add(nomeItemProposta);
-
-            DataGridTextBoxColumn partnumberItem = new DataGridTextBoxColumn();
-            partnumberItem.MappingName = "partnumberPRODUTO";
-            partnumberItem.HeaderText = "partnumber";
-            partnumberItem.Width = 42;
-            tbStyle.GridColumnStyles.Add(partnumberItem);
-
-            DataGridTextBoxColumn ean13Item = new DataGridTextBoxColumn();
-            ean13Item.MappingName = "ean13PRODUTO";
-            ean13Item.HeaderText = "Ean13";
-            ean13Item.Width = 42;
-            tbStyle.GridColumnStyles.Add(ean13Item);
-
-            DataGridTextBoxColumn produtoseparadoItem = new DataGridTextBoxColumn();
-            produtoseparadoItem.MappingName = "PRODUTO";
-            produtoseparadoItem.HeaderText = "ProdutoSeparado";
-            produtoseparadoItem.Width = 42;
-            tbStyle.GridColumnStyles.Add(produtoseparadoItem);
-
-            DataGridTextBoxColumn quantidade = new DataGridTextBoxColumn();
-            quantidade.MappingName = "QTD";
-            quantidade.HeaderText = "Quantidade";
-            quantidade.Width = 42;
-            tbStyle.GridColumnStyles.Add(quantidade);
-
-            dgProposta.TableStyles.Clear();
-            dgProposta.TableStyles.Add(tbStyle);
-            //dgProposta.DataSource = dt;
-
-        }
-
-        /// <summary>
-        /// Carga parcial do fomulário
-        /// Caso o Objeto listInfoPropostas esteja vazio 
-        /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
-        /// </summary>
-        /// <param name="listInfoProposta">List do tipo String com informações sobre a proposta a ser trabalhada.</param>
-        private void fillCamposForm(List<String> listInfoProposta)
-        {
-            lbNumeroPedido.Text = listInfoProposta[1];
-            lbNomeCliente.Text = listInfoProposta[2];
-            lbQtdPecas.Text = listInfoProposta[3] + " Pçs";
-            lbQtdItens.Text = listInfoProposta[4] + " Itens";
-
-            if (this.listInfoProposta == null || this.listInfoProposta.Count == 0)
-            {
-                this.ListInformacoesProposta = listInfoProposta;
-            }
-        }
-
-        /// <summary>
-        /// Carrega parcial os campos do Formulário
-        /// Carga apenas de informações gerais da proposta
-        /// </summary>
-        /// <param name="numeroPedido">Número da Proposta</param>
-        /// <param name="nomeCliente">Nome do Cliente</param>
-        /// <param name="qtdPecas">Total de Peças/param>
-        /// <param name="qtdItens">Total de Itens</param>
-        private void fillCamposForm(String numeroPedido, String nomeCliente, Double qtdPecas, Double qtdItens)
-        {
-            lbNumeroPedido.Text = numeroPedido;
-            lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = qtdPecas.ToString() + " Pçs";
-            lbQtdItens.Text = qtdItens.ToString() + " Itens";
-        }
-
-        /// <summary>
-        /// Preenche os campos do Fomulário.  
-        /// Caso o Objeto listInfoPropostas esteja vazio 
-        /// ele também  será carregado para que esses dados possam ser trabalhados em outros pocedimentos.
-        /// </summary>
-        ///<param name="codigoProposta"> Código Proposta</param>
-        /// <param name="numeroPedido">Número Proposta</param>
-        /// <param name="nomeCliente">Nome Cliente</param>
-        /// <param name="qtdPecas">Quantidade de Peças</param>
-        /// <param name="qtdItens">Quantidade de Itens.</param>
-        private void fillCamposForm(String codigoProposta, String numeroPedido, String nomeCliente, String qtdPecas, String qtdItens)
-        {
-            var codigo = codigoProposta;
-            lbNumeroPedido.Text = numeroPedido;
-            lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = qtdPecas + " Pçs";
-            lbQtdItens.Text = qtdItens + " Itens";
-
-            if (this.listInfoProposta == null || this.listInfoProposta.Count == 0)
-            {
-                List<String> list = new List<String>();
-                list.Add(codigoProposta);
-                list.Add(numeroPedido);
-                list.Add(nomeCliente);
-                list.Add(qtdPecas);
-                list.Add(qtdItens);
-
-                this.ListInformacoesProposta = list;
-            }
-        }
-
-        /// <summary>
-        /// Carrega os campos do Formulário
-        /// É nescessário que o objeto listInfoProposta esteja carregado e atualizado pois 
-        /// a carga será feita  a partir dos dados contidos neste Objeto.
-        /// </summary>
-        private void fillCamposForm()
-        {
-            lbNumeroPedido.Text = ListInformacoesProposta[1];
-            lbNomeCliente.Text = ListInformacoesProposta[2];
-            lbQtdPecas.Text = ListInformacoesProposta[3] + " Pçs";
-            lbQtdItens.Text = ListInformacoesProposta[4] + " Itens";
-        }
-
-        private void liberarItem(String inputText)
-        {
-            try
-            {
-                ProcedimentosLiberacao.lerEtiqueta(inputText, objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
-
-                if (ProcedimentosLiberacao.QtdPecasItem == 0)
-                {
-                    if (!this.nextItemProposta())
-                    {
-                        daoItemProposta = new DaoProdutoProposta();
-                        daoProposta = new DaoProposta();
-                        daoProposta.updatePropostaTbPickingMobileFinalizar(objProposta, Proposta.StatusLiberacao.FINALIZADO);
-                        daoItemProposta.updateItemPropostaRetorno();
-                        this.Dispose();
-                        this.Close();
-                    }
-
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                daoProposta = null;
-                daoItemProposta = null;
-            }
         }
 
     #endregion

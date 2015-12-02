@@ -199,7 +199,10 @@ namespace TitaniumColector.Forms
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.panelInform);
             this.Controls.Add(this.listVolumes);
-
+            //this.ControlBox = false;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.WindowState = System.Windows.Forms.FormWindowState.Normal;
             this.ResumeLayout(false);
 
             //

@@ -20,7 +20,7 @@ namespace TitaniumColector.Classes.Procedimentos
         private static Double qtdPecasItem;
         private static Double pesoTotalEmbalagens;
         private static Double pesoTotalPedido;
-        private static Int32 proximaEtiqueta;
+        //private static Int32 proximaEtiqueta;
         private static List<Etiqueta> listEtiquetasLidas;
         private static List<Etiqueta> listEtiquetas;
         private static List<EmbalagemSeparacao> listEmbalagensSeparacao;
@@ -51,7 +51,7 @@ namespace TitaniumColector.Classes.Procedimentos
                 listEtiquetasLidas = new List<Etiqueta>();
             }
             
-            ProximaEtiqueta = 0;
+            //ProximaEtiqueta = 0;
 
             if(ListEtiquetasGeradas != null)
             {
@@ -69,9 +69,9 @@ namespace TitaniumColector.Classes.Procedimentos
             TotalItens = tItens;
             TotalPecas = tPecas;
             qtdPecasItem = pecasItens;
-            ProcedimentosLiberacao.inicializaQtdVolumes(qtdVolumes);
+            ProcedimentosLiberacao.inicializaQtdVolumes();
             ProcedimentosLiberacao.calcularPesoTotalEmbalagens();
-            ProcedimentosLiberacao.PesoTotalProdutos = 0;
+            //ProcedimentosLiberacao.PesoTotalProdutos = 0;
 
             listEtiquetasLidas = new List<Etiqueta>();
 
@@ -101,7 +101,7 @@ namespace TitaniumColector.Classes.Procedimentos
                 listEtiquetasLidas = new List<Etiqueta>();
             }
 
-            ProximaEtiqueta = 0;
+            //ProximaEtiqueta = 0;
 
             if (ListEtiquetasGeradas != null)
             {
@@ -151,11 +151,11 @@ namespace TitaniumColector.Classes.Procedimentos
             totalPecas = value;
         }
 
-        public static Int32 ProximaEtiqueta
-        {
-            get { return proximaEtiqueta; }
-            set { proximaEtiqueta = value; }
-        }
+        //public static Int32 ProximaEtiqueta
+        //{
+        //    get { return proximaEtiqueta; }
+        //    set { proximaEtiqueta = value; }
+        //}
 
         public static Double TotalItens
         {
@@ -196,7 +196,7 @@ namespace TitaniumColector.Classes.Procedimentos
         public static Double PesoTotalProdutos
         {
             get { return ProcedimentosLiberacao.pesoTotalProdutos; }
-            private set { ProcedimentosLiberacao.pesoTotalProdutos = value; }
+            set { ProcedimentosLiberacao.pesoTotalProdutos = value; }
         }
 
         public static Double PesoTotalPedido
@@ -300,34 +300,7 @@ namespace TitaniumColector.Classes.Procedimentos
                 return true;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="produto"></param>
-        /// <param name="tbProduto"></param>
-        /// <param name="tblote"></param>
-        /// <param name="tbSequencia"></param>
-        /// <param name="tbQuantidade"></param>
-        /// <param name="tbMensagem"></param>
-        public static void lerEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tblote,TextBox tbSequencia,TextBox tbQuantidade,TextBox tbMensagem)
-        {
-            tbMensagem.Text = "";
-
-            if (ProximaEtiqueta <= ListEtiquetasGeradas.Count - 1)
-            {
-                ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(ListEtiquetasGeradas[ProximaEtiqueta].ToString(), FileUtility.splitType.PIPE);
-                Etiqueta objEtiqueta = new Etiqueta();
-                objEtiqueta = Etiqueta.arrayToEtiqueta(ArrayStringToEtiqueta);
-                efetuaLeituraEtiqueta(produto,tbProduto,tblote,tbSequencia,tbQuantidade,tbMensagem,objEtiqueta);
-                
-            }
-            else
-            {
-                tbMensagem.Text = "Próximo Item.";
-            }
-        }
-        
+  
         /// <summary>
         /// 
         /// </summary>
@@ -369,33 +342,6 @@ namespace TitaniumColector.Classes.Procedimentos
         }
         
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="produto"></param>
-        /// <param name="tbProduto"></param>
-        /// <param name="tblote"></param>
-        /// <param name="tbSequencia"></param>
-        /// <param name="tbQuantidade"></param>
-        /// <param name="tbMensagem"></param>
-        /// <param name="arrayEtiqueta"></param>
-        public static void lerEtiqueta(ProdutoProposta produto,TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem, Array arrayEtiqueta)
-        {
-            tbMensagem.Text = "";
-
-            if (ProximaEtiqueta  <= ListEtiquetasGeradas.Count - 1)
-            {
-                arrayEtiqueta = FileUtility.arrayOfTextFile(ListEtiquetasGeradas[ProximaEtiqueta].ToString(), FileUtility.splitType.PIPE);
-                Etiqueta objEtiqueta = new Etiqueta();
-                objEtiqueta = Etiqueta.arrayToEtiqueta(arrayEtiqueta);
-                efetuaLeituraEtiqueta(produto,tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
-            }
-            else
-            {
-                tbMensagem.Text = "Próximo Item.";
-            }
-        }
-         
-        /// <summary>
         /// realiza todo o procedimento para validação de tipo de etiqueta,etiqueta, produto,
         /// validação de sequência,subtração de quantidade de itens registrados na etiqueta.
         /// </summary>
@@ -409,15 +355,15 @@ namespace TitaniumColector.Classes.Procedimentos
         public static void efetuaLeituraEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tbLote,TextBox tbSequencia,TextBox tbQuantidade,
                                                  TextBox tbMensagem,Etiqueta objEtiqueta)
         {
-            if (objEtiqueta.QuantidadeEtiqueta == 0.0)
-            {
-                throw new QuantidadeInvalidaException("A quantidade de produtos informado na embalagem é inválida!");
-            }
-
             try
             {
                 if (comparaProdutoEtiquetaProdutoTrabalhado(produto, objEtiqueta))
                 {
+                    if (objEtiqueta.QuantidadeEtiqueta == 0.0)
+                    {
+                        throw new QuantidadeInvalidaException("A quantidade de produtos informado na embalagem é inválida!");
+                    }
+
                     if (validaEtiquetaNaoLida(objEtiqueta))
                     {
                         if (QtdPecasItem > 0)
@@ -433,7 +379,6 @@ namespace TitaniumColector.Classes.Procedimentos
                     else
                     {
                         tbMensagem.Text = String.Format("A etiqueta {0} já foi validada.", objEtiqueta.SequenciaEtiqueta);
-                        ProximaEtiqueta += 1;
                     }
                 }
                 else
@@ -447,7 +392,6 @@ namespace TitaniumColector.Classes.Procedimentos
                         tbMensagem.Text = String.Format("Produto da etiqueta lida não confere com o item a ser liberado.");
                     }
                     
-                    ProximaEtiqueta += 1;
                 }
 
             }
@@ -797,12 +741,11 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 ProcedimentosLiberacao.setarVolumeInicial();
                 return;
-            }else
+            }
+            else
             {
                 TotalVolumes = qtdVolumes;
-            }
-
-            
+            } 
         }
 
         /// <summary>
@@ -949,47 +892,21 @@ namespace TitaniumColector.Classes.Procedimentos
             ProcedimentosLiberacao.PesoTotalPedido = ProcedimentosLiberacao.PesoTotalEmbalagens + ProcedimentosLiberacao.PesoTotalProdutos;
         }
 
-        #region "Descontinuado"
+        public static void limpar() 
+        {
+            totalItens = 0;
+            totalPecas = 0;
+            totalVolumes = 0;
+            pesoTotalProdutos = 0.0;
+            qtdPecasItem = 0.0;
+            pesoTotalEmbalagens = 0.0;
+            pesoTotalPedido = 0.0;
+            listEtiquetasLidas = null;
+            listEtiquetas = null;
+            listEmbalagensSeparacao = null;
+            arrayStringToEtiqueta = null;
+            mensagem="";
 
-            ///// <summary>
-            // /// Gera etiquetas para testes.
-            // /// </summary>
-            //public static void gerarEtiquetas()
-            //{
-            //    Etiqueta objEtiqueta;
-            //    List<Etiqueta> list = new List<Etiqueta>();
-
-            //    ProximaEtiqueta = 0;
-            //    list.Add(new Etiqueta("8031", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12349"), 25));
-            //    for (int i = 1; i <= 8; i++)
-            //    {
-            //        if (i < 5)
-            //        {
-            //            objEtiqueta = new Etiqueta("8031", "Chicote Soquete luz", 7895479042575, "LT-10051", Convert.ToInt32("1234" + i), 50);
-            //        }
-            //        else 
-            //        {
-            //            objEtiqueta = new Etiqueta("7085", "Soquete pisca dianteiro lateral", 7895479000995, "LT-27796", Convert.ToInt32("1234" + (i - 4)), 100);
-            //        }
-
-            //        list.Add(objEtiqueta);
-            //        objEtiqueta = null;
-            //    }
-
-            //    list.Add(new Etiqueta("8030", "Chicote Soquete luz", 7895479042576, "LT-10051", Convert.ToInt32("12340"), 25));
-            //    ListEtiquetasGeradas = list;
-            //}
-
-            //public static String decrementaVolume(int codigoEmbalagem)
-            //{
-            //    if (QtdVolumes > 1)
-            //    {
-            //        --QtdVolumes;
-            //        return QtdVolumes.ToString();
-            //    }
-            //    return "Qtd Volumes não pode ser menor que 1.";
-            //}
-
-        #endregion 
+        }
     }
 }
