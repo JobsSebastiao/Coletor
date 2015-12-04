@@ -98,6 +98,5 @@ namespace TitaniumColector.Classes.Model
         {
             return base.Codigo + Convert.ToInt32(base.Padrao)+ base.Nome.Length;
         }
-
     }
 }

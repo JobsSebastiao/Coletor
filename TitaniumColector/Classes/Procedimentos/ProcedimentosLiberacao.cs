@@ -8,6 +8,7 @@ using TitaniumColector.Classes.Exceptions;
 using System.Xml;
 using System.Xml.Linq;
 using TitaniumColector.Classes.Model;
+using TitaniumColector.Forms;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
@@ -20,7 +21,6 @@ namespace TitaniumColector.Classes.Procedimentos
         private static Double qtdPecasItem;
         private static Double pesoTotalEmbalagens;
         private static Double pesoTotalPedido;
-        //private static Int32 proximaEtiqueta;
         private static List<Etiqueta> listEtiquetasLidas;
         private static List<Etiqueta> listEtiquetas;
         private static List<EmbalagemSeparacao> listEmbalagensSeparacao;
@@ -378,7 +378,7 @@ namespace TitaniumColector.Classes.Procedimentos
                     }
                     else
                     {
-                        tbMensagem.Text = String.Format("A etiqueta {0} já foi validada.", objEtiqueta.SequenciaEtiqueta);
+                        FrmProposta.mostrarMensagem(TitaniumColector.Forms.FrmProposta.enumCor.RED,String.Format("A etiqueta {0} já foi validada.", objEtiqueta.SequenciaEtiqueta),TitaniumColector.Forms.FrmProposta.enumCursor.DEFAULT);
                     }
                 }
                 else

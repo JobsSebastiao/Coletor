@@ -24,8 +24,6 @@ namespace TitaniumColector.Classes.Utility
             }
         }
 
-        // Property for the background image to be drawn behind the button text when
-        // the button is pressed.
         public Image PressedImage
         {
             get
@@ -66,16 +64,6 @@ namespace TitaniumColector.Classes.Utility
 
             base.OnPaint(e);
         }
-
-        //protected override void OnClick(EventArgs e)
-        //{
-        //    this.pressed = true;
-        //    Rectangle rec = new Rectangle();
-        //    System.Windows.Forms.PaintEventArgs paintEvent 
-        //        = new System.Windows.Forms.PaintEventArgs(this.CreateGraphics(),rec);
-        //    this.OnPaint(paintEvent);
-        //    base.OnClick(e);
-        //}
 
         protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
         {

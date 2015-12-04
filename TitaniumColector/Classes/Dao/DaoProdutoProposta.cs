@@ -37,7 +37,7 @@ namespace TitaniumColector.Classes.Dao
                 sql01.Append(" SELECT codigoITEMPROPOSTA,propostaITEMPROPOSTA,");
                 sql01.Append(" produtoRESERVA AS codigoPRODUTO,");
                 sql01.Append(" nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,");
-                sql01.Append(" SUM(quantidadeRESERVA) AS QTD,pesobrutoPRODUTO");
+                sql01.Append(" SUM(quantidadeRESERVA) AS QtdITEMRESERVA,pesobrutoPRODUTO");
                 sql01.Append(" ,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA,");
                 sql01.Append(" DBO.fn1211_LocaisLoteProduto(produtoRESERVA,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA)) AS nomesLocaisLOTES ");
                 sql01.Append(" FROM tb1206_Reservas (NOLOCK) ");
@@ -58,7 +58,7 @@ namespace TitaniumColector.Classes.Dao
 
                         objItemProposta = new ProdutoProposta(  Convert.ToInt32(dr["codigoITEMPROPOSTA"]),
                                                                 Convert.ToInt32(dr["propostaITEMPROPOSTA"]),
-                                                                Convert.ToDouble(dr["QTD"]),
+                                                                Convert.ToDouble(dr["QtdITEMRESERVA"]),
                                                                 ProdutoProposta.statusSeparado.NAOSEPARADO,
                                                                 (string)dr["lotesRESERVA"],
                                                                 (string)dr["nomesLocaisLOTES"],
@@ -80,19 +80,15 @@ namespace TitaniumColector.Classes.Dao
 
                 if (listItensProposta.Count == 0)
                 {
-                    throw new SqlQueryExceptions("Não foi possível recuperar informações sobre os itens da proposta " + codigoProposta);
+                    throw new SqlQueryExceptions("MÉTODO : fillListItensProposta()\nMOTIVO: Não foi possível recuperar informações sobre os itens da proposta " + codigoProposta);
                 }
 
                 return listItensProposta;
 
             }
-            catch(SqlQueryExceptions ex)
-            {
-                throw ex;
-            }
             catch (SqlException ex)
             {
-                throw ex;
+                throw new Exception("fillListItensProposta()\n-->" +  ex.Message);
             }
         }
 
@@ -180,20 +176,15 @@ namespace TitaniumColector.Classes.Dao
                     sql01.Append("INSERT INTO tb0002_ItensProposta");
                     sql01.Append("(codigoITEMPROPOSTA, propostaITEMPROPOSTA, quantidadeITEMPROPOSTA");
                     sql01.Append(",statusseparadoITEMPROPOSTA, codigoprodutoITEMPROPOSTA");
-                    //, lotereservaITEMPROPOSTA,qtdembalagemITEMPROPOSTA,pesoITEMPROPOSTA
                     sql01.Append(",alllotesreservaITEMPROPOSTA,allnomeslocaisITEMPROPOSTA) ");
                     sql01.Append("VALUES (");
                     sql01.AppendFormat("{0},", item.CodigoItemProposta);
                     sql01.AppendFormat("{0},", item.PropostaItemProposta);
                     sql01.AppendFormat("{0},", item.Quantidade);
-                    //sql01.AppendFormat("{0},", item.Peso);
                     sql01.AppendFormat("{0},", (int)item.StatusSeparado);
                     sql01.AppendFormat("{0},", item.CodigoProduto);
-                    //sql01.AppendFormat("{0},", item.LotereservaItemProposta); //nao utilizo este Valor lembrar de retirar
                     sql01.AppendFormat("'{0}',", item.LotesReserva); 
-                    //sql01.AppendFormat("{0},", item.QuantidadeEmbalagem);  //nao utilizo este Valor
                     sql01.AppendFormat("'{0}')", item.NomeLocaisItemProposta);
-
 
                     CeSqlServerConn.execCommandSqlCe(sql01.ToString());
                 }
@@ -207,11 +198,10 @@ namespace TitaniumColector.Classes.Dao
             catch (Exception Ex)
             {
                 StringBuilder strBuilder = new StringBuilder();
-                strBuilder.Append("Ocorreram problemas durante a carga de dados na tabela tb0002_ItensProposta. \n");
-                strBuilder.Append("O procedimento não pode ser concluído \n");
-                strBuilder.AppendFormat("Description : {0}", Ex.Message);
-
-                MainConfig.errorMessage(strBuilder.ToString(), "Error in Query!!");
+                strBuilder.Append("AÇÃO : insertItemProposta()\n");
+                strBuilder.Append("MOTIVO : Ocorreram problemas durante a carga de dados na tabela tb0002_ItensProposta!n");
+                strBuilder.AppendFormat("DESCRIÇÃO : {0}", Ex.Message);
+                MainConfig.errorMessage(strBuilder.ToString(), "Insert Proposta!!");
             }
 
         }

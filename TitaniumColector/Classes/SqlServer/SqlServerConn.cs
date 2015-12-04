@@ -308,7 +308,7 @@ namespace TitaniumColector.SqlServer
             return null;
         }
 
-        public static void EndTransaction(ref bool flag)
+        public static void endTransaction(ref bool flag)
         {
             if (flag == false)
             {

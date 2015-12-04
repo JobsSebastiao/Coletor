@@ -125,7 +125,7 @@ namespace TitaniumColector.Classes.Dao
 
    
         /// <summary>
-        /// Realiza o insert na tabela de Propostas
+        /// Realiza o insert na tabela de Propostas do dispositivo mobile
         /// </summary>
         /// <param name="codigoProposta">Código da Proposta</param>
         /// <param name="numeroProposta">Número da Proposta</param>
@@ -157,10 +157,10 @@ namespace TitaniumColector.Classes.Dao
 
                 CeSqlServerConn.execCommandSqlCe(sql01.ToString());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
-                throw;
+
+                throw new Exception("insertProposta() --> Problemas as inserir informações na base mobile \n erro :" + ex.Message);
             }
             
         }
@@ -453,6 +453,14 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
+        /// <summary>
+        /// Caso não exista ifnformações sobre a proposta na tabela de piking Mobile realiza o insert
+        /// Caso exista realiza o Update
+        /// </summary>
+        /// <param name="proposta">Codigo</param>
+        /// <param name="usuarioProposta">Codigo Usuário</param>
+        /// <param name="statusLiberacao">Statusde liberação a ser incluso para a proposta no piking mobile</param>
+        /// <param name="horaInicio"> hora inicio da conferência</param>
         public void InsertOrUpdatePickingMobile(Proposta proposta, int usuarioProposta, Proposta.StatusLiberacao statusLiberacao, DateTime horaInicio) 
         {
             try
@@ -462,14 +470,14 @@ namespace TitaniumColector.Classes.Dao
                     insertPropostaTbPickingMobile(proposta.Codigo, usuarioProposta, statusLiberacao, horaInicio);
                 }
                 else
-                {   //passou na verificação
+                {  
                     updatePropostaTbPickingMobile(proposta,statusLiberacao);
                 }
 
             }
             catch (Exception ex)
             {
-                throw new Exception(" Problemas gerados no método InsertOrUpdatePickingMobile!! ",ex);
+                throw new Exception("InsertOrUpdatePickingMobile() \n error :!! "+ ex.Message,ex);
             }
             
         }

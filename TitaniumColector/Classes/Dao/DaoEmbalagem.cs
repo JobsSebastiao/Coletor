@@ -241,6 +241,11 @@ namespace TitaniumColector.Classes.Dao
                 //RECUPERA O CODIGO DOS VOLUMES JÁ SALVOS PARA A TABELA DE EMBALAGENS SEPARARACAO
                 int[,] infoEmbalagens = recuperaCodigoEmbalagensSeparacao(proposta.Codigo, proposta.CodigoPikingMobile);
 
+                if ((ProcedimentosLiberacao.ListEmbalagensSeparacao.Count == 0)||(ProcedimentosLiberacao.ListEmbalagensSeparacao == null)) 
+                {
+                    throw new NullReferenceException();
+                }
+
                 //VERIFICA TODAS AS EMBALAGENS UTILIZADAS NA SEPARACAO
                 foreach (var item in ProcedimentosLiberacao.ListEmbalagensSeparacao.ToList<EmbalagemSeparacao>())
                 {
@@ -274,6 +279,10 @@ namespace TitaniumColector.Classes.Dao
                     }
                 }
 
+            }
+            catch(NullReferenceException)
+            {
+                throw new Exception("AÇÃO : salvarEmbalagensSeparacao()\nMOTIVO : Lista de Embalagens Vazia!\n");
             }
             catch (Exception ex)
             {   

@@ -13,34 +13,14 @@ namespace TitaniumColector.Classes.Model
         private Int32 tipoEmbalagem;
         private String ean13Embalagem;
 
-        //private Int32 produtoEmbalagem;
-        //private Int32 codigo;
-        //private String nome;
-        //private PadraoEmbalagem isPadrao;
-
         public EmbalagemProduto() { }
 
-        public EmbalagemProduto(
-             Int32 codigo
-            ,String nome
-            ,TitaniumColector.Classes.Model.Embalagem.PadraoEmbalagem padrao
-            ,Int32 produtoEmb
-            ,Double qtd
-            ,Int32 tipo
-            ,String ean13Emb) : base (codigo,nome,padrao,produtoEmb)
+        public EmbalagemProduto(Int32 codigo,String nome,TitaniumColector.Classes.Model.Embalagem.PadraoEmbalagem padrao
+            ,Int32 produtoEmb,Double qtd,Int32 tipo,String ean13Emb) : base (codigo,nome,padrao,produtoEmb)
         {
-
-            
             this.Quantidade = qtd;
             this.TipoEmbalagem = tipo;
             this.Ean13Embalagem = ean13Emb;
-
-            //this.ProdutoEmbalagem = produtoEmb;
-            //parametros passados para a classe Pai
-            //this.Codigo = codigo;
-            //this.Nome = nome;
-            //this.IsPadrao = isPadrao;
-
         }
 
     #region "GET E SETS"

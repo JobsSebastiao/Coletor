@@ -91,6 +91,7 @@
     <Compile Include="Classes\Model\Usuario.cs" />
     <Compile Include="Classes\Model\Parametros.cs" />
     <Compile Include="Classes\Model\Permisssoes.cs" />
+    <Compile Include="Classes\Utility\ICall.cs" />
     <Compile Include="Classes\Utility\ImageButton.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -8,10 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Utility;
 using TitaniumColector.Classes.Dao;
+using TitaniumColector.Classes.Utility;
 
 namespace TitaniumColector.Forms
 {
-    public partial class FrmAcao : Form
+    public partial class FrmAcao : Form,ICall
     {
 
         public FrmAcao()
@@ -19,6 +20,8 @@ namespace TitaniumColector.Forms
             InitializeComponent();
             this.controlsConfig();
         }
+
+        public FrmAcao(bool test) { }
 
         private void mnuAcao_Logout_Click(object sender, EventArgs e)
         {
@@ -36,15 +39,30 @@ namespace TitaniumColector.Forms
 
         private void btnVenda_Click(object sender, EventArgs e)
         {
+            this.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
             FrmProposta proposta = new FrmProposta();
+            this.Close();
             proposta.Show();
         }
 
-        private void btnSaida_Click(object sender, EventArgs e)
+        private void btnCompra_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Funcionalidade em desenvolvimento!!");
         }
 
+        #region ICall Members
+
+        /// <summary>
+        /// Método da interface utilizado quando o usuário escolhe uma das opções do menu do form propostas
+        /// </summary>
+        public void call()
+        {
+            FrmAcao form = new FrmAcao();
+            form.Show();
+        }
+
+        #endregion
+     
     }
 }

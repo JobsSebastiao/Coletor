@@ -18,14 +18,15 @@ using TitaniumColector.Classes.Utility;
 
 namespace TitaniumColector
 {
-    public partial class frmLogin : Form
+    public partial class frmLogin : Form,ICall
     {   
         
         private Usuario objUsuario;
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
         private DaoUsuario daoUsuario;
-       
+
+        public frmLogin(bool chamada) { }
         public frmLogin()
         {
             try
@@ -258,12 +259,25 @@ namespace TitaniumColector
             }
             catch (Exception ex)
             {
-                throw ex;
+                MainConfig.errorMessage("Não foi possível acessar o sistema! \nMotivo"+ex.Message,"Login");
             }
             
         }
 
     #endregion  
+
+    #region ICall Members
+
+    /// <summary>
+    /// Método da Interface Utilizado na chamada do form a partir do menu do form Propostas.
+    /// </summary>
+    public void call()
+    {
+        frmLogin form = new frmLogin();
+        form.Show();
+    }
+
+    #endregion
 
     #region "//MÉTODOS COMUNS AO FORMULÁRIO"
 

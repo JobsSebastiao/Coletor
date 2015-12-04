@@ -52,7 +52,7 @@ namespace TitaniumColector.Forms
             this.lbVolumes = new System.Windows.Forms.Label();
             this.lbQtdVolumes = new System.Windows.Forms.Label();
             this.pnlFrmProposta = new System.Windows.Forms.Panel();
-            this.tbMensagem = new System.Windows.Forms.TextBox();
+            tbMensagem = new System.Windows.Forms.TextBox();
             this.tbSequencia = new System.Windows.Forms.TextBox();
             this.tbLote = new System.Windows.Forms.TextBox();
             this.tbProduto = new System.Windows.Forms.TextBox();
@@ -196,7 +196,7 @@ namespace TitaniumColector.Forms
             this.pnlFrmProposta.Controls.Add(this.lbLote);
             this.pnlFrmProposta.Controls.Add(this.lbSequencia);
             this.pnlFrmProposta.Controls.Add(this.lbMensagem);
-            this.pnlFrmProposta.Controls.Add(this.tbMensagem);
+            this.pnlFrmProposta.Controls.Add(tbMensagem);
             this.pnlFrmProposta.Controls.Add(this.tbSequencia);
             this.pnlFrmProposta.Controls.Add(this.tbLote);
             this.pnlFrmProposta.Controls.Add(this.tbProduto);
@@ -218,12 +218,12 @@ namespace TitaniumColector.Forms
             // 
             // tbMensagem
             // 
-            this.tbMensagem.Location = new System.Drawing.Point(14, 392);
-            this.tbMensagem.Multiline = true;
-            this.tbMensagem.Name = "tbMensagem";
-            this.tbMensagem.Size = new System.Drawing.Size(296, 23);
-            this.tbMensagem.TabIndex = 14;
-            this.tbMensagem.Text = "produto não existe no pedido";
+            tbMensagem.Location = new System.Drawing.Point(14, 392);
+            tbMensagem.Multiline = true;
+            tbMensagem.Name = "tbMensagem";
+            tbMensagem.Size = new System.Drawing.Size(296, 23);
+            tbMensagem.TabIndex = 14;
+            tbMensagem.Text = "produto não existe no pedido";
             // 
             // tbSequencia
             // 
@@ -547,15 +547,15 @@ namespace TitaniumColector.Forms
             //
             //tbMensagem
             //
-            this.tbMensagem.Location = new System.Drawing.Point(lbMensagem.Location.X, lbMensagem.Location.Y + lbMensagem.Size.Height);
-            this.tbMensagem.Enabled = false;
-            this.tbMensagem.Multiline = true;
-            this.tbMensagem.ForeColor = Color.Red;
-            this.tbMensagem.Multiline = true;
-            this.tbMensagem.Font = MainConfig.FontPequenaBold;
-            this.tbMensagem.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 35);
-            this.tbMensagem.BackColor = System.Drawing.SystemColors.Window;
-            this.tbMensagem.Tag = "L";
+            tbMensagem.Location = new System.Drawing.Point(lbMensagem.Location.X, lbMensagem.Location.Y + lbMensagem.Size.Height);
+            tbMensagem.Enabled = false;
+            tbMensagem.Multiline = true;
+            tbMensagem.ForeColor = Color.Red;
+            tbMensagem.Multiline = true;
+            tbMensagem.Font = MainConfig.FontPequenaBold;
+            tbMensagem.Size = new System.Drawing.Size(this.pnCentral.Size.Width, 35);
+            tbMensagem.BackColor = System.Drawing.SystemColors.Window;
+            tbMensagem.Tag = "L";
             //
             //LbQtdVolumes
             //
@@ -594,6 +594,15 @@ namespace TitaniumColector.Forms
             btnVolumes.Visible = true;
             btnVolumes.Click += new System.EventHandler(btnVolumes_Click);
 
+            cores = new Color[3];
+            cores[0] = Color.Red;
+            cores[1] = Color.Black;
+            cores[2] = Color.Blue;
+
+            estadoCursor = new System.Windows.Forms.Cursor[2];
+            estadoCursor[0] = System.Windows.Forms.Cursors.WaitCursor;
+            estadoCursor[1] = System.Windows.Forms.Cursors.Default; 
+
             this.pnlFrmProposta.Controls.Add(this.btnVolumes);
         }
 
@@ -622,7 +631,7 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.TextBox tbLocal;
         private System.Windows.Forms.TextBox tbDescricao;
         private System.Windows.Forms.TextBox tbPartNumber;
-        private System.Windows.Forms.TextBox tbMensagem;
+        private static System.Windows.Forms.TextBox tbMensagem;
         private System.Windows.Forms.TextBox tbSequencia;
         private System.Windows.Forms.TextBox tbLote;
         private System.Windows.Forms.TextBox tbProduto;

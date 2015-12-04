@@ -30,7 +30,7 @@
         private void InitializeComponent()
         {
             this.btnVenda = new System.Windows.Forms.Button();
-            this.btnSaida = new System.Windows.Forms.Button();
+            this.btnCompra = new System.Windows.Forms.Button();
             this.painelFrmAcao = new System.Windows.Forms.Panel();
             this.painelFrmAcao.SuspendLayout();
             this.SuspendLayout();
@@ -44,19 +44,19 @@
             this.btnVenda.Text = "Próxima Venda";
             this.btnVenda.Click += new System.EventHandler(this.btnVenda_Click);
             // 
-            // btnSaida
+            // btnCompra
             // 
-            this.btnSaida.Location = new System.Drawing.Point(41, 241);
-            this.btnSaida.Name = "btnSaida";
-            this.btnSaida.Size = new System.Drawing.Size(265, 174);
-            this.btnSaida.TabIndex = 1;
-            this.btnSaida.Text = "Saída";
-            this.btnSaida.Click += new System.EventHandler(this.btnSaida_Click);
+            this.btnCompra.Location = new System.Drawing.Point(41, 241);
+            this.btnCompra.Name = "btnCompra";
+            this.btnCompra.Size = new System.Drawing.Size(265, 174);
+            this.btnCompra.TabIndex = 1;
+            this.btnCompra.Text = "Próxima Compra";
+            this.btnCompra.Click += new System.EventHandler(this.btnCompra_Click);
             // 
             // painelFrmAcao
             // 
             this.painelFrmAcao.Controls.Add(this.btnVenda);
-            this.painelFrmAcao.Controls.Add(this.btnSaida);
+            this.painelFrmAcao.Controls.Add(this.btnCompra);
             this.painelFrmAcao.Dock = System.Windows.Forms.DockStyle.Fill;
             this.painelFrmAcao.Location = new System.Drawing.Point(0, 0);
             this.painelFrmAcao.Name = "painelFrmAcao";
@@ -130,11 +130,11 @@
             //
             //btnSaida
             //
-            this.btnSaida.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnVenda.Location.Y + btnVenda.Size.Height + 10);
-            this.btnSaida.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
-            this.btnSaida.Text = "Próxima Compra";
-            this.btnSaida.BackColor = System.Drawing.SystemColors.Control;
-            this.btnSaida.Font = MainConfig.FontGrandeBold;
+            this.btnCompra.Location = new System.Drawing.Point(MainConfig.intPositionX + 20, btnVenda.Location.Y + btnVenda.Size.Height + 10);
+            this.btnCompra.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
+            this.btnCompra.Text = "Próxima Compra";
+            this.btnCompra.BackColor = System.Drawing.SystemColors.Control;
+            this.btnCompra.Font = MainConfig.FontGrandeBold;
 
         }
 
@@ -145,7 +145,7 @@
         private System.Windows.Forms.MenuItem mnuAcao_Exit;
         private System.Windows.Forms.MenuItem mnuAcao_Logout;
         private System.Windows.Forms.Button btnVenda;
-        private System.Windows.Forms.Button btnSaida;
+        private System.Windows.Forms.Button btnCompra;
         private System.Windows.Forms.Panel painelFrmAcao;
     }
 }
