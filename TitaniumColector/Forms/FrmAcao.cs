@@ -20,7 +20,7 @@ namespace TitaniumColector.Forms
             InitializeComponent();
             this.controlsConfig();
         }
-
+        //
         public FrmAcao(bool test) { }
 
         private void mnuAcao_Logout_Click(object sender, EventArgs e)
@@ -42,8 +42,9 @@ namespace TitaniumColector.Forms
             this.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
             FrmProposta proposta = new FrmProposta();
-            this.Close();
             proposta.Show();
+            this.Hide();
+            this.Enabled = true;
         }
 
         private void btnCompra_Click(object sender, EventArgs e)

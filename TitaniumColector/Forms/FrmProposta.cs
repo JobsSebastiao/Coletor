@@ -720,7 +720,6 @@ namespace TitaniumColector.Forms
                     daoProposta = null;
                     this.Dispose();
                     this.Close();
-                    //formulario.Show();
                     formulario.call();
                 }
 
@@ -862,7 +861,6 @@ namespace TitaniumColector.Forms
 
             ICall form = new FrmAcao(true);
             this.newLogin(form, false, showQuestion);
-            //this.newLogin(new FrmAcao(), false,showQuestion);
         }
 
         private void finalizarProposta() 
@@ -879,7 +877,7 @@ namespace TitaniumColector.Forms
                 daoItemProposta.updateItemPropostaRetorno();
                 daoProposta.updateVolumeProposta(objProposta.Codigo);
                 daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.CodigoUsuarioLogado);
-           
+                
             }
             catch (Exception ex)
             {
@@ -891,10 +889,9 @@ namespace TitaniumColector.Forms
                 mostrarMensagem(enumCor.RED, "",enumCursor.DEFAULT);
                 daoItemProposta = null;
                 daoProposta = null;
-
-                frm.Show();
                 this.Dispose();
                 this.Close();
+                frm.Show();
             }
         }
 
