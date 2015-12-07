@@ -155,10 +155,6 @@
     <None Include="Diagramas de Classe\ClassDiagram1.cd" />
     <None Include="Properties\DataSources\TitaniumColector.Classes.ItemProposta.datasource" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="TITANIUM.ico" />
-    <Content Include="TITANIUM_Mobile.ico" />
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
