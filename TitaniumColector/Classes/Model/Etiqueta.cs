@@ -5,21 +5,21 @@ using System.Text;
 using System.Xml;
 using TitaniumColector.Classes.Dao;
 
-namespace TitaniumColector.Classes
+namespace TitaniumColector.Classes 
 {
-    class Etiqueta
+    public class Etiqueta 
     {
-        private string partnumber;
-        private string descricaoProduto;
-        private Int64 ean13Embalagem;
-        private String lote;
-        private Int32 sequencia;
-        private Double quantidade;
-        private Int32 volumeEtiqueta;
-        private DateTime dataHoraValidacao;
-        private Tipo tipoEtiqueta;
-        private DaoProduto daoProduto;
+        public Int64 Ean13Etiqueta { get;  set; }
+        public String LoteEtiqueta { get;  set; }
+        public Int32 SequenciaEtiqueta { get;  set; }
+        public Double QuantidadeEtiqueta { get;  set; }
+        public string PartnumberEtiqueta { get;  set; }
+        public string DescricaoProdutoEtiqueta { get;  set; }
+        public DateTime DataHoraValidacao { get;  set; }
+        public Tipo TipoEtiqueta { get;  set; }
+        public Int32 volumeEtiqueta;
 
+        private DaoProduto daoProduto;
         public enum Tipo {INVALID=0,QRCODE=1,BARRAS=2 }
 
     #region "CONTRUTORES"
@@ -29,29 +29,24 @@ namespace TitaniumColector.Classes
         public Etiqueta(String partnumber,String descricao,Int64 ean13,String lote,Int32 sequencia,Double quantidade,Tipo tipoEtiqueta) 
         {
 
+            PartnumberEtiqueta = partnumber;
+            DescricaoProdutoEtiqueta = descricao;
+            Ean13Etiqueta = ean13;
+            LoteEtiqueta = lote;
+            QuantidadeEtiqueta = quantidade;
+            DataHoraValidacao = DateTime.Now;
+
             switch (tipoEtiqueta )
             {
                 case Tipo.QRCODE:
 
-                    PartnumberEtiqueta = partnumber;
-                    DescricaoProdutoEtiqueta = descricao;
-                    Ean13Etiqueta = ean13;
-                    LoteEtiqueta = lote;
                     SequenciaEtiqueta = sequencia;
-                    QuantidadeEtiqueta = quantidade;
-                    DataHoraValidacao = DateTime.Now;
                     TipoEtiqueta = Tipo.QRCODE;
                     break;
 
                 case Tipo.BARRAS:
 
-                    PartnumberEtiqueta = partnumber;
-                    DescricaoProdutoEtiqueta = descricao;
-                    Ean13Etiqueta = ean13;
-                    LoteEtiqueta = lote;
                     SequenciaEtiqueta = 0;
-                    QuantidadeEtiqueta = quantidade;
-                    DataHoraValidacao = DateTime.Now;
                     TipoEtiqueta = Tipo.BARRAS;
                     break;
 
@@ -152,70 +147,74 @@ namespace TitaniumColector.Classes
 
     #region "GET E SETS "
 
-        public Int64 Ean13Etiqueta
-        {
-            get { return ean13Embalagem; }
-            set { ean13Embalagem = value; }
-        }
+        //public Int64 Ean13Etiqueta
+        //{
+        //    get { return ean13Embalagem; }
+        //    set { ean13Embalagem = value; }
+        //}
 
-        public String LoteEtiqueta
-        {
-            get { return lote; }
-            set { lote = value; }
-        }
+        //public String LoteEtiqueta
+        //{
+        //    get { return lote; }
+        //    set { lote = value; }
+        //}
 
-        public Int32 SequenciaEtiqueta
-        {
-            get { return sequencia; }
-            set { sequencia = value; }
-        }
+        //public Int32 SequenciaEtiqueta
+        //{
+        //    get { return sequencia; }
+        //    set { sequencia = value; }
+        //}
 
-        public Double QuantidadeEtiqueta
-        {
-            get 
-            {
-                return quantidade; 
-            }
-            set 
-            { 
-                quantidade = value; 
-            }
-        }
+        //public Double QuantidadeEtiqueta
+        //{
+        //    get 
+        //    {
+        //        return quantidade; 
+        //    }
+        //    set 
+        //    { 
+        //        quantidade = value; 
+        //    }
+        //}
 
-        public string PartnumberEtiqueta
-        {
-            get { return partnumber; }
-            set { partnumber = value; }
-        }
+        //public string PartnumberEtiqueta
+        //{
+        //    get { return partnumber; }
+        //    set { partnumber = value; }
+        //}
 
-        public string DescricaoProdutoEtiqueta
-        {
-            get { return descricaoProduto; }
-            set { descricaoProduto = value; }
-        }
+        //public string DescricaoProdutoEtiqueta
+        //{
+        //    get { return descricaoProduto; }
+        //    set { descricaoProduto = value; }
+        //}
 
         public Int32 VolumeEtiqueta
         {
             get { return volumeEtiqueta; }
-            set { volumeEtiqueta = value; }
+            set { 
+                    if(value > 0)
+                        volumeEtiqueta = value; 
+                }
         }
 
-        public DateTime DataHoraValidacao
-        {
-            get { return dataHoraValidacao; }
-            set { dataHoraValidacao = value; }
-        }
+        //public DateTime DataHoraValidacao
+        //{
+        //    get { return dataHoraValidacao; }
+        //    set { dataHoraValidacao = value; }
+        //}
 
-        public Tipo TipoEtiqueta
-        {
-            get { return tipoEtiqueta; }
-            set { tipoEtiqueta = value; }
-        }
+        //public Tipo TipoEtiqueta
+        //{
+        //    get { return tipoEtiqueta; }
+        //    set { tipoEtiqueta = value; }
+        //}
 
 
     #endregion
 
     #region "METODOS"
+
         ///<summary>
         /// Recebe um array de strings referentes aos atributos do obj Etiqueta.
         /// retorna Um objeto do tipo Etiqueta

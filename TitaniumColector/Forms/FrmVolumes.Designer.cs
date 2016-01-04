@@ -50,10 +50,10 @@ namespace TitaniumColector.Forms
         {
 
             this.listVolumes = new System.Windows.Forms.ListView();
-            this.ColunaNome = new System.Windows.Forms.ColumnHeader();
-            this.ColunaQuantidade = new System.Windows.Forms.ColumnHeader();
-            this.ColunaAdd = new System.Windows.Forms.ColumnHeader();
-            this.ColunaRemove = new System.Windows.Forms.ColumnHeader();
+            //this.ColunaNome = new System.Windows.Forms.ColumnHeader();
+            //this.ColunaQuantidade = new System.Windows.Forms.ColumnHeader();
+            //this.ColunaAdd = new System.Windows.Forms.ColumnHeader();
+            //this.ColunaRemove = new System.Windows.Forms.ColumnHeader();
             this.listItem = new System.Windows.Forms.ListViewItem();
             this.panelButtons = new System.Windows.Forms.Panel();
             this.panelInform = new System.Windows.Forms.Panel();
@@ -93,6 +93,7 @@ namespace TitaniumColector.Forms
             this.listVolumes.Columns.Add("Peso", 60, System.Windows.Forms.HorizontalAlignment.Center);
 
 
+
             //
             //painel de Botões
             //
@@ -126,7 +127,7 @@ namespace TitaniumColector.Forms
 
             //
             // labels
-            //
+            //  
             this.lblVolumes.Text = "Volumes_:";
             this.lblVolumes.Font = MainConfig.FontPequenaBold;
             this.fontStringSize = MainConfig.sizeStringEmPixel(this.lblVolumes.Text, MainConfig.FontPequenaBold);
@@ -147,7 +148,6 @@ namespace TitaniumColector.Forms
             this.lblPesoProd.Size = new Size((int)this.fontStringSize.Width, (int)this.fontStringSize.Height);
             this.lblPesoProd.Location = new Point(12, this.lblVolumes.Location.Y + this.lblVolumes.Height + 1);
             this.lblPesoProd.Text = String.Format("Peso Produtos :");
-
 
             this.lblValPesoProd.Text = "1000,000_Kg";
             this.lblValPesoProd.Font = MainConfig.FontPequenaBold;
@@ -184,8 +184,6 @@ namespace TitaniumColector.Forms
             this.lblValTotal.Location = new Point(lblTotal.Location.X + lblTotal.Width + 2, lblTotal.Location.Y);
             this.lblValTotal.Text = String.Format("100,000 Kg");
 
-
-            //this.Menu = this.mainMenu1;
             this.panelButtons.Controls.Add(this.btnUp);
             this.panelButtons.Controls.Add(this.btnDown);
             this.panelInform.Controls.Add(this.lblVolumes);
@@ -199,7 +197,6 @@ namespace TitaniumColector.Forms
             this.Controls.Add(this.panelButtons);
             this.Controls.Add(this.panelInform);
             this.Controls.Add(this.listVolumes);
-            //this.ControlBox = false;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.WindowState = System.Windows.Forms.FormWindowState.Normal;
@@ -218,10 +215,10 @@ namespace TitaniumColector.Forms
 
 
         private System.Windows.Forms.ListView listVolumes;
-        private System.Windows.Forms.ColumnHeader ColunaNome;
-        private System.Windows.Forms.ColumnHeader ColunaQuantidade;
-        private System.Windows.Forms.ColumnHeader ColunaAdd;
-        private System.Windows.Forms.ColumnHeader ColunaRemove;
+        //private System.Windows.Forms.ColumnHeader ColunaNome;
+        //private System.Windows.Forms.ColumnHeader ColunaQuantidade;
+        //private System.Windows.Forms.ColumnHeader ColunaAdd;
+        //private System.Windows.Forms.ColumnHeader ColunaRemove;
         private System.Windows.Forms.ListViewItem listItem;
         private System.Windows.Forms.Panel panelButtons;
         private System.Windows.Forms.Panel panelInform;

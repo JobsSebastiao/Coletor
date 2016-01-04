@@ -18,19 +18,23 @@ namespace TitaniumColector.Forms
 {
     public partial class FrmProposta : Form
     {
-    
+        //OBJECTS
         private Proposta objProposta;
         private BaseMobile objTransacoes;
         private String inputText;
         private Parametros paramValidarSequencia;
+        private List<String> listInfoProposta;
+
+        //OBJETOS DAO
         private DaoEtiqueta daoEtiqueta;
         private DaoProdutoProposta daoItemProposta;
         private DaoProposta daoProposta;
         private DaoProduto daoProduto;
         private DaoEmbalagem daoEmbalagem;
-        private List<String> listInfoProposta;
-        private static System.Drawing.Color[] cores;
-        private static System.Windows.Forms.Cursor[] estadoCursor;
+
+        //ENUM
+        public enum enumCor { RED = 0, BLACK = 1, BLUE = 2 }
+        public enum enumCursor { WAIT = 0, DEFAULT = 1 }
 
 
         //Contrutor.
@@ -55,7 +59,7 @@ namespace TitaniumColector.Forms
             try
             {
                 ICall form = new FrmAcao(true);
-                this.newLogin(form,true,true);
+                this.exitForm(form,true,true);
             }
             catch (Exception ex)
             {
@@ -78,7 +82,7 @@ namespace TitaniumColector.Forms
             try
             {
                 
-                if (this.newLogin(new frmLogin(true),true,true )!= DialogResult.Cancel) {
+                if (this.exitForm(new frmLogin(true),true,true )!= DialogResult.Cancel) {
                     MainConfig.UserOn.registrarAcesso(Usuario.statusLogin.NAOLOGADO);
                 }
             }
@@ -114,7 +118,9 @@ namespace TitaniumColector.Forms
             {
                 if (inputText != "" && inputText != null)
                 {
+
                     Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
+                    tipoEtiqueta = Leitor.validaInputValueEtiqueta 
 
                     switch (tipoEtiqueta)
                     {
@@ -173,7 +179,7 @@ namespace TitaniumColector.Forms
         private void FrmProposta_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
 
-            DialogResult result = newLogin(true,true);
+            DialogResult result = exitForm(true);
 
             if (result == DialogResult.No || result == DialogResult.Yes)
             {
@@ -183,43 +189,9 @@ namespace TitaniumColector.Forms
             {
                 e.Cancel = true;
             }
-
-            //DialogResult result = MessageBox.Show("Desejar salvar as alterações realizadas?", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-            
-            
-            //if (result == DialogResult.No)
-            //{
-            //    daoProposta = new DaoProposta();
-            //    ProcedimentosLiberacao.interromperLiberacao(objProposta);
-            //    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO,true,false);
-            //    daoProposta = null;
-            //    MainConfig.UserOn.registrarAcesso(Usuario.statusLogin.NAOLOGADO);
-            //    this.Dispose();
-            //    this.Close();
-            //    Application.Exit();
-            //}
-            //else if (result == DialogResult.Yes)
-            //{
-            //    daoItemProposta = new DaoProdutoProposta();
-            //    daoProposta = new DaoProposta();
-            //    daoEmbalagem = new DaoEmbalagem();
-
-            //    daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
-            //    ProcedimentosLiberacao.interromperLiberacao(objProposta);
-            //    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO,true,true);
-            //    daoItemProposta.updateItemPropostaRetorno();
-            //    MainConfig.UserOn.registrarAcesso(Usuario.statusLogin.NAOLOGADO);
-            //    this.Dispose();
-            //    this.Close();
-            //    Application.Exit();
-            //}
-            //else
-            //{
-            //    e.Cancel = true;
-            //}
         }
 
-        void btnVolumes_Click(object sender, System.EventArgs e)
+        private void btnVolumes_Click(object sender, System.EventArgs e)
         {
             FrmVolumes frmVolumes = new FrmVolumes();
             frmVolumes.ShowDialog();
@@ -245,6 +217,7 @@ namespace TitaniumColector.Forms
             daoProduto = new DaoProduto();
             daoEmbalagem = new DaoEmbalagem();
 
+            //LIMPA INFORMAÇÕES RESULTANTE DE OUTROS PRODUTOS JÁ CONFERIDOS
             ProcedimentosLiberacao.limpar();
 
             try
@@ -657,7 +630,7 @@ namespace TitaniumColector.Forms
         /// <summary>
         /// Realiza todo o processo de liberação para o produto lido
         /// </summary>
-        /// <param name="inputText">Valor captado pelo leitor</param>
+        /// <param name="inputText">Valor captado pelo Leitor</param>
         /// <param name="tipoEtiqueta">Tipo de Etiqueta a ser validada</param>
         private void liberarItem(String inputText,Etiqueta.Tipo tipoEtiqueta)
         {
@@ -686,60 +659,20 @@ namespace TitaniumColector.Forms
         }
 
         /// <summary>
-        /// tratamentos para realizar update de informações durante o fechamento do form.
+        /// Realiza os procedimentos nescessários de termino de conferência 
+        /// de um item de modo que não seja perdido nenhuma informação útil.
         /// </summary>
-        private void newLogin(ICall formulario) 
-        {
-            try
-            {
-                DialogResult resp = MessageBox.Show("Deseja salvar as altereções relalizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-
-                Cursor.Current = Cursors.WaitCursor;
-
-                if (resp == DialogResult.Yes)
-                {
-
-                    daoItemProposta = new DaoProdutoProposta();
-                    daoProposta = new DaoProposta();
-                    daoEmbalagem = new DaoEmbalagem();
-
-                    ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, true);
-                    daoItemProposta.updateItemPropostaRetorno();
-                    daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
-                    this.Dispose();
-                    this.Close();
-
-                    formulario.call();
-                }
-                else if (resp == DialogResult.No)
-                {
-                    daoProposta = new DaoProposta();
-                    ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                    daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
-                    daoProposta = null;
-                    this.Dispose();
-                    this.Close();
-                    formulario.call();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("newLogin() \n" + ex.Message, ex);
-            }
-            finally
-            {
-                Cursor.Current = Cursors.Default;
-            }  
-        }
-
-        private DialogResult newLogin(ICall formulario, bool retorno, bool showQuestion)
+        /// <param name="formulario">Interface responsável por abrir um próximo formulário</param>
+        /// <param name="retorno">Se o usuário terá ou não um mesnsagem de informativa após a conclusão do método.</param>
+        /// <param name="showQuestion">Mostrar ou não a pergunta de confirmação ao usuário.</param>
+        /// <returns>resposta do Dialog Result</returns>
+        private DialogResult exitForm(ICall formulario, bool retorno, bool showQuestion)
         {
             try
             {
                 DialogResult resp;
 
+                //Verifica se irá ou não apresentar a pergunta ao usuário.
                 if (showQuestion)
                 {
                     resp = MessageBox.Show("Deseja salvar as altereções realizadas", "Exit", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
@@ -749,10 +682,13 @@ namespace TitaniumColector.Forms
                     resp = DialogResult.Yes;
                 }
 
+                //Modifica o estado do cursor
                 Cursor.Current = Cursors.WaitCursor;
                 
+                //realiza procedimentos nescessário para terminar a conferência do item
                 if (resp == DialogResult.Yes)
                 {
+                    //Classes para trabalhar com as bases de dados.
                     daoItemProposta = new DaoProdutoProposta();
                     daoProposta = new DaoProposta();
                     daoEmbalagem = new DaoEmbalagem();
@@ -763,7 +699,6 @@ namespace TitaniumColector.Forms
                     daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
                     this.Dispose();
                     this.Close();
-                    formulario.call();
                 }
                 else if (resp == DialogResult.No)
                 {
@@ -772,9 +707,7 @@ namespace TitaniumColector.Forms
                     daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
                     this.Dispose();
                     this.Close();
-                    formulario.call();
                 }
-
                 return resp;
             }
             catch (Exception ex)
@@ -788,11 +721,20 @@ namespace TitaniumColector.Forms
                 daoProposta = null;
                 daoEmbalagem = null;
                 Cursor.Current = Cursors.Default;
+                formulario.call();
             }
         }
 
-        private DialogResult newLogin(bool retorno, bool showQuestion)
+        /// <summary>
+        /// Realiza os procedimentos nescessários de termino de conferência 
+        /// de um item de modo que não seja perdido nenhuma informação útil.
+        /// </summary>
+        /// <param name="showQuestion">Mostrar ou não a pergunta de confirmação ao usuário.</param>
+        /// <returns>resposta do Dialog Result</returns>
+        private DialogResult exitForm(bool showQuestion)
         {
+            //RETIREI BOOL RETORNO AINDA SOB SUBERVISÃO
+
             try
             {
                 DialogResult resp;
@@ -852,17 +794,21 @@ namespace TitaniumColector.Forms
         /// <param name="mensagem"></param>
         /// <param name="headForm"></param>
         private void exitOnError(String mensagem, String headForm,bool showQuestion)
-        {
-            this.Dispose();
-            this.Close();
-
+        {   
+            //MOSTRA MENSAGEM DE ERRO AO USUÁRIO
             MainConfig.errorMessage(mensagem, headForm);
             Cursor.Current = Cursors.Default;
-
+            //FINALIZA O PROCESSO E ABRE O FORM DE AÇÃO NOVAMENTE.
             ICall form = new FrmAcao(true);
-            this.newLogin(form, false, showQuestion);
+            this.exitForm(form, false, showQuestion);
+            //ENCERRA O FORM.
+            this.Dispose();
+            this.Close();
         }
 
+        /// <summary>
+        /// Finaliza o processo de conferência de uma proposta como um todo.
+        /// </summary>
         private void finalizarProposta() 
         {
             try
@@ -901,9 +847,6 @@ namespace TitaniumColector.Forms
             tbMensagem.ForeColor = cores[(int)corMensagem];
             tbMensagem.Text = mensagem;
         }
-
-        public  enum enumCor{ RED = 0 , BLACK = 1 ,BLUE=2}
-        public enum enumCursor { WAIT = 0,DEFAULT = 1}
 
     #endregion
 

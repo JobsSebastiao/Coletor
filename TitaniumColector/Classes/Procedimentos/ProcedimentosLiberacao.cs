@@ -13,7 +13,7 @@ using TitaniumColector.Forms;
 namespace TitaniumColector.Classes.Procedimentos
 {
      static class ProcedimentosLiberacao
-    {
+     {
         private static Double totalItens;
         private static Double totalPecas;
         private static Int32 totalVolumes;
@@ -26,7 +26,7 @@ namespace TitaniumColector.Classes.Procedimentos
         private static List<EmbalagemSeparacao> listEmbalagensSeparacao;
         private static Array arrayStringToEtiqueta;
         private static String mensagem;
-
+        
         /// <summary>
         /// Carrega as a serem trabalhadas durante o procedimento de liiberção dos itens da proposta.
         /// </summary>
@@ -151,12 +151,6 @@ namespace TitaniumColector.Classes.Procedimentos
             totalPecas = value;
         }
 
-        //public static Int32 ProximaEtiqueta
-        //{
-        //    get { return proximaEtiqueta; }
-        //    set { proximaEtiqueta = value; }
-        //}
-
         public static Double TotalItens
         {
             get { return totalItens; }
@@ -204,7 +198,7 @@ namespace TitaniumColector.Classes.Procedimentos
             get { return ProcedimentosLiberacao.pesoTotalPedido; }
             set { ProcedimentosLiberacao.pesoTotalPedido = value; }
         }
-
+     
     #endregion
 
         /// <summary>
@@ -335,7 +329,6 @@ namespace TitaniumColector.Classes.Procedimentos
         public static void lerEtiqueta(String inputValue,Etiqueta.Tipo tipoEtiqueta, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
         {
             tbMensagem.Text = "";
-
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
             Etiqueta objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
@@ -363,7 +356,6 @@ namespace TitaniumColector.Classes.Procedimentos
                     {
                         throw new QuantidadeInvalidaException("A quantidade de produtos informado na embalagem é inválida!");
                     }
-
                     if (validaEtiquetaNaoLida(objEtiqueta))
                     {
                         if (QtdPecasItem > 0)
@@ -391,9 +383,7 @@ namespace TitaniumColector.Classes.Procedimentos
                     {
                         tbMensagem.Text = String.Format("Produto da etiqueta lida não confere com o item a ser liberado.");
                     }
-                    
                 }
-
             }
             catch ( QuantidadeInvalidaException qtdEx)
             {
@@ -403,7 +393,6 @@ namespace TitaniumColector.Classes.Procedimentos
             }
             catch (Exception ex)
             {
-                
                 throw ex;
             }   
         }
@@ -514,7 +503,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <summary>
         /// Valida o tipo de etiqueta lido
         /// </summary>
-        /// <param name="inputValue">informação capturada pelo leitor</param>
+        /// <param name="inputValue">informação capturada pelo Leitor</param>
         /// <returns>Etiqueta.tipo (EAN13,QRCODE,INVALID)</returns>
         public static Etiqueta.Tipo validaInputValueEtiqueta(String inputValue)
         {

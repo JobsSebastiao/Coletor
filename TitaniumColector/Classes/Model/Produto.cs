@@ -26,46 +26,6 @@ namespace TitaniumColector.Classes
 
         }
 
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao) 
-        {
-            this.CodigoProduto = codigo;
-            this.Ean13 = ean13;
-            this.Partnumber = partnumber;
-            this.Descricao = descricao;
-            this.Peso = 0.0;
-
-        }
-
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao,Double peso)
-        {
-            this.CodigoProduto = codigo;
-            this.Ean13 = ean13;
-            this.Partnumber = partnumber;
-            this.Descricao = descricao;
-            this.Peso = peso;
-
-        }
-
-        /// <summary>
-        /// Construtor onde alguns atributos não são setados duarante a intancia da classe.
-        /// </summary>
-        /// <param name="Codigo">Código do produto</param>
-        /// <param name="ean13">Ean13 do produto</param>
-        /// <param name="partnumber">`Partnumber do Produto</param>
-        /// <param name="Descricao">DEscrição (NOME) do produto</param>
-        /// <param name="codigoLocalLote">Código do local oonde está armazenado este produto.</param>
-        /// <param name="nomeLocalLote">Nome(identificação) do local de armazenagem do produto</param>
-        public Produto(Int32 codigo,String ean13,String partnumber,String descricao,Int32 codigoLocalLote,String nomeLocalLote)
-        {
-            CodigoProduto = codigo;
-            Ean13 = ean13;
-            Partnumber = partnumber;
-            Descricao = descricao;
-            CodigoLocalLote = codigoLocalLote;
-            NomeLocalLote = nomeLocalLote;
-
-        }
-
         /// <summary>
         /// Inclui ao contrutor valores para os atributos CodigoLoteProduto e IdentificacaoLoteProduto
         /// </summary>
@@ -77,7 +37,7 @@ namespace TitaniumColector.Classes
         /// <param name="nomeLocalLote">Nome(identificação) do local de armazenagem do produto</param>
         /// <param name="codLoteProd">Código do lote do produto</param>
         /// <param name="identificacaoLoteProd">Identificação do Lote do produto</param>
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote,Int64 codLoteProd,String identificacaoLoteProd)
+        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote, Int64 codLoteProd, String identificacaoLoteProd)
         {
             CodigoProduto = codigo;
             Ean13 = ean13;
@@ -88,6 +48,14 @@ namespace TitaniumColector.Classes
             IdentificacaoLoteProduto = identificacaoLoteProd;
         }
 
+        public Produto(Int32 codigo, String ean13, String partnumber, String descricao,Double peso)
+        {
+            this.CodigoProduto = codigo;
+            this.Ean13 = ean13;
+            this.Partnumber = partnumber;
+            this.Descricao = descricao;
+            this.Peso = peso;
+        }
 
         public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote, Int64 codLoteProd, String identificacaoLoteProd,Double peso)
         {
@@ -119,7 +87,6 @@ namespace TitaniumColector.Classes
                 this.IdentificacaoLoteProduto = ((Produto)obj).IdentificacaoLoteProduto;
                 this.Peso = ((Produto)obj).Peso;
                 this.Embalagens = ((Produto)obj).embalagens.ToList<EmbalagemProduto>();
-
             }
         }
 

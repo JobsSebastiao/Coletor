@@ -49,7 +49,8 @@ namespace TitaniumColector.Forms
 
         private void btnCompra_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Funcionalidade em desenvolvimento!!");
+            FrmAlocacao frm = new FrmAlocacao();
+            frm.Show();
         }
 
         #region ICall Members

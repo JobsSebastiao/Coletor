@@ -77,11 +77,14 @@
     <Compile Include="Classes\Dao\DaoProduto.cs" />
     <Compile Include="Classes\Dao\DaoProposta.cs" />
     <Compile Include="Classes\Dao\DaoUsuario.cs" />
+    <Compile Include="Classes\Interface\IValidate.cs" />
     <Compile Include="Classes\Model\Embalagem.cs" />
     <Compile Include="Classes\Model\EmbalagemProduto.cs" />
     <Compile Include="Classes\Model\EmbalagemSeparacao.cs" />
     <Compile Include="Classes\Model\Etiqueta.cs" />
     <Compile Include="Classes\Exceptions\SqlQueryExceptions.cs" />
+    <Compile Include="Classes\Model\EtiquetaVenda.cs" />
+    <Compile Include="Classes\Model\Leitor.cs" />
     <Compile Include="Classes\Procedimentos\ProcedimentosLiberacao.cs" />
     <Compile Include="Classes\Procedimentos\BaseMobile.cs" />
     <Compile Include="Classes\Model\ProdutoProposta.cs" />
@@ -91,7 +94,7 @@
     <Compile Include="Classes\Model\Usuario.cs" />
     <Compile Include="Classes\Model\Parametros.cs" />
     <Compile Include="Classes\Model\Permisssoes.cs" />
-    <Compile Include="Classes\Utility\ICall.cs" />
+    <Compile Include="Classes\Interface\ICall.cs" />
     <Compile Include="Classes\Utility\ImageButton.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -100,6 +103,12 @@
     </Compile>
     <Compile Include="Forms\FrmAcao.Designer.cs">
       <DependentUpon>FrmAcao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmAlocacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmAlocacao.Designer.cs">
+      <DependentUpon>FrmAlocacao.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmLogin.cs">
       <SubType>Form</SubType>
@@ -126,6 +135,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Forms\FrmAcao.resx">
       <DependentUpon>FrmAcao.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmAlocacao.resx">
+      <DependentUpon>FrmAlocacao.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmLogin.resx">

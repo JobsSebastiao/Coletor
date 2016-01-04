@@ -640,5 +640,7 @@ namespace TitaniumColector.Forms
         private System.Windows.Forms.MenuItem mnuOpcoes_Exit;
         private ImageButton btnVolumes;
         private System.Windows.Forms.ImageList imgPropostas;
+        private static System.Drawing.Color[] cores;
+        private static System.Windows.Forms.Cursor[] estadoCursor;
     }
 }
