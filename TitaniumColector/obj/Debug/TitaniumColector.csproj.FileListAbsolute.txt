@@ -74,3 +74,4 @@ C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Deb
 C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Debug\TitaniumColector.exe
 C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Debug\TitaniumColector.pdb
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmAlocacao.resources
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Classes.Testes.FrmTeste.resources

@@ -8,6 +8,7 @@ using System.Data.SqlServerCe;
 using TitaniumColector.Classes.Exceptions;
 using TitaniumColector.SqlServer;
 using System.Windows.Forms;
+using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes.Dao
 {
@@ -150,7 +151,7 @@ namespace TitaniumColector.Classes.Dao
             return nomesLocais;
         }
 
-        public Etiqueta recuperarInformacoesPorEan13Etiqueta(Etiqueta etiqueta)
+        public Etiqueta recuperarInformacoesPorEan13Etiqueta(EtiquetaVenda etiqueta)
         {
 
             sql01 = new StringBuilder();
@@ -167,7 +168,7 @@ namespace TitaniumColector.Classes.Dao
 
             while (dr.Read())
             {
-                etiqueta = new Etiqueta((string)dr["partnumberPRODUTO"], (string)dr["descricaoPRODUTO"], Convert.ToInt64(dr["ean13EMBALAGEM"]), (string)dr["identificacaolotePRODUTO"]
+                etiqueta = new EtiquetaVenda((int)(dr["partnumberPRODUTO"]), (string)dr["descricaoPRODUTO"], (string)(dr["ean13EMBALAGEM"]), (string)dr["identificacaolotePRODUTO"]
                                         , 0, Convert.ToDouble(dr["qtdEMBALAGEM"]), etiqueta.TipoEtiqueta);
             }
 

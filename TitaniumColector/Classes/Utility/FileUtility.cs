@@ -235,12 +235,6 @@ namespace TitaniumColector.Utility
         /// 
         /// string = "text1/text2/text3/text4/text5" onde o separador e o caracter "/"
         /// 
-        /// o retorno será um array com 5 posições
-        /// string(0)= text1
-        /// string(1)= text2
-        /// string(2)= text3
-        /// string(3)= text4
-        /// string(4)= text5
         /// </exemplo>
         public static String[] arrayOfTextFile(string strFile, splitType splitCaracter)
         {

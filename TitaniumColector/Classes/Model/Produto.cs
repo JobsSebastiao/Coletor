@@ -37,7 +37,7 @@ namespace TitaniumColector.Classes
         /// <param name="nomeLocalLote">Nome(identificação) do local de armazenagem do produto</param>
         /// <param name="codLoteProd">Código do lote do produto</param>
         /// <param name="identificacaoLoteProd">Identificação do Lote do produto</param>
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote, Int64 codLoteProd, String identificacaoLoteProd)
+        public Produto(int codigo, string ean13, string partnumber, string descricao, string nomeLocalLote, int codLoteProd, string identificacaoLoteProd)
         {
             CodigoProduto = codigo;
             Ean13 = ean13;
@@ -48,7 +48,16 @@ namespace TitaniumColector.Classes
             IdentificacaoLoteProduto = identificacaoLoteProd;
         }
 
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao,Double peso)
+        public Produto(int codigo, string partnumber, string descricao, string nomeLocalLote, int codLoteProd)
+        {
+            CodigoProduto = codigo;
+            Partnumber = partnumber;
+            Descricao = descricao;
+            NomeLocalLote = nomeLocalLote;
+            CodigoLoteProduto = codLoteProd;
+        }
+
+        public Produto(int codigo, string ean13, string partnumber, string descricao,double peso)
         {
             this.CodigoProduto = codigo;
             this.Ean13 = ean13;
@@ -57,7 +66,7 @@ namespace TitaniumColector.Classes
             this.Peso = peso;
         }
 
-        public Produto(Int32 codigo, String ean13, String partnumber, String descricao, String nomeLocalLote, Int64 codLoteProd, String identificacaoLoteProd,Double peso)
+        public Produto(int codigo, string ean13, string partnumber, string descricao, string nomeLocalLote, Int64 codLoteProd, string identificacaoLoteProd,double peso)
         {
             this.CodigoProduto = codigo;
             this.Ean13 = ean13;

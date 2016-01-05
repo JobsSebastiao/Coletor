@@ -49,7 +49,7 @@ namespace TitaniumColector.Forms
 
         private void inicializarForm() 
         {
-            fontStringSize = new SizeF();
+            //fontStringSize = new SizeF();
             this.txtCabecalho = new System.Windows.Forms.TextBox();
             this.txtDescricaoTotal = new System.Windows.Forms.TextBox ();
             this.txtTotal = new System.Windows.Forms.TextBox();
@@ -131,14 +131,16 @@ namespace TitaniumColector.Forms
             this.Controls.Add(this.txtDescricaoTotal);
             this.Controls.Add(this.txtTotal);
             this.Controls.Add(this.btnSair);
+
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(FrmAlocacao_KeyPress);
         }
 
         private System.Windows.Forms.ListView listVolumes;
-        private System.Windows.Forms.ListViewItem listItem;
+        //private System.Windows.Forms.ListViewItem listItem;
         private System.Windows.Forms.TextBox txtCabecalho;
         private System.Windows.Forms.TextBox txtDescricaoTotal;
         private System.Windows.Forms.TextBox txtTotal;
-        private System.Drawing.SizeF fontStringSize;
+        //private System.Drawing.SizeF fontStringSize;
         private System.Windows.Forms.Button btnSair;
         private System.Windows.Forms.Panel pnGridItens;
         

@@ -4,23 +4,37 @@ using System.Collections.Generic;
 using System.Text;
 using System.Xml;
 using TitaniumColector.Classes.Dao;
+using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes 
 {
     public class Etiqueta 
     {
-        public Int64 Ean13Etiqueta { get;  set; }
-        public String LoteEtiqueta { get;  set; }
-        public Int32 SequenciaEtiqueta { get;  set; }
-        public Double QuantidadeEtiqueta { get;  set; }
-        public string PartnumberEtiqueta { get;  set; }
-        public string DescricaoProdutoEtiqueta { get;  set; }
-        public DateTime DataHoraValidacao { get;  set; }
+        
+        //PROPRIEDADES EM COMUM ''
         public Tipo TipoEtiqueta { get;  set; }
+        public string DescricaoProdutoEtiqueta { get; set; }
+        public string PartnumberEtiqueta { get; set; }
+        public String LoteEtiqueta { get; set; }
+        //PROPRIEDADES DEVEM SER PASSADAS PARA A CLASSE ETIQUETAVENDA
+        //public Int64 Ean13Etiqueta { get; set; }
+        public Int32 SequenciaEtiqueta { get; set; }
+        public Double QuantidadeEtiqueta { get; set; }
+        public DateTime DataHoraValidacao { get; set; }
         public Int32 volumeEtiqueta;
 
         private DaoProduto daoProduto;
         public enum Tipo {INVALID=0,QRCODE=1,BARRAS=2 }
+
+        public Int32 VolumeEtiqueta
+        {
+            get { return volumeEtiqueta; }
+            set
+            {
+                if (value > 0)
+                    volumeEtiqueta = value;
+            }
+        }
 
     #region "CONTRUTORES"
 
@@ -31,12 +45,41 @@ namespace TitaniumColector.Classes
 
             PartnumberEtiqueta = partnumber;
             DescricaoProdutoEtiqueta = descricao;
-            Ean13Etiqueta = ean13;
             LoteEtiqueta = lote;
             QuantidadeEtiqueta = quantidade;
             DataHoraValidacao = DateTime.Now;
 
             switch (tipoEtiqueta )
+            {
+                case Tipo.QRCODE:
+
+                    SequenciaEtiqueta = sequencia;
+                    TipoEtiqueta = Tipo.QRCODE;
+                    break;
+
+                case Tipo.BARRAS:
+
+                    SequenciaEtiqueta = 0;
+                    TipoEtiqueta = Tipo.BARRAS;
+                    break;
+
+                default:
+                    break;
+            }
+
+        }
+
+        public Etiqueta(String partnumber, String descricao, String lote, Int32 sequencia, Double quantidade, Tipo tipoEtiqueta)
+        {
+
+            PartnumberEtiqueta = partnumber;
+            DescricaoProdutoEtiqueta = descricao;
+            //Ean13Etiqueta = ean13;
+            LoteEtiqueta = lote;
+            QuantidadeEtiqueta = quantidade;
+            DataHoraValidacao = DateTime.Now;
+
+            switch (tipoEtiqueta)
             {
                 case Tipo.QRCODE:
 
@@ -85,7 +128,7 @@ namespace TitaniumColector.Classes
                             }
                             else if (strItem == "EAN13")
                             {
-                                Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
+                                //Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
                             }
                             else if (strItem == "LOTE")
                             {
@@ -110,18 +153,18 @@ namespace TitaniumColector.Classes
                             daoProduto = new DaoProduto();
 
                             this.TipoEtiqueta = Tipo.BARRAS;
-                            Ean13Etiqueta = Convert.ToInt64(item);
-                            Etiqueta aux = daoProduto.recuperarInformacoesPorEan13Etiqueta(this);
+                            //Ean13Etiqueta = Convert.ToInt64(item);
+                            //Etiqueta aux = (EtiquetaVenda)daoProduto.recuperarInformacoesPorEan13Etiqueta(this);
 
-                            if(aux !=null)
-                            {
-                                DescricaoProdutoEtiqueta = aux.DescricaoProdutoEtiqueta;
-                                PartnumberEtiqueta = aux.PartnumberEtiqueta;
-                                Ean13Etiqueta = aux.Ean13Etiqueta;
-                                LoteEtiqueta = aux.LoteEtiqueta;
-                                SequenciaEtiqueta = aux.SequenciaEtiqueta;
-                                QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
-                            }
+                            //if(aux !=null)
+                            //{
+                            //    DescricaoProdutoEtiqueta = aux.DescricaoProdutoEtiqueta;
+                            //    PartnumberEtiqueta = aux.PartnumberEtiqueta;
+                            //    //Ean13Etiqueta = aux.Ean13Etiqueta;
+                            //    LoteEtiqueta = aux.LoteEtiqueta;
+                            //    SequenciaEtiqueta = aux.SequenciaEtiqueta;
+                            //    QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
+                            //}
                         }
 
                         break;
@@ -142,74 +185,6 @@ namespace TitaniumColector.Classes
             }
 
         }
-
-    #endregion
-
-    #region "GET E SETS "
-
-        //public Int64 Ean13Etiqueta
-        //{
-        //    get { return ean13Embalagem; }
-        //    set { ean13Embalagem = value; }
-        //}
-
-        //public String LoteEtiqueta
-        //{
-        //    get { return lote; }
-        //    set { lote = value; }
-        //}
-
-        //public Int32 SequenciaEtiqueta
-        //{
-        //    get { return sequencia; }
-        //    set { sequencia = value; }
-        //}
-
-        //public Double QuantidadeEtiqueta
-        //{
-        //    get 
-        //    {
-        //        return quantidade; 
-        //    }
-        //    set 
-        //    { 
-        //        quantidade = value; 
-        //    }
-        //}
-
-        //public string PartnumberEtiqueta
-        //{
-        //    get { return partnumber; }
-        //    set { partnumber = value; }
-        //}
-
-        //public string DescricaoProdutoEtiqueta
-        //{
-        //    get { return descricaoProduto; }
-        //    set { descricaoProduto = value; }
-        //}
-
-        public Int32 VolumeEtiqueta
-        {
-            get { return volumeEtiqueta; }
-            set { 
-                    if(value > 0)
-                        volumeEtiqueta = value; 
-                }
-        }
-
-        //public DateTime DataHoraValidacao
-        //{
-        //    get { return dataHoraValidacao; }
-        //    set { dataHoraValidacao = value; }
-        //}
-
-        //public Tipo TipoEtiqueta
-        //{
-        //    get { return tipoEtiqueta; }
-        //    set { tipoEtiqueta = value; }
-        //}
-
 
     #endregion
 
@@ -238,7 +213,7 @@ namespace TitaniumColector.Classes
                 }
                 else if (strItem == "EAN13")
                 {
-                    objEtiqueta.Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
+                    //objEtiqueta.Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
                 }
                 else if (strItem == "LOTE")
                 {
@@ -255,7 +230,13 @@ namespace TitaniumColector.Classes
             }
             return objEtiqueta;
         }
-        
+
+        //próxima alteração
+        //metodo abstrato
+        public virtual Etiqueta.Tipo validaInputValueEtiqueta(String inputValue) { return Tipo.INVALID;}
+        public virtual void realizaAcao(string inputText,Etiqueta.Tipo tipoEtiqueta){}
+        public virtual Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta) { return new Etiqueta(); }
+
         /// <summary>
         /// Verifica se já existe um determinado Objeto Etiqueta em um list.
         /// </summary>
@@ -361,7 +342,8 @@ namespace TitaniumColector.Classes
                 //escreve o elemento raiz
                 writer.WriteStartElement("Item");
                 //escrever o atributo para o Elemento Raiz Item
-                writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
+
+                //writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
 
                 foreach (var item in listaEtiquetas)
                 {
@@ -395,50 +377,61 @@ namespace TitaniumColector.Classes
 
         public override bool Equals(object obj)
         {
+            return false;
+
             System.Type type = obj.GetType();
 
-            if (obj == null || (type != typeof(Etiqueta)))
-            {
-                return false;
-            }
-            else
-            {
-                switch (((Etiqueta)obj).TipoEtiqueta)
-                {
-                    case Tipo.QRCODE:
+            return (obj == null || (type != typeof(Etiqueta)))? false : true;
 
-                        return (Ean13Etiqueta == ((Etiqueta)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
+            //if (obj == null || (type != typeof(Etiqueta)))
+            //{
+            //    return false;
+            //}
+            //return 
+            //else
+            //{
+            //    switch (((Etiqueta)obj).TipoEtiqueta)
+            //    {
+            //        case Tipo.QRCODE:
 
-                    case Tipo.BARRAS:
+            //            return (Ean13Etiqueta == ((Etiqueta)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
 
-                        return (Ean13Etiqueta == ((Etiqueta)obj).Ean13Etiqueta );
+            //        case Tipo.BARRAS:
 
-                    default:
-                        return false;
-                }
-            }
+            //            return (Ean13Etiqueta == ((Etiqueta)obj).Ean13Etiqueta);
+
+            //        default:
+            //            return false;
+            //    }
+            //}
 
         }
 
+        //public override string ToString()
+        //{
+        //    return String.Format("PNUMBER:{0}|DESCRICAO:{1}|EAN13:{2}|LOTE:{3}|SEQ:{4}|QTD:{5}",PartnumberEtiqueta,DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta);
+        //}
         public override string ToString()
         {
-            return String.Format("PNUMBER:{0}|DESCRICAO:{1}|EAN13:{2}|LOTE:{3}|SEQ:{4}|QTD:{5}",PartnumberEtiqueta,DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta);
-        }
-
-        /// <summary>
-        /// Detalha todas as informações sobre a etiqueta.
-        /// </summary>
-        /// <returns>texto com informações sobre a etiqueta.</returns>
-        public String etiquetaFullDetail() 
-        {
-            return String.Format("PartNumber:{0}|Descrição:{1}|Ean13:{2}|Lote:{3}|Sêquencia:{4}|Quantidade:{5}|Volumes:{6}|HoraValidação:{7}|TipoEtiqueta:{8}",
-                                  PartnumberEtiqueta, DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta, VolumeEtiqueta, DataHoraValidacao, TipoEtiqueta);
+            return String.Format("PNUMBER:{0}|DESCRICAO:{1}|LOTE:{2}", PartnumberEtiqueta, DescricaoProdutoEtiqueta,LoteEtiqueta);
         }
 
         public override int GetHashCode()
         {
             return base.GetHashCode();
         }
+
+
+        ///// <summary>
+        ///// Detalha todas as informações sobre a etiqueta.
+        ///// </summary>
+        ///// <returns>texto com informações sobre a etiqueta.</returns>
+        //public String etiquetaFullDetail() 
+        //{
+        //    return String.Format("PartNumber:{0}|Descrição:{1}|Ean13:{2}|Lote:{3}|Sêquencia:{4}|Quantidade:{5}|Volumes:{6}|HoraValidação:{7}|TipoEtiqueta:{8}",
+        //                          PartnumberEtiqueta, DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta, VolumeEtiqueta, DataHoraValidacao, TipoEtiqueta);
+        //}
+
 
     #endregion
 

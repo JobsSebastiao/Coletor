@@ -310,9 +310,9 @@ namespace TitaniumColector.Classes.Procedimentos
             tbMensagem.Text = "";
 
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
-            Etiqueta objEtiqueta = new Etiqueta();
-            objEtiqueta = new Etiqueta(arrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
-            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
+            Etiqueta objEtiqueta = new EtiquetaVenda();
+            objEtiqueta = new EtiquetaVenda(arrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
+            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
         }
       
         /// <summary>
@@ -330,8 +330,8 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             tbMensagem.Text = "";
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
-            Etiqueta objEtiqueta = new Etiqueta(arrayStringToEtiqueta, tipoEtiqueta);
-            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
+            Etiqueta objEtiqueta = new EtiquetaVenda(arrayStringToEtiqueta, tipoEtiqueta);
+            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
         }
         
         /// <summary>
@@ -346,7 +346,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <param name="tbMensagem">Text Box Mensagem</param>
         /// <param name="objEtiqueta">Objeto Etiqueta.</param>
         public static void efetuaLeituraEtiqueta(ProdutoProposta produto,TextBox tbProduto,TextBox tbLote,TextBox tbSequencia,TextBox tbQuantidade,
-                                                 TextBox tbMensagem,Etiqueta objEtiqueta)
+                                                 TextBox tbMensagem,EtiquetaVenda objEtiqueta)
         {
             try
             {
@@ -404,7 +404,7 @@ namespace TitaniumColector.Classes.Procedimentos
          /// <param name="etiquetaLida"> Obj Etiqueta que será verificado </param>
          /// <returns>True --> Caso sejam iguais.</returns>
          /// 
-        public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta, Etiqueta etiquetaLida)
+        public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta, EtiquetaVenda etiquetaLida)
         {
             //Verifica se os produtos são iguais
             switch (etiquetaLida.TipoEtiqueta)

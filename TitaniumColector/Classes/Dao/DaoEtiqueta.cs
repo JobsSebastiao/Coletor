@@ -5,6 +5,7 @@ using System.Text;
 using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlClient;
+using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes.Dao
 {
@@ -17,7 +18,7 @@ namespace TitaniumColector.Classes.Dao
            
         }
 
-        public void insertSequencia(List<Etiqueta> listEtiquetas)
+        public void insertSequencia(List<EtiquetaVenda> listEtiquetas)
         {
             try
             {

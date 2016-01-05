@@ -14,6 +14,7 @@ namespace TitaniumColector
         static void Main()
         {
             Application.Run(new frmLogin());
+            //Application.Run(new TitaniumColector.Classes.Testes.FrmTeste());
         }
     }
 }

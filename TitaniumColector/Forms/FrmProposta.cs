@@ -119,15 +119,14 @@ namespace TitaniumColector.Forms
                 if (inputText != "" && inputText != null)
                 {
 
-                    Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
-                    tipoEtiqueta = Leitor.validaInputValueEtiqueta 
+                    //Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
+                    Etiqueta.Tipo tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText,new EtiquetaVenda());
 
                     switch (tipoEtiqueta)
                     {
                         case Etiqueta.Tipo.INVALID:
 
                             inputText = string.Empty;
-                            //tbMensagem.Text = " Tipo de Etiqueta inválida!!!";
                             mostrarMensagem(enumCor.RED," Tipo de Etiqueta inválida!!!",enumCursor.DEFAULT);
                             break;
 
@@ -475,7 +474,7 @@ namespace TitaniumColector.Forms
                 //grava informações do item na base de dados mobile
                 daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
                 //inseri informações das etiquetas referente ao produto liberado em formato Xml
-                daoItemProposta.updateXmlItemProposta(Etiqueta.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+                daoItemProposta.updateXmlItemProposta(EtiquetaVenda.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
                
                 //carrega próximo item
                 if (ProcedimentosLiberacao.TotalItens > 0)
