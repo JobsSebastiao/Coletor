@@ -8,7 +8,7 @@ using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes 
 {
-    public class Etiqueta 
+    public class Etiqueta
     {
         
         //PROPRIEDADES EM COMUM ''
@@ -16,6 +16,7 @@ namespace TitaniumColector.Classes
         public string DescricaoProdutoEtiqueta { get; set; }
         public string PartnumberEtiqueta { get; set; }
         public String LoteEtiqueta { get; set; }
+
         //PROPRIEDADES DEVEM SER PASSADAS PARA A CLASSE ETIQUETAVENDA
         //public Int64 Ean13Etiqueta { get; set; }
         public Int32 SequenciaEtiqueta { get; set; }
@@ -377,40 +378,17 @@ namespace TitaniumColector.Classes
 
         public override bool Equals(object obj)
         {
-            return false;
+            
+             System.Type type = obj.GetType();
 
-            System.Type type = obj.GetType();
-
-            return (obj == null || (type != typeof(Etiqueta)))? false : true;
-
-            //if (obj == null || (type != typeof(Etiqueta)))
-            //{
-            //    return false;
-            //}
-            //return 
-            //else
-            //{
-            //    switch (((Etiqueta)obj).TipoEtiqueta)
-            //    {
-            //        case Tipo.QRCODE:
-
-            //            return (Ean13Etiqueta == ((Etiqueta)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
-
-            //        case Tipo.BARRAS:
-
-            //            return (Ean13Etiqueta == ((Etiqueta)obj).Ean13Etiqueta);
-
-            //        default:
-            //            return false;
-            //    }
-            //}
-
+             return (obj == null || (type.BaseType != typeof(Etiqueta)))? false : true;
         }
 
         //public override string ToString()
         //{
         //    return String.Format("PNUMBER:{0}|DESCRICAO:{1}|EAN13:{2}|LOTE:{3}|SEQ:{4}|QTD:{5}",PartnumberEtiqueta,DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta);
         //}
+
         public override string ToString()
         {
             return String.Format("PNUMBER:{0}|DESCRICAO:{1}|LOTE:{2}", PartnumberEtiqueta, DescricaoProdutoEtiqueta,LoteEtiqueta);
@@ -418,22 +396,9 @@ namespace TitaniumColector.Classes
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return this.SequenciaEtiqueta;
         }
-
-
-        ///// <summary>
-        ///// Detalha todas as informações sobre a etiqueta.
-        ///// </summary>
-        ///// <returns>texto com informações sobre a etiqueta.</returns>
-        //public String etiquetaFullDetail() 
-        //{
-        //    return String.Format("PartNumber:{0}|Descrição:{1}|Ean13:{2}|Lote:{3}|Sêquencia:{4}|Quantidade:{5}|Volumes:{6}|HoraValidação:{7}|TipoEtiqueta:{8}",
-        //                          PartnumberEtiqueta, DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta, VolumeEtiqueta, DataHoraValidacao, TipoEtiqueta);
-        //}
-
-
-    #endregion
-
     }
+
+    #endregion 
 }

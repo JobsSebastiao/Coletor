@@ -7,7 +7,7 @@ namespace TitaniumColector.Classes.Model
 {
     public class Leitor
     {
-        private Etiqueta objEtiqueta;
+        //private Etiqueta objEtiqueta;
 
         /// <summary>
         /// Valida se a etiqueta é de um tipo válido esperado.

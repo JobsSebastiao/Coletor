@@ -98,16 +98,17 @@
     <Compile Include="Classes\Model\Parametros.cs" />
     <Compile Include="Classes\Model\Permisssoes.cs" />
     <Compile Include="Classes\Interface\ICall.cs" />
-    <Compile Include="Classes\Testes\FrmTeste.cs">
+    <Compile Include="Forms\Testes\FrmTeste.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Classes\Testes\FrmTeste.Designer.cs">
+    <Compile Include="Forms\Testes\FrmTeste.Designer.cs">
       <DependentUpon>FrmTeste.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Testes\TestClass.cs" />
+    <Compile Include="Forms\Testes\TestClass.cs" />
     <Compile Include="Classes\Utility\ImageButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classes\Utility\ListViewItemComparer.cs" />
     <Compile Include="Forms\FrmAcao.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -119,6 +120,12 @@
     </Compile>
     <Compile Include="Forms\FrmAlocacao.Designer.cs">
       <DependentUpon>FrmAlocacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmInputAlocacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmInputAlocacao.Designer.cs">
+      <DependentUpon>FrmInputAlocacao.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FrmLogin.cs">
       <SubType>Form</SubType>
@@ -143,7 +150,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Classes\Testes\FrmTeste.resx">
+    <EmbeddedResource Include="Forms\Testes\FrmTeste.resx">
       <DependentUpon>FrmTeste.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -153,6 +160,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmAlocacao.resx">
       <DependentUpon>FrmAlocacao.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FrmInputAlocacao.resx">
+      <DependentUpon>FrmInputAlocacao.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FrmLogin.resx">

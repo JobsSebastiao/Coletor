@@ -428,4 +428,4 @@ namespace TitaniumColector.Classes.Model
 
       
     }  
-}
+} 

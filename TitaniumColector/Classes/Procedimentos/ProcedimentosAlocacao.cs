@@ -5,15 +5,19 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Utility;
 using TitaniumColector.Classes.Model;
+using TitaniumColector.Forms;
+using System.Drawing;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
     class ProcedimentosAlocacao
     {
-        private List<Etiqueta> listEtiquetas;
-        private List<Etiqueta> listEtiquetasAlocadas;
+        public List<Etiqueta> listEtiquetas { get; set; }
+        public  List<Etiqueta> listEtiquetasAlocadas { get; set; }
         private Etiqueta etiquetaProduto;
         private Array inputStringToEtiqueta;
+        //nao uso ainda
+        public Form FormPrincipal { get; set; }
 
     #region "SingleTon"
 
@@ -33,6 +37,7 @@ namespace TitaniumColector.Classes.Procedimentos
                 {
                     instancia = new ProcedimentosAlocacao();
                 }
+
                 return instancia;
             }
 
@@ -52,29 +57,62 @@ namespace TitaniumColector.Classes.Procedimentos
 
                 case Etiqueta.Tipo.QRCODE:
 
-                    //this.liberarItem(inputText, tipoEtiqueta);
                     //MONTA UM ARRAY DE STRING COM AS INFORMACOES PASSADAS NO INPUTTEXT
                     inputStringToEtiqueta = FileUtility.arrayOfTextFile(inputText, FileUtility.splitType.PIPE);
+                    //GERA UM OBJETO ETIQUETA DO TIPO QUE FOI PASSADO NO PRIMEIRO PÂRAMETRO 
                     etiquetaProduto = Leitor.gerarEtiqueta(new EtiquetaAlocacao(),inputStringToEtiqueta,tipoEtiqueta);
+                    //VALIDA A INCLUSÃO OU ALOCAÇÃO DA ETIQUETA;
+                    this.trabalhaEtiqueta(etiquetaProduto);
+
                     inputText = string.Empty;
                     break;
 
-                case Etiqueta.Tipo.BARRAS:
-                    inputText = string.Empty;
-                    mostrarMensagem("Não é possível validar etiqueta do tipo Codigo de Barras!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    break;
                 default:
 
                     inputText = string.Empty;
-                    mostrarMensagem("Não é possível validar etiqueta do tipo Codigo de Barras!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    mostrarMensagem("Não é possível validar a etiqueta lida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     break;
             }
         }
 
-        public static void mostrarMensagem(string mensagem,string caption,MessageBoxButtons msgButton,MessageBoxIcon msgIcon)
+        private void trabalhaEtiqueta(Etiqueta etiqueta) 
         {
-            MessageBox.Show(mensagem,caption,msgButton,msgIcon,MessageBoxDefaultButton.Button2);
+            if (!etiquetaJaValidada(etiqueta))
+            {
+                this.listEtiquetas.Add(etiqueta);
+            }
+            else 
+            {
+                FrmInputAlocacao frmInput = new FrmInputAlocacao();
+                frmInput.Show();
+            }
         }
 
+        /// <summary>
+        /// Verifica se a etiqueta já existe na lista de Etiquetas
+        /// </summary>
+        /// <param name="etiqueta">Etiqueta a ser validada</param>
+        /// <returns>true se ela existe.</returns>
+        private bool etiquetaJaValidada(Etiqueta etiqueta) 
+        {
+            foreach (var item in listEtiquetas )
+            {
+                if (item.Equals(etiqueta))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private void ordenarList(List<EtiquetaAlocacao> list) 
+        {
+            list.Sort();
+        }
+
+        public static void mostrarMensagem(string mensagem, string caption, MessageBoxButtons msgButton, MessageBoxIcon msgIcon)
+        {
+            MessageBox.Show(mensagem, caption, msgButton, msgIcon, MessageBoxDefaultButton.Button2);
+        }
     }
 }

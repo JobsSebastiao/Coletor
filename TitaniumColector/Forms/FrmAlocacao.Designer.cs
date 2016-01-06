@@ -111,6 +111,7 @@ namespace TitaniumColector.Forms
             this.listVolumes.Font = MainConfig.FontPadraoBold;
             this.listVolumes.Location = new System.Drawing.Point(MainConfig.intPositionX + 1, MainConfig.intPositionY + 1);
             this.listVolumes.View = System.Windows.Forms.View.Details;
+            
             //
             //Colunas ListVolumes
             //
@@ -131,12 +132,13 @@ namespace TitaniumColector.Forms
             this.Controls.Add(this.txtDescricaoTotal);
             this.Controls.Add(this.txtTotal);
             this.Controls.Add(this.btnSair);
-
             this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(FrmAlocacao_KeyPress);
+
         }
 
+        
         private System.Windows.Forms.ListView listVolumes;
-        //private System.Windows.Forms.ListViewItem listItem;
+        private System.Windows.Forms.ListViewItem listItem;
         private System.Windows.Forms.TextBox txtCabecalho;
         private System.Windows.Forms.TextBox txtDescricaoTotal;
         private System.Windows.Forms.TextBox txtTotal;

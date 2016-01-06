@@ -5,12 +5,17 @@ using System.Text;
 
 namespace TitaniumColector.Classes.Model
 {
-    class EtiquetaAlocacao : Etiqueta
+    class EtiquetaAlocacao : Etiqueta,IComparable
     {
-        private int codigoProduto { get; set; }
-        private int codigoItemAlocacao { get; set; }
-        private string LocaisLote { get; set; }
-        private string VolumeItemAlocacao { get; set; }
+        public int CodigoProduto { get; set; }
+        public int CodigoItemAlocacao { get; set; }
+        public int CodigoLocalAlocacao { get; set; }
+        public int CodigoLote { get; set; }
+        public string LocaisLote { get; set; }
+        public string VolumeItemAlocacao { get; set; }
+        public string LocalAlocacao { get; set; }
+        public string DescricaoCompletaProduto { get; set; }
+        public bool JaAlocado { get; set; }
 
         /// <summary>
         /// Valida informações do inputText no acionamento da "pistola"
@@ -113,15 +118,15 @@ namespace TitaniumColector.Classes.Model
 
                             if (strItem == "CODIGOITEM")
                             {
-                                this.codigoItemAlocacao = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                                this.CodigoItemAlocacao = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
                             }
                             else if (strItem == "CODIGOPRODUTO")
                             {
-                                this.codigoProduto = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                                this.CodigoProduto = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
                             }
                             else if (strItem == "CODIGOLOTE")
                             {
-                                base.LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                                this.CodigoLote = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
                             }
                             else if (strItem == "NOMELOTE")
                             {
@@ -143,6 +148,8 @@ namespace TitaniumColector.Classes.Model
                             {
                                 this.VolumeItemAlocacao = item.Substring(item.IndexOf(":", 0) + 1);
                             }
+
+                            this.DescricaoCompletaProduto = String.Format("{0}-{1}",base.PartnumberEtiqueta,base.DescricaoProdutoEtiqueta);
                         }
 
                         break;
@@ -168,30 +175,49 @@ namespace TitaniumColector.Classes.Model
         }
 
         public override bool Equals(object obj)
-        {
+        { 
             if (base.Equals(obj))
             {
-                switch (((EtiquetaVenda)obj).TipoEtiqueta)
+                switch (((EtiquetaAlocacao)obj).TipoEtiqueta)
                 {
                     case Tipo.QRCODE:
 
-                        return false; //(Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
-
-                    case Tipo.BARRAS:
-
-                        return false; //(Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta);
+                        return ( 
+                                    this.CodigoProduto == ((EtiquetaAlocacao)obj).CodigoProduto 
+                                 && this.CodigoItemAlocacao == ((EtiquetaAlocacao)obj).CodigoItemAlocacao 
+                                 && this.CodigoLote == ((EtiquetaAlocacao)obj).CodigoLote
+                                 && this.VolumeItemAlocacao == ((EtiquetaAlocacao)obj).VolumeItemAlocacao
+                                );
 
                     default:
                         return false;
                 }
             }
-
             return false;
         }
 
         public override int GetHashCode()
         {
-            return base.GetHashCode();
+            return this.LocaisLote.ToString().GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return string.Format("CodigoItem : {0}, Produto : {1} , Lote : {2}, Volume : {3}, Local Armazenagem : {4}"
+                            ,this.CodigoItemAlocacao,this.DescricaoCompletaProduto,base.LoteEtiqueta,this.VolumeItemAlocacao,this.LocalAlocacao);
+        }
+
+        #region IComparable Members
+
+        //Define os termos utilizado comparar e ordenar itens da classe.
+        public int CompareTo(object obj)
+        {
+            if (obj == null)
+                return 1;
+            else
+                return (this.LocaisLote.CompareTo(((EtiquetaAlocacao)obj).LocaisLote));
+        }
+
+        #endregion
     }
 }
