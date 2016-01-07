@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TitaniumColector.Classes.Model
 {
-    class EtiquetaAlocacao : Etiqueta,IComparable
+    public class EtiquetaAlocacao : Etiqueta,IComparable
     {
         public int CodigoProduto { get; set; }
         public int CodigoItemAlocacao { get; set; }

@@ -7,10 +7,11 @@ using TitaniumColector.Utility;
 using TitaniumColector.Classes.Model;
 using TitaniumColector.Forms;
 using System.Drawing;
+using System.IO;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
-    class ProcedimentosAlocacao
+    class ProcedimentosAlocacao : IDisposable
     {
         public List<Etiqueta> listEtiquetas { get; set; }
         public  List<Etiqueta> listEtiquetasAlocadas { get; set; }
@@ -83,7 +84,8 @@ namespace TitaniumColector.Classes.Procedimentos
             }
             else 
             {
-                FrmInputAlocacao frmInput = new FrmInputAlocacao();
+                this.FormPrincipal.Enabled = false;
+                FrmInputAlocacao frmInput = new FrmInputAlocacao((EtiquetaAlocacao)etiqueta,this.FormPrincipal);
                 frmInput.Show();
             }
         }
@@ -114,5 +116,52 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             MessageBox.Show(mensagem, caption, msgButton, msgIcon, MessageBoxDefaultButton.Button2);
         }
+
+        public void alocarProduto(EtiquetaAlocacao etiquetaAlocar) 
+        {
+            if (etiquetaAlocar.JaAlocado)
+            {
+                if(this.etiquetaJaValidada(etiquetaAlocar))
+                {
+                    this.listEtiquetasAlocadas.Add(etiquetaAlocar);
+                    this.listEtiquetas.Remove(etiquetaAlocar);
+                }
+            }
+        }
+
+    #region "Idisposable"
+
+        private Stream _resource;
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Use SupressFinalize in case a subclass
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // If you need thread safety, use a lock around these 
+            // operations, as well as in your methods that use the resource.
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (_resource != null)
+                        _resource.Dispose();
+                }
+
+                // Indicate that the instance has been disposed.
+                _resource = null;
+                _disposed = true;
+            }
+        }
+
+    #endregion
+
     }
 }
