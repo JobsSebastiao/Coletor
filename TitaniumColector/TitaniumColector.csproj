@@ -86,7 +86,6 @@
     <Compile Include="Classes\Model\EtiquetaAlocacao.cs" />
     <Compile Include="Classes\Model\EtiquetaVenda.cs" />
     <Compile Include="Classes\Model\Leitor.cs" />
-    <Compile Include="Classes\Model\ProdutoAlocacao.cs" />
     <Compile Include="Classes\Procedimentos\ProcedimentosAlocacao.cs" />
     <Compile Include="Classes\Procedimentos\ProcedimentosLiberacao.cs" />
     <Compile Include="Classes\Procedimentos\BaseMobile.cs" />

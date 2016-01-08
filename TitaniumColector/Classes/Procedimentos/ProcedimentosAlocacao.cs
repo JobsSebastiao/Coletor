@@ -8,17 +8,19 @@ using TitaniumColector.Classes.Model;
 using TitaniumColector.Forms;
 using System.Drawing;
 using System.IO;
+using System.Xml;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
     class ProcedimentosAlocacao : IDisposable
     {
-        public List<Etiqueta> listEtiquetas { get; set; }
-        public  List<Etiqueta> listEtiquetasAlocadas { get; set; }
+        public List<Etiqueta> ListEtiquetas { get; set; }
+        public  List<Etiqueta> ListEtiquetasAlocadas { get; set; }
+        public List<String> ListXmlProcedimento { get; set; }
         private Etiqueta etiquetaProduto;
         private Array inputStringToEtiqueta;
-        //nao uso ainda
         public Form FormPrincipal { get; set; }
+        
 
     #region "SingleTon"
 
@@ -26,8 +28,9 @@ namespace TitaniumColector.Classes.Procedimentos
 
         private ProcedimentosAlocacao() 
         {
-            listEtiquetas = new List<Etiqueta>();
-            listEtiquetasAlocadas = new List<Etiqueta>();
+            ListEtiquetas = new List<Etiqueta>();
+            ListEtiquetasAlocadas = new List<Etiqueta>();
+            ListXmlProcedimento = new List<string>();
         }
 
         public static ProcedimentosAlocacao Instanciar
@@ -38,13 +41,21 @@ namespace TitaniumColector.Classes.Procedimentos
                 {
                     instancia = new ProcedimentosAlocacao();
                 }
-
                 return instancia;
             }
-
         }
 
      #endregion
+
+        public void clear() 
+        {
+            this.ListEtiquetas = new List<Etiqueta>();
+            this.ListXmlProcedimento = new List<string>();
+            this.ListEtiquetasAlocadas = new List<Etiqueta>();
+            this.etiquetaProduto = null;
+            this.inputStringToEtiqueta = null;
+            this.FormPrincipal = null;
+        }
 
         public void realizarAcao(string inputText,Etiqueta.Tipo tipoEtiqueta)
         {
@@ -78,16 +89,41 @@ namespace TitaniumColector.Classes.Procedimentos
 
         private void trabalhaEtiqueta(Etiqueta etiqueta) 
         {
-            if (!etiquetaJaValidada(etiqueta))
+
+            try
             {
-                this.listEtiquetas.Add(etiqueta);
+                if (etiquetaJaAlocada(etiqueta))
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (!etiquetaJaValidada(etiqueta))
+                {
+                    this.ListEtiquetas.Add(etiqueta);
+                }
+                else
+                {
+                    if (!etiquetaJaAlocada(etiqueta))
+                    {
+                        this.FormPrincipal.Enabled = false;
+                        FrmInputAlocacao frmInput = new FrmInputAlocacao((EtiquetaAlocacao)etiqueta, this.FormPrincipal);
+                        frmInput.Show();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException();  
+                    }
+                }
             }
-            else 
+            catch( InvalidOperationException)
             {
-                this.FormPrincipal.Enabled = false;
-                FrmInputAlocacao frmInput = new FrmInputAlocacao((EtiquetaAlocacao)etiqueta,this.FormPrincipal);
-                frmInput.Show();
+                mostrarMensagem("Volume já alocado!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+            catch (Exception)
+            {   
+                throw;
+            }
+            
         }
 
         /// <summary>
@@ -97,7 +133,19 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <returns>true se ela existe.</returns>
         private bool etiquetaJaValidada(Etiqueta etiqueta) 
         {
-            foreach (var item in listEtiquetas )
+            foreach (var item in ListEtiquetas )
+            {
+                if (item.Equals(etiqueta))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool etiquetaJaAlocada(Etiqueta etiqueta)
+        {
+            foreach (var item in ListEtiquetasAlocadas)
             {
                 if (item.Equals(etiqueta))
                 {
@@ -112,11 +160,6 @@ namespace TitaniumColector.Classes.Procedimentos
             list.Sort();
         }
 
-        public static void mostrarMensagem(string mensagem, string caption, MessageBoxButtons msgButton, MessageBoxIcon msgIcon)
-        {
-            MessageBox.Show(mensagem, caption, msgButton, msgIcon, MessageBoxDefaultButton.Button2);
-        }
-
         public void alocarProduto(EtiquetaAlocacao etiquetaAlocar) 
         {
             if (etiquetaAlocar.JaAlocado)
@@ -124,8 +167,8 @@ namespace TitaniumColector.Classes.Procedimentos
                 if(this.etiquetaJaValidada(etiquetaAlocar))
                 {
                     etiquetaAlocar.montarXmlEtiqueta();
-                    this.listEtiquetasAlocadas.Add(etiquetaAlocar);
-                    this.listEtiquetas.Remove(etiquetaAlocar);
+                    this.ListEtiquetasAlocadas.Add(etiquetaAlocar);
+                    this.ListEtiquetas.Remove(etiquetaAlocar);
                 }
             }
         }
@@ -133,6 +176,101 @@ namespace TitaniumColector.Classes.Procedimentos
         public void atualizarListView() 
         {
             FrmAlocacao.carregarListEmbalagens();
+        }
+
+        public static void mostrarMensagem(string mensagem, string caption, MessageBoxButtons msgButton, MessageBoxIcon msgIcon)
+        {
+            MessageBox.Show(mensagem, caption, msgButton, msgIcon, MessageBoxDefaultButton.Button2);
+        }
+
+        public void montarXmlProcedimento() 
+        {
+            var trabalhadoItem = 0;
+            this.ListXmlProcedimento = new List<string>();
+
+            foreach (EtiquetaAlocacao item in ListEtiquetasAlocadas)
+            { 
+                if (trabalhadoItem != item.CodigoItemAlocacao) 
+                {
+                    trabalhadoItem = item.CodigoItemAlocacao;
+
+                    //apenas realizo um cast para List<EtiquetaAlocacao>
+                    List<EtiquetaAlocacao> list = ListEtiquetasAlocadas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>();
+
+
+                    //Seleciono apenas os itens que possuem o CODIGO DO ITEM a ser trabalhado
+                    var itemSelecionado = from c in list
+                                          where c.CodigoItemAlocacao == trabalhadoItem
+                                          orderby c.VolumeItemAlocacao
+                                          select c;
+
+                    //MONTAGEM XML
+                    //Inicia o processo para montagem da string de Xml do Item do pedido
+                    System.IO.StringWriter str = new System.IO.StringWriter();
+                    //Variável que irá receber o Xml na forma de String.
+                    XmlTextWriter writer = new XmlTextWriter(str);
+                    //inicia o documento xml
+                    writer.WriteStartDocument();
+                    //define a indentação do arquivo
+                    writer.Formatting = Formatting.Indented;
+                    //
+
+                    var count = 0;
+                    //trabalho as informações nescessárias para montar  a string  Xml;
+                    foreach (var itens in itemSelecionado)
+                    {
+
+                        if (count == 0) 
+                        {
+                            //Escreve o elemento raiz
+                            writer.WriteStartElement("ItemPedido");
+                            //Escrever o atributo para o Elemento Raiz CodigoItemPedido
+                            writer.WriteAttributeString("ID", itens.CodigoItemAlocacao.ToString());
+
+                            //Escreve o elemento raiz Produto Pedido
+                            writer.WriteStartElement("prodPedido");
+                            //escrever o atributo para o Elemento Raiz Produto Pedido
+                            writer.WriteAttributeString("ID", itens.CodigoProduto.ToString());
+                            writer.WriteAttributeString("DESCRICAO", itens.DescricaoCompletaProduto.ToString());
+
+                            //Escreve o elemento raiz Usuario Liberacao
+                            writer.WriteStartElement("idUsuarioLiberacao");
+                            //escrever o atributo para o Elemento Usuario Liberacao
+                            writer.WriteAttributeString("ID", itens.UsuarioAlocacao.Codigo.ToString());
+
+                            //Escreve Elemento Raiz Informações 
+                            writer.WriteStartElement("Inf");
+                        }
+
+                        //Escreve o elemento raiz Volumes
+                        writer.WriteStartElement("volume");
+                        //Escreve atributos Do Elelmento Volume
+                        writer.WriteAttributeString("ID", itens.VolumeItemAlocacao.ToString());
+
+                        //Escreve elementos entre a tag inf
+                        //informações do item do pedido
+                        writer.WriteElementString("idLote", itens.CodigoLote.ToString());
+                        writer.WriteElementString("descLote", itens.LoteEtiqueta.ToString());
+                        writer.WriteElementString("idLocalAlocacao", itens.CodigoLocalAlocacao.ToString());
+                        writer.WriteElementString("descLocalAlocacao", itens.LocalAlocacao.ToString());
+                        
+                        writer.WriteElementString("datahoraLiberacao", itens.MomentoAlocacao.ToString());
+
+                        //Encerra o elemento Volumes
+                        writer.WriteEndElement();
+                        
+                        count++;
+                    }
+
+                    //Encerra o elemento Inf
+                    writer.WriteEndElement();
+
+                    //Encerra o elemento Item
+                    writer.WriteEndDocument();
+
+                    this.ListXmlProcedimento.Add(str.ToString().Replace("\r\n", "").Remove(0, 39));
+                }
+            }
         }
 
     #region "Idisposable"

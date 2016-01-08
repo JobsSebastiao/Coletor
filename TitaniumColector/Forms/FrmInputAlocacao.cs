@@ -13,6 +13,7 @@ namespace TitaniumColector.Forms
 {
     public partial class FrmInputAlocacao : Form
     {
+        //PROPRIEDADES
         public EtiquetaAlocacao EtiquetaAlocar { get; set; }
         public Form FormChamador { get; set; }
         private string InputText{get;set;}
@@ -40,15 +41,6 @@ namespace TitaniumColector.Forms
             this.EtiquetaAlocar = (EtiquetaAlocacao)etiqueta;
             preencherForm();
             return this.EtiquetaAlocar;
-        }
-
-        private void preencherForm()
-        {
-            this.lbDescricaoProduto.Text = this.EtiquetaAlocar.DescricaoCompletaProduto.ToString();
-            this.lbDescricaoLote.Text = this.EtiquetaAlocar.LoteEtiqueta.ToString();
-            this.tbLocalSugerido.Text = this.EtiquetaAlocar.LocaisLote.ToString();
-            this.tbLocalAlocacao.Text = "     ";
-            this.tbLocalAlocacao.Enabled = false;
         }
 
         void FrmInputAlocacao_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -97,6 +89,15 @@ namespace TitaniumColector.Forms
             }
         }
 
+        private void preencherForm()
+        {
+            this.lbDescricaoProduto.Text = this.EtiquetaAlocar.DescricaoCompletaProduto.ToString();
+            this.lbDescricaoLote.Text = this.EtiquetaAlocar.LoteEtiqueta.ToString();
+            this.tbLocalSugerido.Text = this.EtiquetaAlocar.LocaisLote.ToString();
+            this.tbLocalAlocacao.Text = "     ";
+            this.tbLocalAlocacao.Enabled = false;
+        }
+
         private bool validaInputValue(string inputText) 
         {
             if (inputText.StartsWith("CODIGO:"))
@@ -143,6 +144,8 @@ namespace TitaniumColector.Forms
             this.EtiquetaAlocar.CodigoLocalAlocacao = this.CodigoLocalEtiqueta;
             this.EtiquetaAlocar.LocalAlocacao = this.LocalEtiqueta;
             this.EtiquetaAlocar.JaAlocado = true;
+            this.EtiquetaAlocar.UsuarioAlocacao = MainConfig.UserOn;
+            this.EtiquetaAlocar.DataHoraValidacao = DateTime.Now;
         }
 
         private void btCancel_Click(object sender, EventArgs e)

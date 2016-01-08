@@ -96,7 +96,7 @@ namespace TitaniumColector.Forms
             txtTotal.ReadOnly = true;
             txtTotal.TabStop = false;
             txtTotal.BackColor = Color.White;
-            txtTotal.Text = "00000";
+            txtTotal.Text = "  0000";
             //
             // Button Sair
             //             
@@ -116,7 +116,7 @@ namespace TitaniumColector.Forms
             this.btnFinalizar.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnFinalizar.Size = new System.Drawing.Size(75, 30);
             this.btnFinalizar.Location = new System.Drawing.Point(txtDescricaoTotal.Location.X, btnSair.Location.Y);
-            this.btnFinalizar.Click += new System.EventHandler(btnSair_Click);
+            this.btnFinalizar.Click += new System.EventHandler(btnFinalizar_Click); 
             //
             // Total Alocado :
             //
@@ -134,7 +134,7 @@ namespace TitaniumColector.Forms
             fontStringSize = MainConfig.sizeStringEmPixel(lbQtdTotalAlocado.Text, lbQtdTotalAlocado.Font);
             lbQtdTotalAlocado.Size = new Size((int)this.fontStringSize.Width, (int)this.fontStringSize.Height);
             lbQtdTotalAlocado.Location = new Point(this.Width/2 - (lbQtdTotalAlocado.Size.Width/2) , this.lbTotalAlocado.Location.Y + this.lbTotalAlocado.Size.Height + 5 );
-            lbQtdTotalAlocado.Text = " 099 ";
+            lbQtdTotalAlocado.Text = " 000 ";
             //
             // ListVolumes
             //

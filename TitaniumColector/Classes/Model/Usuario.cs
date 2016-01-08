@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TitaniumColector.Classes
 {
-    class Usuario
+    public class Usuario
     {
         private int intCodigo;
         private int intPasta;

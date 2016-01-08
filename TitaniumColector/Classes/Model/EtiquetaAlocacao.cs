@@ -17,6 +17,8 @@ namespace TitaniumColector.Classes.Model
         public string LocalAlocacao { get; set; } 
         public string DescricaoCompletaProduto { get; set; }
         public bool JaAlocado { get; set; }
+        public DateTime MomentoAlocacao { get; set; }
+        public Usuario UsuarioAlocacao { get; set; }
         
         /// <summary>
         /// Valida informações do inputText no acionamento da "pistola"
@@ -215,7 +217,7 @@ namespace TitaniumColector.Classes.Model
                 //Encerra o elemento Item
                 writer.WriteEndDocument();
 
-                base.Xml = str.ToString().Replace("\r\n", "").Remove(0,39);
+                base.Xml = str.ToString().Remove(0, 39).Replace("\r\n", "").Replace(" ", "");
 
                 // O resultado é uma string.
                 return result = this.Xml;

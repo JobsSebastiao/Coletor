@@ -39,12 +39,11 @@ namespace TitaniumColector.Forms
                         //CRIAR OU RECUPERA A INSTANCIA PARA UM OBJETO PROCEDIMENTALOCACAO (USO DE SINGLETON)
                         procedimentos = ProcedimentosAlocacao.Instanciar;
                         procedimentos.FormPrincipal = this;
-
                         //VALIDA O TIPO DE ETIQUETA
                         Etiqueta.Tipo tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText, new EtiquetaAlocacao());
                         //INICIA O PROCEDIMENTO
                         procedimentos.realizarAcao(inputText, tipoEtiqueta);
-                        carregarListEmbalagens(procedimentos.listEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>());
+                        carregarListEmbalagens(procedimentos.ListEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>());
                         inputText = "";
                     }
                 }
@@ -61,10 +60,21 @@ namespace TitaniumColector.Forms
 
         private void btnSair_Click(object sender, System.EventArgs e)
         {
+            procedimentos.clear();
+            FrmAlocacao.TotalVolumes = 0;
+            FrmAlocacao.TotalVolumesAlocados = 0;
             this.Close();
             this.Dispose(true);
             FrmAcao frm = new FrmAcao();
             frm.Show();
+        }
+
+        private void btnFinalizar_Click(object sender,System.EventArgs e) 
+        {
+            //CRIAR OU RECUPERA A INSTANCIA PARA UM OBJETO PROCEDIMENTALOCACAO (USO DE SINGLETON)
+            procedimentos = ProcedimentosAlocacao.Instanciar;
+            procedimentos.FormPrincipal = this;
+            procedimentos.montarXmlProcedimento();
         }
 
         /// <summary>
@@ -74,9 +84,9 @@ namespace TitaniumColector.Forms
         {
             listVolumes.Items.Clear();
             //Ordena baseado no metodo CompareTo da classe 
-            ProcedimentosAlocacao.Instanciar.listEtiquetas.Sort();
+            ProcedimentosAlocacao.Instanciar.ListEtiquetas.Sort();
             //carrega o listview com as informações carregadas do banco de dados.
-            foreach (var item in ProcedimentosAlocacao.Instanciar.listEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>())
+            foreach (var item in ProcedimentosAlocacao.Instanciar.ListEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>())
             {
                 CultureInfo ptBr = CultureInfo.CreateSpecificCulture("pt-BR");
                 //string peso = string.Format(item.Peso.ToString("00.000", ptBr));
@@ -129,7 +139,7 @@ namespace TitaniumColector.Forms
 
         public static int TotalVolumesAlocados
         {
-            get { return ProcedimentosAlocacao.Instanciar.listEtiquetasAlocadas.Count; }
+            get { return ProcedimentosAlocacao.Instanciar.ListEtiquetasAlocadas.Count; }
             private set { totalVolumesAlocados = value; }
         }
 
