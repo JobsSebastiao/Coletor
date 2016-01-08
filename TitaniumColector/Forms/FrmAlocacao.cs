@@ -18,7 +18,8 @@ namespace TitaniumColector.Forms
     {
         private string inputText;
         private ProcedimentosAlocacao procedimentos;
-        private int totalVolumes;
+        private static int totalVolumes;
+        private static int totalVolumesAlocados;
 
         public FrmAlocacao()
         {
@@ -69,7 +70,33 @@ namespace TitaniumColector.Forms
         /// <summary>
         /// Carrega a listView de etiquetas lidas
         /// </summary>
-        public void carregarListEmbalagens(List<EtiquetaAlocacao> listEtiquetas)
+        public static void carregarListEmbalagens()
+        {
+            listVolumes.Items.Clear();
+            //Ordena baseado no metodo CompareTo da classe 
+            ProcedimentosAlocacao.Instanciar.listEtiquetas.Sort();
+            //carrega o listview com as informações carregadas do banco de dados.
+            foreach (var item in ProcedimentosAlocacao.Instanciar.listEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>())
+            {
+                CultureInfo ptBr = CultureInfo.CreateSpecificCulture("pt-BR");
+                //string peso = string.Format(item.Peso.ToString("00.000", ptBr));
+
+                listItem = new System.Windows.Forms.ListViewItem();
+                listItem.Tag = item.CodigoItemAlocacao.ToString();
+                listItem.Text = item.CodigoItemAlocacao.ToString(); item.LocaisLote.ToString();
+                listItem.SubItems.Add(item.LocaisLote.ToString());
+                listItem.SubItems.Add(item.DescricaoCompletaProduto.ToString());
+                listItem.SubItems.Add(item.VolumeItemAlocacao.ToString());
+                listItem.SubItems.Add(item.LoteEtiqueta.ToString());
+                listVolumes.Items.Add(listItem);
+            }
+
+            txtTotal.Text = TotalVolumes.ToString(" 0000", CultureInfo.CreateSpecificCulture("pt-BR"));
+            lbQtdTotalAlocado.Text = TotalVolumesAlocados.ToString(" 000", CultureInfo.CreateSpecificCulture("pt-BR"));
+            
+        }
+
+        public static void carregarListEmbalagens(List<EtiquetaAlocacao> listEtiquetas)
         {
             listVolumes.Items.Clear();
             //Ordena baseado no metodo CompareTo da classe 
@@ -90,14 +117,22 @@ namespace TitaniumColector.Forms
                 listVolumes.Items.Add(listItem);
             }
 
-            txtTotal.Text = TotalVolumes.ToString();
+            txtTotal.Text = TotalVolumes.ToString(" 0000", CultureInfo.CreateSpecificCulture("pt-BR"));
+            lbQtdTotalAlocado.Text = TotalVolumesAlocados.ToString(" 000",CultureInfo.CreateSpecificCulture("pt-BR"));
         }
 
-        public int TotalVolumes
+        public static int TotalVolumes
         {
             get { return listVolumes.Items.Count; }
             private set { totalVolumes = value; }
         }
+
+        public static int TotalVolumesAlocados
+        {
+            get { return ProcedimentosAlocacao.Instanciar.listEtiquetasAlocadas.Count; }
+            private set { totalVolumesAlocados = value; }
+        }
+
 
     }
 }

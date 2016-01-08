@@ -16,6 +16,7 @@ namespace TitaniumColector.Classes
         public string DescricaoProdutoEtiqueta { get; set; }
         public string PartnumberEtiqueta { get; set; }
         public String LoteEtiqueta { get; set; }
+        public string Xml { get; protected set; }
 
         //PROPRIEDADES DEVEM SER PASSADAS PARA A CLASSE ETIQUETAVENDA
         //public Int64 Ean13Etiqueta { get; set; }
@@ -237,6 +238,7 @@ namespace TitaniumColector.Classes
         public virtual Etiqueta.Tipo validaInputValueEtiqueta(String inputValue) { return Tipo.INVALID;}
         public virtual void realizaAcao(string inputText,Etiqueta.Tipo tipoEtiqueta){}
         public virtual Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta) { return new Etiqueta(); }
+        public virtual string montarXmlEtiqueta(){ return null;}
 
         /// <summary>
         /// Verifica se já existe um determinado Objeto Etiqueta em um list.
@@ -324,9 +326,10 @@ namespace TitaniumColector.Classes
         ///           --Para se trabalhar com uma lista que possua informações de mais de um item é nescessário alterção do código ou 
         ///           criação de outro método mais  apropriado.
         /// </remarks>
-        public static String gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
+        public static string gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
         {
-            String result = "";
+            string result = "";
+
             try
             {
                 System.IO.StringWriter str = new System.IO.StringWriter();

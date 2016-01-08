@@ -155,6 +155,7 @@ namespace TitaniumColector.Forms
             using (TitaniumColector.Classes.Procedimentos.ProcedimentosAlocacao procedimentos = TitaniumColector.Classes.Procedimentos.ProcedimentosAlocacao.Instanciar) 
             {
                 procedimentos.alocarProduto(this.EtiquetaAlocar);
+                procedimentos.atualizarListView();
             }
         }
 

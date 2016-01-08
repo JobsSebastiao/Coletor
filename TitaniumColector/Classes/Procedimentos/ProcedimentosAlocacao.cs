@@ -123,10 +123,16 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 if(this.etiquetaJaValidada(etiquetaAlocar))
                 {
+                    etiquetaAlocar.montarXmlEtiqueta();
                     this.listEtiquetasAlocadas.Add(etiquetaAlocar);
                     this.listEtiquetas.Remove(etiquetaAlocar);
                 }
             }
+        }
+
+        public void atualizarListView() 
+        {
+            FrmAlocacao.carregarListEmbalagens();
         }
 
     #region "Idisposable"

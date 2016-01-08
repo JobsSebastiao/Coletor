@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
+using System.Xml;
 
 namespace TitaniumColector.Classes.Model
 {
@@ -13,10 +14,10 @@ namespace TitaniumColector.Classes.Model
         public int CodigoLote { get; set; }
         public string LocaisLote { get; set; }
         public string VolumeItemAlocacao { get; set; }
-        public string LocalAlocacao { get; set; }
+        public string LocalAlocacao { get; set; } 
         public string DescricaoCompletaProduto { get; set; }
         public bool JaAlocado { get; set; }
-
+        
         /// <summary>
         /// Valida informações do inputText no acionamento da "pistola"
         /// </summary>
@@ -172,6 +173,58 @@ namespace TitaniumColector.Classes.Model
         public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
         {
             return new EtiquetaAlocacao( arrayEtiqueta,  tipoEtiqueta);
+        }
+
+        public override string montarXmlEtiqueta()
+        {
+            string result = "";
+
+            try
+            {
+                System.IO.StringWriter str = new System.IO.StringWriter();
+
+                //Variável que irá receber o Xml na forma de String.
+                XmlTextWriter writer = new XmlTextWriter(str);
+
+                //inicia o documento xml
+                writer.WriteStartDocument();
+
+                //define a indentação do arquivo
+                writer.Formatting = Formatting.Indented;
+
+                //escreve o elemento raiz
+                writer.WriteStartElement("ItemPedido");
+                //escrever o atributo para o Elemento Raiz Item
+                //Escreve atributos codigoItemPedido
+                writer.WriteAttributeString("ID", this.CodigoItemAlocacao.ToString());
+
+                //Elemento Raiz Seq
+                writer.WriteStartElement("Inf");
+                //Escreve elemento entre a tag inf
+                writer.WriteElementString("idProduto", this.CodigoProduto.ToString());
+                writer.WriteElementString("partnumberProd", this.PartnumberEtiqueta.ToString());
+                writer.WriteElementString("descricaoProd", this.DescricaoProdutoEtiqueta.ToString());
+                writer.WriteElementString("idLote", this.CodigoLote.ToString());
+                writer.WriteElementString("descLote", this.LoteEtiqueta.ToString());
+                writer.WriteElementString("idLocalAlocacao", this.CodigoLocalAlocacao.ToString());
+                writer.WriteElementString("descLocalAlocacao", this.LocalAlocacao.ToString());
+                writer.WriteElementString("volumeSeparacao", this.VolumeItemAlocacao.ToString());
+                //Encerra o elemento Seq
+                writer.WriteEndElement();
+            
+                //Encerra o elemento Item
+                writer.WriteEndDocument();
+
+                base.Xml = str.ToString().Replace("\r\n", "").Remove(0,39);
+
+                // O resultado é uma string.
+                return result = this.Xml;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public override bool Equals(object obj)
