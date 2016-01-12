@@ -50,6 +50,5 @@ namespace TitaniumColector.Classes.Dao
 
         }
 
-
     }
 }

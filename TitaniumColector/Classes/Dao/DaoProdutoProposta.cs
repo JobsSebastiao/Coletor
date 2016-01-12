@@ -38,8 +38,8 @@ namespace TitaniumColector.Classes.Dao
                 sql01.Append(" produtoRESERVA AS codigoPRODUTO,");
                 sql01.Append(" nomePRODUTO,partnumberPRODUTO,ean13PRODUTO,");
                 sql01.Append(" SUM(quantidadeRESERVA) AS QtdITEMRESERVA,pesobrutoPRODUTO");
-                sql01.Append(" ,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA,");
-                sql01.Append(" DBO.fn1211_LocaisLoteProduto(produtoRESERVA,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA)) AS nomesLocaisLOTES ");
+                sql01.Append(" ,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA) AS lotesRESERVA");
+                sql01.Append(" ,dbo.fn1211_LocaisLoteProduto(produtoRESERVA,dbo.fn1211_LotesReservaProduto(produtoRESERVA,propostaITEMPROPOSTA)) AS nomesLocaisLOTES ");
                 sql01.Append(" FROM tb1206_Reservas (NOLOCK) ");
                 sql01.Append(" INNER JOIN tb1602_Itens_Proposta (NOLOCK) ON codigoITEMPROPOSTA = docRESERVA ");
                 sql01.Append(" INNER JOIN tb0501_Produtos (NOLOCK) ON produtoITEMPROPOSTA = codigoPRODUTO  ");

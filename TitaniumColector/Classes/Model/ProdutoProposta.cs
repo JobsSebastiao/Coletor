@@ -40,8 +40,20 @@ namespace TitaniumColector.Classes
         /// <param name="strPartnumber"></param>
         /// <param name="strDescricao"></param>
         /// <param name="peso"></param>
-        public ProdutoProposta(Int32 intCodigoItemProposta, Int32 intPropostaItemProposta, Double dblQuantidade, statusSeparado isSeparado, String strLotesReserva, String strNomesLocaisItem
-        , Int32 intCodigoProduto, String strEan13, String strPartnumber, String strDescricao, Double peso)
+        public ProdutoProposta
+            (
+                  Int32 intCodigoItemProposta
+                , Int32 intPropostaItemProposta
+                , double dblQuantidade
+                , statusSeparado isSeparado
+                , string strLotesReserva
+                , string strNomesLocaisItem
+                , Int32 intCodigoProduto
+                , string strEan13
+                , string strPartnumber
+                , string strDescricao
+                , double peso
+            )
             : base(intCodigoProduto, strEan13, strPartnumber, strDescricao, peso)
         {
             this.CodigoItemProposta = intCodigoItemProposta;

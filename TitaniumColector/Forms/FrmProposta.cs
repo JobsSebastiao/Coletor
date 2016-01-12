@@ -22,7 +22,7 @@ namespace TitaniumColector.Forms
         private Proposta objProposta;
         private BaseMobile objTransacoes;
         private String inputText;
-        private Parametros paramValidarSequencia;
+        private Parametro paramValidarSequencia;
         private List<String> listInfoProposta;
 
         //OBJETOS DAO
@@ -281,8 +281,8 @@ namespace TitaniumColector.Forms
                 ProcedimentosLiberacao.interromperLiberacao(objProposta);
                 daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
                 StringBuilder strBuilder = new StringBuilder();
-                strBuilder.Append("Ocorreram problemas durante a carga de dados para a Base Mobile \n");
-                strBuilder.AppendFormat("Error : {0}", ex.Message);
+                strBuilder.Append("O procedimento não pode ser concluído.\n");
+                strBuilder.AppendFormat(" Descrição: {0}", ex.Message);
                 strBuilder.Append("\nContate o Administrador do sistema.");
                 this.exitOnError(strBuilder.ToString(), "SqlException!!",false);
             }
@@ -474,7 +474,13 @@ namespace TitaniumColector.Forms
                 //grava informações do item na base de dados mobile
                 daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
                 //inseri informações das etiquetas referente ao produto liberado em formato Xml
-                daoItemProposta.updateXmlItemProposta(EtiquetaVenda.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+
+                using (var etiqueta = new EtiquetaVenda()) 
+                {
+                    daoItemProposta.updateXmlItemProposta(etiqueta.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+                }
+
+                //daoItemProposta.updateXmlItemProposta(EtiquetaVenda.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
                
                 //carrega próximo item
                 if (ProcedimentosLiberacao.TotalItens > 0)

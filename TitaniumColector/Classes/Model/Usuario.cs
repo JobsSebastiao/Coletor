@@ -1,19 +1,23 @@
 ﻿using System;
 using TitaniumColector.SqlServer;
 using System.Text;
+using TitaniumColector.Classes.Model;
+using System.Collections.Generic;
+using TitaniumColector.Classes.Utility;
 
 namespace TitaniumColector.Classes
 {
     public class Usuario
     {
-        private int intCodigo;
-        private int intPasta;
-        private string strNome;
-        private string strSenha;
-        private string strNomeCompleto;
-        private statusUsuario enumStatusUsuario;
-        private statusLogin enumStatusLogin;
-        private StringBuilder sql01;
+        public int Codigo { get; set; }
+        public int Pasta { get; set; }
+        public string Nome { get; set; }
+        public string Senha { get; set; }
+        public string NomeCompleto { get; set; }
+        public statusUsuario StatusUsuario { get; set; }
+        public statusLogin StatusLogin { get; set; }
+        public StringBuilder Sql01 { get; set; }
+        public IList<Permissao> Permissoes { get; set; }
 
     #region "ENUMS" 
 
@@ -23,7 +27,7 @@ namespace TitaniumColector.Classes
 
     #endregion
 
-    #region "GETS E SETS"
+    #region "Contrutores"
 
         public Usuario()
         {
@@ -50,111 +54,6 @@ namespace TitaniumColector.Classes
             StatusUsuario = user.StatusUsuario;
             StatusLogin = user.StatusLogin;
         }
-
-        public int Codigo
-        {
-            get
-            {
-                return this.intCodigo;
-            }
-
-            set
-            {
-
-                if ((value != this.intCodigo))
-                {
-                    intCodigo = value;
-                }
-
-            }
-        }
-
-        public int Pasta
-        {
-            get
-            {
-                return intPasta;
-            }
-
-            set
-            {
-                if ((value != this.intPasta))
-                {
-                    intPasta = value;
-                }
-            }
-        }
-
-        public string Nome
-        {
-            get
-            {
-                return strNome;
-            }
-
-            set
-            {
-                if ((value != null))
-                {
-                    strNome = value.Trim();
-                }
-            }
-        }
-
-        public string Senha
-        {
-            get
-            {
-                return strSenha;
-            }
-
-            set
-            {
-                if ((value != null))
-                {
-                    strSenha = value.Trim();
-                }
-            }
-        }
-
-        public string NomeCompleto
-        {
-
-            get { return strNomeCompleto; }
-
-            set
-            {
-                if ((value != null))
-                {
-                    strNomeCompleto = value.Trim();
-                }
-            }
-        }
-
-        internal statusLogin StatusLogin
-        {
-            get
-            {
-                return enumStatusLogin;
-            }
-            set
-            {
-                enumStatusLogin = value;
-            }
-        }
-
-        internal statusUsuario StatusUsuario
-        {
-            get
-            {
-                return enumStatusUsuario;
-            }
-            set
-            {
-                enumStatusUsuario = value;
-            }
-        }
-
 
     #endregion
 
@@ -279,33 +178,33 @@ namespace TitaniumColector.Classes
 
             MainConfig.UsuarioLogado = user.Nome;
             MainConfig.CodigoUsuarioLogado = user.Codigo;
-            sql01 = new StringBuilder();
+            Sql01 = new StringBuilder();
 
             switch (tipodeAcao)
             {
                 case statusLogin.LOGADO:
-                    sql01.Length = 0;
+                    Sql01.Length = 0;
                     //Insere o acesso e inicia a transação
-                    sql01.Append("INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)");
-                    sql01.Append(" VALUES (" + user.Codigo + ",'" + MainConfig.HostName + "')");
-                    SqlServerConn.execCommandSql(sql01.ToString());
+                    Sql01.Append("INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)");
+                    Sql01.Append(" VALUES (" + user.Codigo + ",'" + MainConfig.HostName + "')");
+                    SqlServerConn.execCommandSql(Sql01.ToString());
                     break;
                 case statusLogin.NAOLOGADO:
-                    sql01.Length = 0;
-                    sql01.Append("UPDATE tb0207_Acessos");
-                    sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
-                    sql01.AppendFormat(" WHERE codigoACESSO = {0}",MainConfig.CodigoAcesso);
-                    SqlServerConn.execCommandSql(sql01.ToString());
+                    Sql01.Length = 0;
+                    Sql01.Append("UPDATE tb0207_Acessos");
+                    Sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
+                    Sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.CodigoAcesso);
+                    SqlServerConn.execCommandSql(Sql01.ToString());
                     return 0;
                 default:
                     break;
             }
 
             //Recupera o código do acesso
-            sql01.Length = 0;
-            sql01.Append("SELECT MAX(codigoACESSO) AS novoACESSO");
-            sql01.Append(" FROM tb0207_Acessos");
-            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
+            Sql01.Length = 0;
+            Sql01.Append("SELECT MAX(codigoACESSO) AS novoACESSO");
+            Sql01.Append(" FROM tb0207_Acessos");
+            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(Sql01.ToString());
             if ((dr.FieldCount > 0))
             {
                 while ((dr.Read()))
@@ -328,23 +227,23 @@ namespace TitaniumColector.Classes
 
             MainConfig.UsuarioLogado = this.Nome;
             MainConfig.CodigoUsuarioLogado = this.Codigo;
-            sql01 = new StringBuilder();
+            Sql01 = new StringBuilder();
 
             switch (tipodeAcao)
             {
                 case statusLogin.LOGADO:
-                    sql01.Length = 0;
+                    Sql01.Length = 0;
                     //Insere o acesso e inicia a transação
-                    sql01.Append("INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)");
-                    sql01.Append(" VALUES (" + this.Codigo + ",'" + MainConfig.HostName + "')");
-                    SqlServerConn.execCommandSql(sql01.ToString());
+                    Sql01.Append("INSERT INTO tb0207_Acessos (usuarioACESSO, maquinaACESSO)");
+                    Sql01.Append(" VALUES (" + this.Codigo + ",'" + MainConfig.HostName + "')");
+                    SqlServerConn.execCommandSql(Sql01.ToString());
                     break;
                 case statusLogin.NAOLOGADO:
-                    sql01.Length = 0;
-                    sql01.Append("UPDATE tb0207_Acessos");
-                    sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
-                    sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.CodigoAcesso);
-                    SqlServerConn.execCommandSql(sql01.ToString());
+                    Sql01.Length = 0;
+                    Sql01.Append("UPDATE tb0207_Acessos");
+                    Sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
+                    Sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.CodigoAcesso);
+                    SqlServerConn.execCommandSql(Sql01.ToString());
                     return 0;
                 default:
                     break;
@@ -352,10 +251,10 @@ namespace TitaniumColector.Classes
 
 
             //Recupera o código do acesso
-            sql01.Length = 0;
-            sql01.Append("SELECT MAX(codigoACESSO) AS novoACESSO");
-            sql01.Append(" FROM tb0207_Acessos");
-            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
+            Sql01.Length = 0;
+            Sql01.Append("SELECT MAX(codigoACESSO) AS novoACESSO");
+            Sql01.Append(" FROM tb0207_Acessos");
+            System.Data.SqlClient.SqlDataReader dr = SqlServerConn.fillDataReader(Sql01.ToString());
             if ((dr.FieldCount > 0))
             {
                 while ((dr.Read()))
@@ -368,6 +267,12 @@ namespace TitaniumColector.Classes
             dr.Close();
             return retorno;
 
+        }
+
+        public void definePermissoes() 
+        {
+            var gerenciador = new GerenciadorPermissoesParametros();
+            this.Permissoes = gerenciador.ListPermissoes(this.Codigo);
         }
 
     #endregion

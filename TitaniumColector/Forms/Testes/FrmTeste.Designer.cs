@@ -40,6 +40,7 @@
             this.button1.Size = new System.Drawing.Size(72, 20);
             this.button1.TabIndex = 0;
             this.button1.Text = "button1";
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FrmTeste
             // 
@@ -53,7 +54,7 @@
             this.Name = "FrmTeste";
             this.Text = "FrmTeste";
             this.Load += new System.EventHandler(this.FrmTeste_Load);
-            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(FrmTeste_KeyPress);
+            this.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FrmTeste_KeyPress);
             this.ResumeLayout(false);
 
         }

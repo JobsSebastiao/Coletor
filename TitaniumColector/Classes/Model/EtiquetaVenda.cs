@@ -7,18 +7,17 @@ using TitaniumColector.Forms;
 using TitaniumColector.Classes.Utility;
 using TitaniumColector.Classes.Dao;
 using System.Xml;
+using System.IO;
 
 namespace TitaniumColector.Classes.Model
 {
-    public class EtiquetaVenda : Etiqueta
+    public class EtiquetaVenda : Etiqueta,IDisposable
     {
         DaoProduto daoProduto;
 
-        //private Parametros paramValidarSequencia;
-        public Int64 Ean13Etiqueta { get; set; }
+     #region "proxima alteração- trazer parametros para esta classe"
         //public Int32 SequenciaEtiqueta { get; set; }
         //public Double QuantidadeEtiqueta { get; set; }
-        //public DateTime DataHoraValidacao { get; set; }
         //public Int32 volumeEtiqueta;
 
         //public Int32 VolumeEtiqueta
@@ -30,17 +29,13 @@ namespace TitaniumColector.Classes.Model
         //        }
         //}
 
+    #endregion
+
+        public Int64 Ean13Etiqueta { get; set; }
+
         public EtiquetaVenda() { }
 
-        public EtiquetaVenda(
-                  int ean13Etiqueta
-                , string partnumber
-                , string descricao
-                , string identificacaoLote
-                , int sequencia
-                , double qtdEmbalagem
-                , Etiqueta.Tipo tipoEtiqueta
-            )
+        public EtiquetaVenda(int ean13Etiqueta, string partnumber, string descricao, string identificacaoLote, int sequencia, double qtdEmbalagem, Etiqueta.Tipo tipoEtiqueta)
             : base(partnumber , descricao , identificacaoLote,sequencia, qtdEmbalagem,tipoEtiqueta)
         {
             Ean13Etiqueta = ean13Etiqueta;
@@ -217,6 +212,103 @@ namespace TitaniumColector.Classes.Model
 
             return tipoEtiqueta;
         }
+
+        /// <summary>
+        /// Monta Xml para detalhar as estiquetas equivalentes ao item passado como parâmetro
+        /// </summary>
+        /// <param name="listaEtiquetas">Lista de Etiquetas dos item que foi separado</param>
+        /// <returns>String no formato de Xml</returns>
+        /// <remarks> Na forma em que etá o código abaixo o trabalho é feito em uma lista que contém informações de apenas um item liberado
+        ///           --Para se trabalhar com uma lista que possua informações de mais de um item é nescessário alterção do código ou 
+        ///           criação de outro método mais  apropriado.
+        /// </remarks>
+        public override string gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
+        {
+            string result = "";
+
+            try
+            {
+                System.IO.StringWriter str = new System.IO.StringWriter();
+
+                //Variável que irá receber o Xml na forma de String.
+                XmlTextWriter writer = new XmlTextWriter(str);
+
+                //inicia o documento xml
+                writer.WriteStartDocument();
+
+                //define a indentação do arquivo
+                writer.Formatting = Formatting.Indented;
+
+                //escreve o elemento raiz
+                writer.WriteStartElement("Item");
+                //escrever o atributo para o Elemento Raiz Item
+
+                //writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
+
+                foreach (var item in listaEtiquetas)
+                {
+                    //Elemento Raiz Seq
+                    writer.WriteStartElement("Seq");
+                    //Escreve atributos IdEtiqueta
+                    writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
+                    //Escreve atributos TIPO Etiqueta
+                    writer.WriteAttributeString("TIPO", item.TipoEtiqueta.ToString());
+                    //Escreve elemento entre a tag Seq
+                    writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
+                    writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
+                    writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
+                    writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
+                    //Encerra o elemento Seq
+                    writer.WriteEndElement();
+                }
+
+                //Encerra o elemento Item
+                writer.WriteEndDocument();
+
+                // O resultado é uma string.
+                return result = str.ToString();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
+        #region "Idisposable"
+
+        private Stream _resource;
+        private bool _disposed;
+
+        public void Dispose()
+        {
+            Dispose(true);
+
+            // Use SupressFinalize in case a subclass
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // If you need thread safety, use a lock around these 
+            // operations, as well as in your methods that use the resource.
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (_resource != null)
+                        _resource.Dispose();
+                }
+
+                // Indicate that the instance has been disposed.
+                _resource = null;
+                _disposed = true;
+            }
+        }
+
+        #endregion
 
         #region "ainda sem uso "
 

@@ -57,7 +57,7 @@ namespace TitaniumColector.Classes
             CodigoLoteProduto = codLoteProd;
         }
 
-        public Produto(int codigo, string ean13, string partnumber, string descricao,double peso)
+        public Produto(Int32 codigo, string ean13, string partnumber, string descricao,double peso)
         {
             this.CodigoProduto = codigo;
             this.Ean13 = ean13;

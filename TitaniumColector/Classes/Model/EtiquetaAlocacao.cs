@@ -17,7 +17,6 @@ namespace TitaniumColector.Classes.Model
         public string LocalAlocacao { get; set; } 
         public string DescricaoCompletaProduto { get; set; }
         public bool JaAlocado { get; set; }
-        public DateTime MomentoAlocacao { get; set; }
         public Usuario UsuarioAlocacao { get; set; }
         
         /// <summary>

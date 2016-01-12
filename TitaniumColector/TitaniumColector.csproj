@@ -86,6 +86,7 @@
     <Compile Include="Classes\Model\EtiquetaAlocacao.cs" />
     <Compile Include="Classes\Model\EtiquetaVenda.cs" />
     <Compile Include="Classes\Model\Leitor.cs" />
+    <Compile Include="Classes\Model\Permissao.cs" />
     <Compile Include="Classes\Procedimentos\ProcedimentosAlocacao.cs" />
     <Compile Include="Classes\Procedimentos\ProcedimentosLiberacao.cs" />
     <Compile Include="Classes\Procedimentos\BaseMobile.cs" />
@@ -94,8 +95,8 @@
     <Compile Include="Classes\Model\Proposta.cs" />
     <Compile Include="Classes\SqlServer\CeSqlServerConn.cs" />
     <Compile Include="Classes\Model\Usuario.cs" />
-    <Compile Include="Classes\Model\Parametros.cs" />
-    <Compile Include="Classes\Model\Permisssoes.cs" />
+    <Compile Include="Classes\Model\Parametro.cs" />
+    <Compile Include="Classes\Model\GerenciadorPermissoesParametros.cs" />
     <Compile Include="Classes\Interface\ICall.cs" />
     <Compile Include="Forms\Testes\FrmTeste.cs">
       <SubType>Form</SubType>

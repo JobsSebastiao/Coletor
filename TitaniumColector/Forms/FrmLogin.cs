@@ -25,6 +25,7 @@ namespace TitaniumColector
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
         private DaoUsuario daoUsuario;
+        private GerenciadorPermissoesParametros permissoesUsuario { get; set; }
 
         public frmLogin(bool chamada) { }
         public frmLogin()
@@ -226,6 +227,7 @@ namespace TitaniumColector
                         if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
                         {
                             MainConfig.UserOn = objUsuario;
+                            MainConfig.UserOn.definePermissoes();
                             MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(MainConfig.UserOn, Usuario.statusLogin.LOGADO);
                             this.cbUsuario.Text = "";
                             this.txtSenha.Text = "";

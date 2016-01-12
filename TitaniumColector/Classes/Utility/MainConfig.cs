@@ -12,6 +12,7 @@ namespace TitaniumColector
     public static class MainConfig
     {
 
+    #region "Propriedades"
         private static string strVersaoSO;
         public static string HostName { get; set; }
         public static string DeviceIp { get; set; }
@@ -41,7 +42,7 @@ namespace TitaniumColector
         private static Font fontGrandeItalic;
         private static Single tamanho;
         private static FontStyle FontStyle;
-        private static Permissoes permissoes_TB1210;
+        private static GerenciadorPermissoesParametros permissoes_TB1210;
 
         //Contantes
         public const int intPositionX = 0;
@@ -51,9 +52,9 @@ namespace TitaniumColector
         //Permissões do sistema.
         private static Boolean validarSequenciaEtiqueta;
 
+    #endregion
 
-        #region "GET & SETS"
-        
+    #region "GET & SETS"
 
         public static string VersaoSO
         {
@@ -92,13 +93,11 @@ namespace TitaniumColector
             set { MainConfig.fontPequenaRegular = value; }
         }
 
-
         public static Font FontPequenaBold
         {
             get { return MainConfig.fontPequenaBold; }
             set { MainConfig.fontPequenaBold = value; }
         }
-
 
         public static Font FontPequenaItalic
         {
@@ -166,7 +165,6 @@ namespace TitaniumColector
             set { MainConfig.fontMuitoGrandeBold = value; }
         }
 
-
         public static Int64 CodigoAcesso
         {
             get  {  return intCodigoAcesso; }
@@ -191,15 +189,15 @@ namespace TitaniumColector
             set { MainConfig.userOn = value; }
         }
 
-        internal static Permissoes Permissoes_TB1210
+        internal static GerenciadorPermissoesParametros Permissoes_TB1210
         {
             get { return MainConfig.permissoes_TB1210; }
             set { MainConfig.permissoes_TB1210 = value; }
         }
 
-        #endregion
+    #endregion
 
-        #region "MÉTODOS DE CONFIGURAÇÃO"
+    #region "MÉTODOS DE CONFIGURAÇÃO"
 
         public static void setMainConfigurations()
         {
@@ -252,8 +250,8 @@ namespace TitaniumColector
         public static void recuperaPermissoes() 
         {
             DaoPermissoes daoPermissoes = new DaoPermissoes();
-            Permissoes_TB1210 = new Permissoes();
-            Permissoes_TB1210 = daoPermissoes.recuperarPermissoes(Permissoes_TB1210.ListCodigoParametro);
+            Permissoes_TB1210 = new GerenciadorPermissoesParametros();
+            Permissoes_TB1210 = daoPermissoes.recuperarParametros(Permissoes_TB1210.ListCodigoParametro);
         }
 
         private static void defineFontPadrao()
@@ -505,7 +503,6 @@ namespace TitaniumColector
             }
             return value;
         }
-
 
     }
 }

@@ -60,10 +60,9 @@ namespace TitaniumColector.Forms
                     {
                         if (validaInputValue(this.InputText))
                         {
-                            this.defineLocal(
-                                TitaniumColector.Utility.FileUtility.arrayOfTextFile(InputText
-                                , TitaniumColector.Utility.FileUtility.splitType.PIPE)
-                                );
+                            this.defineLocal(TitaniumColector.Utility.FileUtility.arrayOfTextFile(InputText
+                                            ,TitaniumColector.Utility.FileUtility.splitType.PIPE)
+                                            );
 
                             this.preencherTbLocal();
                             definirLocalEtiqueta();
@@ -159,6 +158,8 @@ namespace TitaniumColector.Forms
             {
                 procedimentos.alocarProduto(this.EtiquetaAlocar);
                 procedimentos.atualizarListView();
+                this.Close();
+                this.Dispose();
             }
         }
 

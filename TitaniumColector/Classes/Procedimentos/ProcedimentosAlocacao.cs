@@ -9,6 +9,7 @@ using TitaniumColector.Forms;
 using System.Drawing;
 using System.IO;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
@@ -17,11 +18,12 @@ namespace TitaniumColector.Classes.Procedimentos
         public List<Etiqueta> ListEtiquetas { get; set; }
         public  List<Etiqueta> ListEtiquetasAlocadas { get; set; }
         public List<String> ListXmlProcedimento { get; set; }
+        public Form FormPrincipal { get; set; }
+        public int TotalItensAlocados { get { return this.ListEtiquetasAlocadas.Count; } }
+        public int TotalItens { get { return this.ListEtiquetas.Count; } }
         private Etiqueta etiquetaProduto;
         private Array inputStringToEtiqueta;
-        public Form FormPrincipal { get; set; }
         
-
     #region "SingleTon"
 
         private static ProcedimentosAlocacao instancia;
@@ -57,37 +59,11 @@ namespace TitaniumColector.Classes.Procedimentos
             this.FormPrincipal = null;
         }
 
-        public void realizarAcao(string inputText,Etiqueta.Tipo tipoEtiqueta)
-        {
-            switch (tipoEtiqueta)
-            {
-                case Etiqueta.Tipo.INVALID:
-
-                    inputText = string.Empty;
-                    mostrarMensagem(" Tipo de Etiqueta inválida!!!","Guardar Volumes", MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
-                    break;
-
-                case Etiqueta.Tipo.QRCODE:
-
-                    //MONTA UM ARRAY DE STRING COM AS INFORMACOES PASSADAS NO INPUTTEXT
-                    inputStringToEtiqueta = FileUtility.arrayOfTextFile(inputText, FileUtility.splitType.PIPE);
-                    //GERA UM OBJETO ETIQUETA DO TIPO QUE FOI PASSADO NO PRIMEIRO PÂRAMETRO 
-                    etiquetaProduto = Leitor.gerarEtiqueta(new EtiquetaAlocacao(),inputStringToEtiqueta,tipoEtiqueta);
-                    //VALIDA A INCLUSÃO OU ALOCAÇÃO DA ETIQUETA;
-                    this.trabalhaEtiqueta(etiquetaProduto);
-
-                    inputText = string.Empty;
-                    break;
-
-                default:
-
-                    inputText = string.Empty;
-                    mostrarMensagem("Não é possível validar a etiqueta lida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    break;
-            }
-        }
-
-        private void trabalhaEtiqueta(Etiqueta etiqueta) 
+        /// <summary>
+        /// Define o tipo de ação a ser realizada após a leitura da etiqueta.
+        /// </summary>
+        /// <param name="etiqueta">Etiqueta lida</param>
+        private void trabalhaEtiqueta(Etiqueta etiqueta)
         {
 
             try
@@ -131,7 +107,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </summary>
         /// <param name="etiqueta">Etiqueta a ser validada</param>
         /// <returns>true se ela existe.</returns>
-        private bool etiquetaJaValidada(Etiqueta etiqueta) 
+        private bool etiquetaJaValidada(Etiqueta etiqueta)
         {
             foreach (var item in ListEtiquetas )
             {
@@ -155,42 +131,22 @@ namespace TitaniumColector.Classes.Procedimentos
             return false;
         }
 
-        private void ordenarList(List<EtiquetaAlocacao> list) 
+        private void ordenarList(List<EtiquetaAlocacao> list)
         {
             list.Sort();
         }
 
-        public void alocarProduto(EtiquetaAlocacao etiquetaAlocar) 
-        {
-            if (etiquetaAlocar.JaAlocado)
-            {
-                if(this.etiquetaJaValidada(etiquetaAlocar))
-                {
-                    etiquetaAlocar.montarXmlEtiqueta();
-                    this.ListEtiquetasAlocadas.Add(etiquetaAlocar);
-                    this.ListEtiquetas.Remove(etiquetaAlocar);
-                }
-            }
-        }
-
-        public void atualizarListView() 
-        {
-            FrmAlocacao.carregarListEmbalagens();
-        }
-
-        public static void mostrarMensagem(string mensagem, string caption, MessageBoxButtons msgButton, MessageBoxIcon msgIcon)
-        {
-            MessageBox.Show(mensagem, caption, msgButton, msgIcon, MessageBoxDefaultButton.Button2);
-        }
-
-        public void montarXmlProcedimento() 
+        /// <summary>
+        /// Monta o Xml referente a cada item do pedido  o mesmo será gravado na tabela tb1403_Itens_Pedidos ao seu referido item
+        /// </summary>
+        private void montarXmlProcedimento()
         {
             var trabalhadoItem = 0;
             this.ListXmlProcedimento = new List<string>();
 
             foreach (EtiquetaAlocacao item in ListEtiquetasAlocadas)
-            { 
-                if (trabalhadoItem != item.CodigoItemAlocacao) 
+            {
+                if (trabalhadoItem != item.CodigoItemAlocacao)
                 {
                     trabalhadoItem = item.CodigoItemAlocacao;
 
@@ -220,7 +176,7 @@ namespace TitaniumColector.Classes.Procedimentos
                     foreach (var itens in itemSelecionado)
                     {
 
-                        if (count == 0) 
+                        if (count == 0)
                         {
                             //Escreve o elemento raiz
                             writer.WriteStartElement("ItemPedido");
@@ -253,12 +209,11 @@ namespace TitaniumColector.Classes.Procedimentos
                         writer.WriteElementString("descLote", itens.LoteEtiqueta.ToString());
                         writer.WriteElementString("idLocalAlocacao", itens.CodigoLocalAlocacao.ToString());
                         writer.WriteElementString("descLocalAlocacao", itens.LocalAlocacao.ToString());
-                        
-                        writer.WriteElementString("datahoraLiberacao", itens.MomentoAlocacao.ToString());
+                        writer.WriteElementString("datahoraLiberacao", itens.DataHoraValidacao.ToString());
 
                         //Encerra o elemento Volumes
                         writer.WriteEndElement();
-                        
+
                         count++;
                     }
 
@@ -270,6 +225,168 @@ namespace TitaniumColector.Classes.Procedimentos
 
                     this.ListXmlProcedimento.Add(str.ToString().Replace("\r\n", "").Remove(0, 39));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Insert na Base Engine as informações de Lote e Local Lote de cada Volume.
+        /// </summary>
+        private void persistirLocalLote()
+        {
+            using(var dao = new TitaniumColector.Classes.Dao.DaoEtiqueta())
+            {
+                dao.finalizarAlocacao(this.ListEtiquetasAlocadas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>());
+            }
+
+        }
+
+        private int recuperaCodigoItemEmXml(string strXml)
+        {
+            if (strXml.Contains("ItemPedido ID"))
+            {
+                var startIndex = strXml.IndexOf("ItemPedido ID=\"") + ("ItemPedido ID=\"").Length;
+                var lenStr = strXml.IndexOf("\">", startIndex) - 16;
+                return Convert.ToInt32(strXml.Substring(startIndex, lenStr));
+            }
+
+            return -1;
+        }
+
+        private void gravarXmlItemPedido()
+        {
+            foreach (var item in this.ListXmlProcedimento)
+            {
+                var codigo = this.recuperaCodigoItemEmXml(item);
+                if (codigo > 0)
+                {
+                    using (var dao = new TitaniumColector.Classes.Dao.DaoEtiqueta())
+                    {
+                        dao.gravarXmlItemPedido(codigo, item);
+                    }
+                }
+            }
+        }
+
+        public void alocarProduto(EtiquetaAlocacao etiquetaAlocar)
+        {
+            if (etiquetaAlocar.JaAlocado)
+            {
+                if (this.etiquetaJaValidada(etiquetaAlocar))
+                {
+                    etiquetaAlocar.montarXmlEtiqueta();
+                    this.ListEtiquetasAlocadas.Add(etiquetaAlocar);
+                    this.ListEtiquetas.Remove(etiquetaAlocar);
+                }
+            }
+        }
+
+        public void atualizarListView()
+        {
+            FrmAlocacao.carregarListVolumes();
+        }
+
+        /// <summary>
+        /// Mostra uma mensagem ao usuario,(retorna um dialogResult dependente o tipo de Buttons definido com parâmetro)
+        /// </summary>
+        /// <param name="mensagem">Mensagem ao usuário</param>
+        /// <param name="caption">Cabeçalho</param>
+        /// <param name="msgButton">Buttons</param>
+        /// <param name="msgIcon"> Icone da caixa de texto.</param>
+        /// <returns></returns>
+        public static DialogResult mostrarMensagem(string mensagem, string caption, MessageBoxButtons msgButton, MessageBoxIcon msgIcon)
+        {
+            return MessageBox.Show(mensagem, caption, msgButton, msgIcon, MessageBoxDefaultButton.Button2);
+        }
+
+        /// <summary>
+        /// Ações para finalizar o processo para os itens já alocados.
+        /// </summary>
+        public void finalizarProcesso()
+        {
+            try
+            {
+                if (!temItensFinalizar())
+                {
+                    throw new InvalidOperationException();
+                }
+
+                Cursor.Current = Cursors.WaitCursor;
+                this.montarXmlProcedimento();
+                this.persistirLocalLote();
+                this.gravarXmlItemPedido();
+                this.limparItensAlocados();
+                this.atualizarListView();
+                Cursor.Current = Cursors.Default;
+            }
+            catch (InvalidOperationException)
+            {
+                mostrarMensagem("Não existe itens a serem finalizados!", "Guarda de Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            catch (Exception e) 
+            {
+                throw e;
+            }
+            
+        }
+
+        /// <summary>
+        /// Verifica se a lista de etiquetas alocados possue itens
+        /// </summary>
+        /// <returns>true se sim</returns>
+        public bool temItensFinalizar()
+        {
+            return this.ListEtiquetasAlocadas.Count > 0;
+        }
+
+        /// <summary>
+        /// Verifica se a lista de etiquetas lidas possue itens.
+        /// </summary>
+        /// <returns>true se sim</returns>
+        public bool temItensConferidos()
+        {
+            return this.ListEtiquetas.Count > 0;
+        }
+
+        public void limparItensAlocados()
+        {
+            if (this.temItensFinalizar()) 
+            {
+                this.ListEtiquetasAlocadas.Clear();
+                this.ListXmlProcedimento.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Define que ação será feita após a leitura da etiqueta.
+        /// </summary>
+        /// <param name="inputText"></param>
+        /// <param name="tipoEtiqueta"></param>
+        public void realizarAcao(string inputText, Etiqueta.Tipo tipoEtiqueta)
+        {
+            switch (tipoEtiqueta)
+            {
+                case Etiqueta.Tipo.INVALID:
+
+                    inputText = string.Empty;
+                    mostrarMensagem(" Tipo de Etiqueta inválida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    break;
+
+                case Etiqueta.Tipo.QRCODE:
+
+                    //MONTA UM ARRAY DE STRING COM AS INFORMACOES PASSADAS NO INPUTTEXT
+                    inputStringToEtiqueta = FileUtility.arrayOfTextFile(inputText, FileUtility.splitType.PIPE);
+                    //GERA UM OBJETO ETIQUETA DO TIPO QUE FOI PASSADO NO PRIMEIRO PÂRAMETRO 
+                    etiquetaProduto = Leitor.gerarEtiqueta(new EtiquetaAlocacao(), inputStringToEtiqueta, tipoEtiqueta);
+                    //VALIDA A INCLUSÃO OU ALOCAÇÃO DA ETIQUETA;
+                    this.trabalhaEtiqueta(etiquetaProduto);
+                    inputText = string.Empty;
+                    break;
+
+                default:
+
+                    inputText = string.Empty;
+                    mostrarMensagem("Não é possível validar a etiqueta lida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    break;
             }
         }
 

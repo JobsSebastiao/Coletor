@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.Exceptions;
+using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes.Dao
 {
@@ -20,12 +21,12 @@ namespace TitaniumColector.Classes.Dao
         /// </summary>
         /// <param name="codigoPermissoes"> Lista de permissões a serem salvas na base mobile.</param>
         /// <returns>List com informações sobre os parâmetros das permissões a serem utilizadas no mobile. </returns>
-        public Permissoes recuperarPermissoes(List<String> codigoPermissoes)
+        public GerenciadorPermissoesParametros recuperarParametros(List<String> codigoPermissoes)
         {
             try
             {
-                Permissoes permissoes = new Permissoes();
-                Parametros param;
+                var gerenciadorPermissoes = new GerenciadorPermissoesParametros();
+                Parametro param;
 
                 sql01 = new StringBuilder();
                 sql01.Append(" SELECT codigoPARAMETRO,descricaoPARAMETRO,valorPARAMETRO,COALESCE(auxiliarPARAMETRO,0) as auxiliarPARAMETRO FROM tb1210_Parametros");
@@ -38,18 +39,36 @@ namespace TitaniumColector.Classes.Dao
                     {
                         if (item == (string)dr["codigoParametro"])
                         {
-                            param = new Parametros((string)dr["codigoParametro"], (string)dr["descricaoPARAMETRO"], (string)dr["valorPARAMETRO"], Convert.ToInt32(dr["auxiliarPARAMETRO"]));
-                            permissoes.addParametro(param);
+                            param = new Parametro((string)dr["codigoParametro"], (string)dr["descricaoPARAMETRO"], (string)dr["valorPARAMETRO"], Convert.ToInt32(dr["auxiliarPARAMETRO"]));
+                            gerenciadorPermissoes.addParametro(param);
                         }
                     }
                 }
 
-                return permissoes;
+                return gerenciadorPermissoes;
             }
             catch (Exception ex)
             {
                 throw new Exception("Erro ao recuperar parâmetros na base de dados.\nMotivo:" + ex.Message , ex);
             }
+        }
+
+        public IList<Permissao> listaPermissoes(int codigoUsuario,string metodosMetodos) 
+        {
+
+            sql01 = new StringBuilder();
+            sql01.Append(" SELECT tb0205_Metodos.valorUSUARIOMETODO, metodoMETODO");
+            sql01.Append("FROM tb0205_Metodos, tb0034_Metodos, tb0031_Componentes, tb0201_Usuarios");
+            sql01.Append("WHERE codigoMETODO = metodoUSUARIOMETODO");
+            sql01.Append("AND codigoUSUARIO = usuarioUSUARIOMETODO");
+            sql01.Append("AND codigoCOMPONENTE = 5");
+            sql01.AppendFormat("AND usuarioUSUARIOMETODO = {0}",codigoUsuario);
+            sql01.AppendFormat(" AND metodoMETODO IN ({0})", metodosMetodos);
+           
+
+            SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
+
+            return null;
         }
     }
 }

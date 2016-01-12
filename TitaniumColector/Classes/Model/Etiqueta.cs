@@ -17,12 +17,12 @@ namespace TitaniumColector.Classes
         public string PartnumberEtiqueta { get; set; }
         public String LoteEtiqueta { get; set; }
         public string Xml { get; protected set; }
+        public DateTime DataHoraValidacao { get; set; }
 
         //PROPRIEDADES DEVEM SER PASSADAS PARA A CLASSE ETIQUETAVENDA
         //public Int64 Ean13Etiqueta { get; set; }
         public Int32 SequenciaEtiqueta { get; set; }
         public Double QuantidadeEtiqueta { get; set; }
-        public DateTime DataHoraValidacao { get; set; }
         public Int32 volumeEtiqueta;
 
         private DaoProduto daoProduto;
@@ -41,35 +41,6 @@ namespace TitaniumColector.Classes
     #region "CONTRUTORES"
 
         public Etiqueta() { }
-
-        public Etiqueta(String partnumber,String descricao,Int64 ean13,String lote,Int32 sequencia,Double quantidade,Tipo tipoEtiqueta) 
-        {
-
-            PartnumberEtiqueta = partnumber;
-            DescricaoProdutoEtiqueta = descricao;
-            LoteEtiqueta = lote;
-            QuantidadeEtiqueta = quantidade;
-            DataHoraValidacao = DateTime.Now;
-
-            switch (tipoEtiqueta )
-            {
-                case Tipo.QRCODE:
-
-                    SequenciaEtiqueta = sequencia;
-                    TipoEtiqueta = Tipo.QRCODE;
-                    break;
-
-                case Tipo.BARRAS:
-
-                    SequenciaEtiqueta = 0;
-                    TipoEtiqueta = Tipo.BARRAS;
-                    break;
-
-                default:
-                    break;
-            }
-
-        }
 
         public Etiqueta(String partnumber, String descricao, String lote, Int32 sequencia, Double quantidade, Tipo tipoEtiqueta)
         {
@@ -101,137 +72,9 @@ namespace TitaniumColector.Classes
 
         }
 
-        /// <summary>
-        /// Contrutor recebe um array com os valores a serem passados para cada atributo do objEtiqueta;
-        /// </summary>
-        /// <param name="arrayEtiqueta">Array no seguite formato 
-        ///                             "EAN13:?|LOTE:?|SEQ:?|QTD:?"
-        /// </param>
-        public Etiqueta(Array arrayEtiqueta,Tipo tipoEtiqueta) 
-        {
-            try
-            {
-
-                switch (tipoEtiqueta)
-                {
-                    case Tipo.QRCODE:
-
-                        foreach (string item in arrayEtiqueta)
-                        {
-                            string strItem = item.Substring(0, item.IndexOf(":", 0));
-
-                            if (strItem == "PNUMBER")
-                            {
-                                PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "DESCRICAO")
-                            {
-                                DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "EAN13")
-                            {
-                                //Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
-                            }
-                            else if (strItem == "LOTE")
-                            {
-                                LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "SEQ")
-                            {
-                                SequenciaEtiqueta = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                            }
-                            else if (strItem == "QTD")
-                            {
-                                QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
-                            }
-                        }
-
-                        break;
-
-                    case Tipo.BARRAS:
-
-                        foreach (string item in arrayEtiqueta)
-                        {
-                            daoProduto = new DaoProduto();
-
-                            this.TipoEtiqueta = Tipo.BARRAS;
-                            //Ean13Etiqueta = Convert.ToInt64(item);
-                            //Etiqueta aux = (EtiquetaVenda)daoProduto.recuperarInformacoesPorEan13Etiqueta(this);
-
-                            //if(aux !=null)
-                            //{
-                            //    DescricaoProdutoEtiqueta = aux.DescricaoProdutoEtiqueta;
-                            //    PartnumberEtiqueta = aux.PartnumberEtiqueta;
-                            //    //Ean13Etiqueta = aux.Ean13Etiqueta;
-                            //    LoteEtiqueta = aux.LoteEtiqueta;
-                            //    SequenciaEtiqueta = aux.SequenciaEtiqueta;
-                            //    QuantidadeEtiqueta = aux.QuantidadeEtiqueta;
-                            //}
-                        }
-
-                        break;
-
-                    default:
-                        MainConfig.errorMessage("Tipo de Etiqueta indefinido!!", "Leitura Etiquetas");
-                        break;
-                }
-
-                DataHoraValidacao = DateTime.Now;
-                this.TipoEtiqueta = tipoEtiqueta;
-
-            }
-            catch (Exception ex)
-            {
-                
-                throw ex;
-            }
-
-        }
-
     #endregion
 
     #region "METODOS"
-
-        ///<summary>
-        /// Recebe um array de strings referentes aos atributos do obj Etiqueta.
-        /// retorna Um objeto do tipo Etiqueta
-        /// </summary>
-        /// <param name="array">Array de String referentes aos atributos de uma etiqueta</param>
-        public static Etiqueta arrayToEtiqueta(Array array)
-        {
-            Etiqueta objEtiqueta = new Etiqueta();
-
-            foreach (string item in array)
-            {
-                string strItem = item.Substring(0, item.IndexOf(":", 0));
-
-                if (strItem == "PNUMBER")
-                {
-                    objEtiqueta.PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                }
-                else if (strItem == "DESCRICAO")
-                {
-                    objEtiqueta.DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                }
-                else if (strItem == "EAN13")
-                {
-                    //objEtiqueta.Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
-                }
-                else if (strItem == "LOTE")
-                {
-                    objEtiqueta.LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                }
-                else if (strItem == "SEQ")
-                {
-                    objEtiqueta.SequenciaEtiqueta = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                }
-                else if (strItem == "QTD")
-                {
-                    objEtiqueta.QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
-                }
-            }
-            return objEtiqueta;
-        }
 
         //próxima alteração
         //metodo abstrato
@@ -326,10 +169,10 @@ namespace TitaniumColector.Classes
         ///           --Para se trabalhar com uma lista que possua informações de mais de um item é nescessário alterção do código ou 
         ///           criação de outro método mais  apropriado.
         /// </remarks>
-        public static string gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
+        public virtual string gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
         {
             string result = "";
-
+            //return result;
             try
             {
                 System.IO.StringWriter str = new System.IO.StringWriter();
@@ -360,7 +203,7 @@ namespace TitaniumColector.Classes
                     //Escreve elemento entre a tag Seq
                     writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
                     writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
-                    writer.WriteElementString("Time",item.DataHoraValidacao.ToString());
+                    writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
                     writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
                     //Encerra o elemento Seq
                     writer.WriteEndElement();
@@ -370,7 +213,7 @@ namespace TitaniumColector.Classes
                 writer.WriteEndDocument();
 
                 // O resultado é uma string.
-               return result = str.ToString();
+                return result = str.ToString();
 
             }
             catch (Exception)

@@ -70,6 +70,8 @@ namespace TitaniumColector.Forms
             this.txtCabecalho.BackColor = SystemColors.Info;
             this.txtCabecalho.ReadOnly = true;
             this.txtCabecalho.TabStop = false;
+            this.txtCabecalho.TabIndex = 0;
+            this.txtCabecalho.GotFocus += new System.EventHandler(txtCabecalho_GotFocus);
             //
             //panel Grid Volumes
             //
@@ -87,6 +89,8 @@ namespace TitaniumColector.Forms
             this.txtDescricaoTotal.ReadOnly = true;
             this.txtDescricaoTotal.TabStop = false;
             this.txtDescricaoTotal.BackColor = SystemColors.ControlLight;
+            this.txtDescricaoTotal.TabIndex = 0;
+            this.txtDescricaoTotal.GotFocus += new System.EventHandler(txtDescricaoTotal_GotFocus);
             //
             // txtTotal
             //
@@ -97,6 +101,8 @@ namespace TitaniumColector.Forms
             txtTotal.TabStop = false;
             txtTotal.BackColor = Color.White;
             txtTotal.Text = "  0000";
+            txtTotal.TabIndex = 0;
+            txtTotal.GotFocus += new System.EventHandler(txtTotal_GotFocus);
             //
             // Button Sair
             //             
@@ -106,6 +112,8 @@ namespace TitaniumColector.Forms
             this.btnSair.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnSair.Size = new System.Drawing.Size(75, 30);
             this.btnSair.Location = new System.Drawing.Point(txtTotal.Location.X, txtDescricaoTotal.Location.Y + txtDescricaoTotal.Size.Height + 15);
+            this.btnSair.TabIndex = 0;
+            this.btnSair.TabStop = false;
             this.btnSair.Click += new System.EventHandler(btnSair_Click);
             //
             // Button Finalizar
@@ -116,7 +124,9 @@ namespace TitaniumColector.Forms
             this.btnFinalizar.BackColor = System.Drawing.Color.WhiteSmoke;
             this.btnFinalizar.Size = new System.Drawing.Size(75, 30);
             this.btnFinalizar.Location = new System.Drawing.Point(txtDescricaoTotal.Location.X, btnSair.Location.Y);
-            this.btnFinalizar.Click += new System.EventHandler(btnFinalizar_Click); 
+            this.btnFinalizar.TabIndex = 0;
+            this.btnFinalizar.TabStop = false;
+            this.btnFinalizar.Click += new System.EventHandler(btnFinalizar_Click);
             //
             // Total Alocado :
             //

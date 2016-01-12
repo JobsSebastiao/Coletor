@@ -8,14 +8,19 @@ using System.Text;
 using System.Windows.Forms;
 using TitaniumColector.Classes.Model;
 using TitaniumColector.Classes.Procedimentos;
+using TitaniumColector.Forms;
 
 namespace TitaniumColector.Classes.Testes
 {
     public partial class FrmTeste : Form
     {
+        private Form FormPrincipal{get; set; }
+
         public FrmTeste()
         {
             InitializeComponent();
+            this.FormPrincipal = new FrmAlocacao();
+            
         }
 
         public string inputText= "";
@@ -45,6 +50,12 @@ namespace TitaniumColector.Classes.Testes
             {
                 inputText += e.KeyChar.ToString();
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FrmAlocacao frm= new FrmAlocacao();
+            //frm.iniciarProcesso();
         }
     }
 }

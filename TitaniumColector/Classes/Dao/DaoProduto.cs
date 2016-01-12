@@ -49,8 +49,8 @@ namespace TitaniumColector.Classes.Dao
                     sql01.AppendFormat("{0},", item.CodigoLoteProduto);
                     sql01.AppendFormat("\'{0}\',", item.IdentificacaoLoteProduto);
                     sql01.AppendFormat("{0},", item.CodigoLocalLote);
-                    sql01.AppendFormat("{0},", item.Peso);
-                    sql01.AppendFormat("\'{0}\')", item.NomeLocalLote);
+                    sql01.AppendFormat("{0:0.####}", Convert.ToDouble(item.Peso));
+                    sql01.AppendFormat(",'{0}')", item.NomeLocalLote);
 
                     CeSqlServerConn.execCommandSqlCe(sql01.ToString());
                 }
@@ -58,11 +58,12 @@ namespace TitaniumColector.Classes.Dao
             }
             catch (SqlCeException sqlEx)
             {
-                System.Windows.Forms.MessageBox.Show("Erro durante a carga de dados na base Mobile tb0003_Produtos.\n Erro : " + sqlEx.Message);
+                 var mensagem = "Problemas durante a carga de dados na base Mobile tb0003_Produtos.\nMÉTODO : insertProdutoBaseMobile()\nERRO : " + sqlEx.Message;
+                 throw new Exception(mensagem, sqlEx);
             }
-            catch (Exception)
+            catch (Exception e )
             {
-                throw;
+                throw e;
             }
         }
 
@@ -110,7 +111,7 @@ namespace TitaniumColector.Classes.Dao
                 dr.Close();
                 SqlServerConn.closeConn();
 
-                return listProduto;
+               return listProduto;
             }
             catch (SqlQueryExceptions queryEx)
             {
