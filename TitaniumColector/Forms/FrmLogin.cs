@@ -25,7 +25,6 @@ namespace TitaniumColector
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
         private DaoUsuario daoUsuario;
-        private GerenciadorPermissoesParametros permissoesUsuario { get; set; }
 
         public frmLogin(bool chamada) { }
         public frmLogin()
@@ -228,7 +227,7 @@ namespace TitaniumColector
                         {
                             MainConfig.UserOn = objUsuario;
                             MainConfig.UserOn.definePermissoes();
-                            MainConfig.CodigoAcesso = (Int64)objUsuario.registrarAcesso(MainConfig.UserOn, Usuario.statusLogin.LOGADO);
+                            MainConfig.UserOn.registrarAcesso(Usuario.statusLogin.LOGADO);
                             this.cbUsuario.Text = "";
                             this.txtSenha.Text = "";
                             FrmAcao frmAcao = new FrmAcao();
@@ -283,10 +282,6 @@ namespace TitaniumColector
 
     #region "//MÉTODOS COMUNS AO FORMULÁRIO"
 
-        //               //
-        // CB_USUARIO    //
-        //               //
-
         private void cbUsuario_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Back)
@@ -327,9 +322,6 @@ namespace TitaniumColector
             }
         }
 
-        //               //
-        //   TXT_SENHA   //
-        //               //
         private void txtSenha_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Enter)
@@ -339,9 +331,6 @@ namespace TitaniumColector
             }
         }
 
-        //               //
-        //  FRM_LOGIN    //
-        //               //
         private void frmLogin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter && MainConfig.GetFocusedControl(this) != cbUsuario)
@@ -350,9 +339,6 @@ namespace TitaniumColector
             }
         }
 
-        //               //
-        //    BUTTONS    //
-        //               //
         private void btLogin_Click(object sender, EventArgs e)
         {
             this.Logar();

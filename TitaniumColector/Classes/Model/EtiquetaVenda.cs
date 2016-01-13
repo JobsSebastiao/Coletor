@@ -209,7 +209,6 @@ namespace TitaniumColector.Classes.Model
                     tipoEtiqueta = Etiqueta.Tipo.INVALID;
                 }
             }
-
             return tipoEtiqueta;
         }
 
@@ -257,7 +256,7 @@ namespace TitaniumColector.Classes.Model
                     writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
                     writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
                     writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
-                    writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
+                    writer.WriteElementString("Usuario", MainConfig.UserOn.Codigo.ToString());
                     //Encerra o elemento Seq
                     writer.WriteEndElement();
                 }
@@ -274,7 +273,6 @@ namespace TitaniumColector.Classes.Model
                 throw;
             }
         }
-
 
         #region "Idisposable"
 

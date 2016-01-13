@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TitaniumColector.Classes.Utility
 {
-    class Parametro
+    public class Parametro
     {
         public String Codigo {get; set;}
         public String Descricao { get; set; }

@@ -25,7 +25,7 @@ namespace TitaniumColector.Classes
         public Double QuantidadeEtiqueta { get; set; }
         public Int32 volumeEtiqueta;
 
-        private DaoProduto daoProduto;
+        //private DaoProduto daoProduto;
         public enum Tipo {INVALID=0,QRCODE=1,BARRAS=2 }
 
         public Int32 VolumeEtiqueta
@@ -204,7 +204,7 @@ namespace TitaniumColector.Classes
                     writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
                     writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
                     writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
-                    writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
+                    writer.WriteElementString("Usuario", MainConfig.UserOn.Codigo.ToString());
                     //Encerra o elemento Seq
                     writer.WriteEndElement();
                 }

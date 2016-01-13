@@ -18,6 +18,7 @@ namespace TitaniumColector.Classes
         public statusLogin StatusLogin { get; set; }
         public StringBuilder Sql01 { get; set; }
         public IList<Permissao> Permissoes { get; set; }
+        public Int64 CodigoAcesso { get; set; }
 
     #region "ENUMS" 
 
@@ -175,9 +176,7 @@ namespace TitaniumColector.Classes
 
             Int64 retorno = 0;
             this.StatusLogin = tipodeAcao;
-
-            MainConfig.UsuarioLogado = user.Nome;
-            MainConfig.CodigoUsuarioLogado = user.Codigo;
+            MainConfig.UserOn = user;
             Sql01 = new StringBuilder();
 
             switch (tipodeAcao)
@@ -193,7 +192,7 @@ namespace TitaniumColector.Classes
                     Sql01.Length = 0;
                     Sql01.Append("UPDATE tb0207_Acessos");
                     Sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
-                    Sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.CodigoAcesso);
+                    Sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.UserOn.CodigoAcesso);
                     SqlServerConn.execCommandSql(Sql01.ToString());
                     return 0;
                 default:
@@ -219,14 +218,12 @@ namespace TitaniumColector.Classes
 
         }
 
-        public long registrarAcesso(Usuario.statusLogin tipodeAcao)
+        public void registrarAcesso(Usuario.statusLogin tipodeAcao)
         {
 
             Int64 retorno = 0;
             this.StatusLogin = tipodeAcao;
 
-            MainConfig.UsuarioLogado = this.Nome;
-            MainConfig.CodigoUsuarioLogado = this.Codigo;
             Sql01 = new StringBuilder();
 
             switch (tipodeAcao)
@@ -242,13 +239,13 @@ namespace TitaniumColector.Classes
                     Sql01.Length = 0;
                     Sql01.Append("UPDATE tb0207_Acessos");
                     Sql01.Append(" SET encerradoACESSO = 1,horaencerramentoACESSO = getdate(),duracaoACESSO = DATEDIFF(MINUTE,horaaberturaACESSO,getDATE())");
-                    Sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.CodigoAcesso);
+                    Sql01.AppendFormat(" WHERE codigoACESSO = {0}", MainConfig.UserOn.CodigoAcesso);
                     SqlServerConn.execCommandSql(Sql01.ToString());
-                    return 0;
+                    //return 0;
+                    break;
                 default:
                     break;
             }
-
 
             //Recupera o código do acesso
             Sql01.Length = 0;
@@ -265,7 +262,9 @@ namespace TitaniumColector.Classes
 
             SqlServerConn.closeConn();
             dr.Close();
-            return retorno;
+
+            this.CodigoAcesso = retorno;
+            //return retorno;
 
         }
 
@@ -273,6 +272,11 @@ namespace TitaniumColector.Classes
         {
             var gerenciador = new GerenciadorPermissoesParametros();
             this.Permissoes = gerenciador.ListPermissoes(this.Codigo);
+        }
+
+        public bool temPermissoes() 
+        {
+            return this.Permissoes.Count > 0;
         }
 
     #endregion

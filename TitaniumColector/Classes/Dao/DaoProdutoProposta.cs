@@ -300,7 +300,7 @@ namespace TitaniumColector.Classes.Dao
                     sql01 = new StringBuilder();
                     sql01.Append(" UPDATE tb1602_Itens_Proposta");
                     sql01.AppendFormat("  SET   separadoITEMPROPOSTA ={0}", Convert.ToInt32(dr["statusseparadoITEMPROPOSTA"]));
-                    sql01.AppendFormat("  ,usuarioITEMPROPOSTA ={0}", MainConfig.CodigoUsuarioLogado.ToString());
+                    sql01.AppendFormat("  ,usuarioITEMPROPOSTA ={0}", MainConfig.UserOn.Codigo.ToString());
                     sql01.AppendFormat(" ,xmlSequenciaITEMPROPOSTA ='{0}'", (string)dr["xmlSequenciaITEMPROPOSTA"]);
                     sql01.AppendFormat(" WHERE (codigoITEMPROPOSTA = {0})", Convert.ToInt32(dr["codigoITEMPROPOSTA"]));
                     SqlServerConn.execCommandSql(sql01.ToString());

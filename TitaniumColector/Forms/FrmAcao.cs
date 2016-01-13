@@ -14,7 +14,8 @@ namespace TitaniumColector.Forms
 {
     public partial class FrmAcao : Form,ICall
     {
-
+        public bool permissaoVendas { get; set; }
+        public bool permissaoAlocacao { get; set; }
         public FrmAcao()
         {
             InitializeComponent();
@@ -22,6 +23,47 @@ namespace TitaniumColector.Forms
         }
         //
         public FrmAcao(bool test) { }
+
+        void FrmAcao_Load(object sender, System.EventArgs e)
+        {
+
+            try
+            {
+                if (!MainConfig.UserOn.temPermissoes())
+                {
+                    throw new Exception("Usuario não possui as permissões nescessárias para utilização da aplicação!");
+                }
+
+                //Recupera a lista de permissoes definadas para o usuário
+                foreach (var item in MainConfig.UserOn.Permissoes)
+                {
+                    if (item.MetodoMetodo.Equals("Liberacao Vendas Mobile"))
+                    {
+                        permissaoVendas = (item.ValorUsuarioMetodo == 1 ? true : false);
+                        continue;
+                    }
+
+                    if (item.MetodoMetodo.Equals("Guarda Volumes Mobile"))
+                    {
+                        permissaoAlocacao = (item.ValorUsuarioMetodo == 1 ? true : false);
+                        continue;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                this.btnAlocacao.Enabled = false;
+                this.btnVenda.Enabled = false;
+            }
+            finally 
+            {
+                this.btnAlocacao.Enabled = this.permissaoAlocacao;
+                this.lblPermissaoAlocacao.Visible = !this.permissaoAlocacao;
+                this.btnVenda.Enabled = this.permissaoVendas;
+                this.lblPermissaoVenda.Visible = !this.permissaoVendas;
+            }
+        }
 
         private void mnuAcao_Logout_Click(object sender, EventArgs e)
         {
@@ -65,6 +107,7 @@ namespace TitaniumColector.Forms
         }
 
         #endregion
+
      
     }
 }

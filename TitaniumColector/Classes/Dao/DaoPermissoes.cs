@@ -56,19 +56,26 @@ namespace TitaniumColector.Classes.Dao
         public IList<Permissao> listaPermissoes(int codigoUsuario,string metodosMetodos) 
         {
 
+            IList<Permissao> list = new List<Permissao>();
+
             sql01 = new StringBuilder();
             sql01.Append(" SELECT tb0205_Metodos.valorUSUARIOMETODO, metodoMETODO");
-            sql01.Append("FROM tb0205_Metodos, tb0034_Metodos, tb0031_Componentes, tb0201_Usuarios");
-            sql01.Append("WHERE codigoMETODO = metodoUSUARIOMETODO");
-            sql01.Append("AND codigoUSUARIO = usuarioUSUARIOMETODO");
-            sql01.Append("AND codigoCOMPONENTE = 5");
-            sql01.AppendFormat("AND usuarioUSUARIOMETODO = {0}",codigoUsuario);
+            sql01.Append(" FROM tb0205_Metodos, tb0034_Metodos, tb0031_Componentes, tb0201_Usuarios");
+            sql01.Append(" WHERE codigoMETODO = metodoUSUARIOMETODO");
+            sql01.Append(" AND codigoUSUARIO = usuarioUSUARIOMETODO");
+            sql01.Append(" AND codigoCOMPONENTE = 5");
+            sql01.AppendFormat(" AND usuarioUSUARIOMETODO = {0}",codigoUsuario);
             sql01.AppendFormat(" AND metodoMETODO IN ({0})", metodosMetodos);
            
-
             SqlDataReader dr = SqlServerConn.fillDataReader(sql01.ToString());
 
-            return null;
+            while (dr.Read()) 
+            {
+                var permissao = new Permissao(Convert.ToInt16(dr["valorUSUARIOMETODO"]), (string)dr["metodoMETODO"]);
+                list.Add(permissao);
+            }
+
+            return list;
         }
     }
 }

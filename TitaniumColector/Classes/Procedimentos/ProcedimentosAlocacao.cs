@@ -363,31 +363,40 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <param name="tipoEtiqueta"></param>
         public void realizarAcao(string inputText, Etiqueta.Tipo tipoEtiqueta)
         {
-            switch (tipoEtiqueta)
+            try
             {
-                case Etiqueta.Tipo.INVALID:
+                switch (tipoEtiqueta)
+                {
+                    case Etiqueta.Tipo.INVALID:
 
-                    inputText = string.Empty;
-                    mostrarMensagem(" Tipo de Etiqueta inválida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    break;
+                        inputText = string.Empty;
+                        mostrarMensagem(" Tipo de Etiqueta inválida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        break;
 
-                case Etiqueta.Tipo.QRCODE:
+                    case Etiqueta.Tipo.QRCODE:
 
-                    //MONTA UM ARRAY DE STRING COM AS INFORMACOES PASSADAS NO INPUTTEXT
-                    inputStringToEtiqueta = FileUtility.arrayOfTextFile(inputText, FileUtility.splitType.PIPE);
-                    //GERA UM OBJETO ETIQUETA DO TIPO QUE FOI PASSADO NO PRIMEIRO PÂRAMETRO 
-                    etiquetaProduto = Leitor.gerarEtiqueta(new EtiquetaAlocacao(), inputStringToEtiqueta, tipoEtiqueta);
-                    //VALIDA A INCLUSÃO OU ALOCAÇÃO DA ETIQUETA;
-                    this.trabalhaEtiqueta(etiquetaProduto);
-                    inputText = string.Empty;
-                    break;
+                        //MONTA UM ARRAY DE STRING COM AS INFORMACOES PASSADAS NO INPUTTEXT
+                        inputStringToEtiqueta = FileUtility.arrayOfTextFile(inputText, FileUtility.splitType.PIPE);
+                        //GERA UM OBJETO ETIQUETA DO TIPO QUE FOI PASSADO NO PRIMEIRO PÂRAMETRO 
+                        etiquetaProduto = Leitor.gerarEtiqueta(new EtiquetaAlocacao(), inputStringToEtiqueta, tipoEtiqueta);
+                        //VALIDA A INCLUSÃO OU ALOCAÇÃO DA ETIQUETA;
+                        this.trabalhaEtiqueta(etiquetaProduto);
+                        inputText = string.Empty;
+                        break;
 
-                default:
+                    default:
 
-                    inputText = string.Empty;
-                    mostrarMensagem("Não é possível validar a etiqueta lida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    break;
+                        inputText = string.Empty;
+                        mostrarMensagem("Não é possível validar a etiqueta lida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        break;
+                }
+
             }
+            catch (Exception)
+            {
+                throw;
+            }
+           
         }
 
     #region "Idisposable"

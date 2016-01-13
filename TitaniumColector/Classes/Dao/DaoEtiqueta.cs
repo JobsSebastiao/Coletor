@@ -80,16 +80,17 @@ namespace TitaniumColector.Classes.Dao
             }
         }
 
+        /// <summary>
+        /// grava a string xml para o item de cada separação 
+        /// </summary>
+        /// <param name="codItemPedido"></param>
+        /// <param name="strXml"></param>
         public void gravarXmlItemPedido(int codItemPedido,string strXml)
         {
             try
-            {
-                //Insert Engine
+            {                
                 sql01 = new StringBuilder();
-                sql01.Append(" UPDATE tb1403_Itens_Pedidos");
-                sql01.AppendFormat(" SET xmlITEMPC = '{0}'", strXml);
-                sql01.Append(" FROM tb1403_Itens_Pedidos");
-                sql01.AppendFormat(" WHERE codigoITEMPC  = {0}", codItemPedido);
+                sql01.AppendFormat("sps1403_GravarXmlItem '{0}',{1}",strXml,codItemPedido);
                 SqlServerConn.execCommandSql(sql01.ToString());
             }
             catch (Exception ex)

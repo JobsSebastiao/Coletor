@@ -8,7 +8,7 @@ namespace TitaniumColector.Classes.Model
     public class Permissao
     {
         public Int16 ValorUsuarioMetodo { get; private set; }
-        public string MetodoMetodo { get; set; }
+        public string MetodoMetodo { get; private set; }
 
         public Permissao(Int16 valorUsuarioMetodo,string metodoMetodo) 
         {

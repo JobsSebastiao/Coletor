@@ -229,7 +229,7 @@ namespace TitaniumColector.Forms
                 //onde será feito os tratamentos para evitar o travamento do sistema.
                 if ((objProposta = daoProposta.fillTop1PropostaServidor()) != null)
                 {
-                    daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.CodigoUsuarioLogado, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
+                    daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.UserOn.Codigo, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
 
                     //recupera o codigoPickingMobile da proposta trabalhada.
                     objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
@@ -827,7 +827,7 @@ namespace TitaniumColector.Forms
                 daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.FINALIZADO,true,true);
                 daoItemProposta.updateItemPropostaRetorno();
                 daoProposta.updateVolumeProposta(objProposta.Codigo);
-                daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.CodigoUsuarioLogado);
+                daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.UserOn.Codigo);
                 
             }
             catch (Exception ex)

@@ -7,7 +7,7 @@ using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes.Utility
 {
-     class GerenciadorPermissoesParametros
+    public class GerenciadorPermissoesParametros
     {
         public List<Parametro> Parametros{ get; set; }
         public List<Permissao> Permissoes { get; set; }
@@ -97,6 +97,10 @@ namespace TitaniumColector.Classes.Utility
             this.ListMetodosPermissoes.Add("Liberacao Vendas Mobile");
         }
 
+        /// <summary>
+        /// Monta uma string separada por ',' entre cada descricao de metodo
+        /// </summary>
+        /// <returns>ex: 'permisao1','permisao2' </returns>
         public string stringPermissoes() 
         {
             var str = "\'";

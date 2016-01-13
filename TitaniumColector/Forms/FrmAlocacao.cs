@@ -146,25 +146,33 @@ namespace TitaniumColector.Forms
         /// </summary>
         public static void carregarListVolumes()
         {
-            listVolumes.Items.Clear();
-
-            //Ordena baseado no metodo CompareTo da classe 
-            ProcedimentosAlocacao.Instanciar.ListEtiquetas.Sort();
-            //carrega o listview com as informações carregadas do banco de dados.
-            foreach (var item in ProcedimentosAlocacao.Instanciar.ListEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>())
+            try
             {
-                CultureInfo ptBr = CultureInfo.CreateSpecificCulture("pt-BR");
-                listItem = new System.Windows.Forms.ListViewItem();
-                listItem.Tag = item.CodigoItemAlocacao.ToString();
-                listItem.Text = item.CodigoItemAlocacao.ToString(); item.LocaisLote.ToString();
-                listItem.SubItems.Add(item.LocaisLote.ToString());
-                listItem.SubItems.Add(item.DescricaoCompletaProduto.ToString());
-                listItem.SubItems.Add(item.VolumeItemAlocacao.ToString());
-                listItem.SubItems.Add(item.LoteEtiqueta.ToString());
-                listVolumes.Items.Add(listItem);
+                listVolumes.Items.Clear();
+
+                //Ordena baseado no metodo CompareTo da classe 
+                ProcedimentosAlocacao.Instanciar.ListEtiquetas.Sort();
+                //carrega o listview com as informações carregadas do banco de dados.
+                foreach (var item in ProcedimentosAlocacao.Instanciar.ListEtiquetas.Cast<EtiquetaAlocacao>().ToList<EtiquetaAlocacao>())
+                {
+                    CultureInfo ptBr = CultureInfo.CreateSpecificCulture("pt-BR");
+                    listItem = new System.Windows.Forms.ListViewItem();
+                    listItem.Tag = item.CodigoItemAlocacao.ToString();
+                    listItem.Text = item.CodigoItemAlocacao.ToString(); item.LocaisLote.ToString();
+                    listItem.SubItems.Add(item.LocaisLote.ToString());
+                    listItem.SubItems.Add(item.DescricaoCompletaProduto.ToString());
+                    listItem.SubItems.Add(item.VolumeItemAlocacao.ToString());
+                    listItem.SubItems.Add(item.LoteEtiqueta.ToString());
+                    listVolumes.Items.Add(listItem);
+                }
+                txtTotal.Text = TotalVolumes.ToString(" 0000", CultureInfo.CreateSpecificCulture("pt-BR"));
+                lbQtdTotalAlocado.Text = TotalVolumesAlocados.ToString(" 000", CultureInfo.CreateSpecificCulture("pt-BR"));
             }
-            txtTotal.Text = TotalVolumes.ToString(" 0000", CultureInfo.CreateSpecificCulture("pt-BR"));
-            lbQtdTotalAlocado.Text = TotalVolumesAlocados.ToString(" 000", CultureInfo.CreateSpecificCulture("pt-BR"));
+            catch (Exception)
+            {
+                throw new Exception("Problemas durante a atualização do formulário!\n MÉTODO : carregarListVolumes() ");
+            }
+            
         }
 
         public static void carregarListVolumes(List<EtiquetaAlocacao> listEtiquetas)

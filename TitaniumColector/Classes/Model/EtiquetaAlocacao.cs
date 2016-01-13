@@ -43,11 +43,11 @@ namespace TitaniumColector.Classes.Model
                     {
                         if (inputValue.Contains("CODIGOLOTE:"))
                         {
-                            if (inputValue.Contains("LOTE:"))
+                            if (inputValue.Contains("NOMELOTE:"))
                             {
                                 if (inputValue.Contains("PARTNUMBER:"))
                                 {
-                                    if (inputValue.Contains("PRODUTO:"))
+                                    if (inputValue.Contains("NOMEPRODUTO:"))
                                     {
                                         if (inputValue.Contains("LOCAISLOTE:"))
                                         {
@@ -150,9 +150,9 @@ namespace TitaniumColector.Classes.Model
                             {
                                 this.VolumeItemAlocacao = item.Substring(item.IndexOf(":", 0) + 1);
                             }
-
-                            this.DescricaoCompletaProduto = String.Format("{0}-{1}",base.PartnumberEtiqueta,base.DescricaoProdutoEtiqueta);
                         }
+
+                        this.DescricaoCompletaProduto = String.Format("{0}-{1}", base.PartnumberEtiqueta, base.DescricaoProdutoEtiqueta);
 
                         break;
 
