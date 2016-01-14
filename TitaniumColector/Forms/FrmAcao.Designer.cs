@@ -44,7 +44,6 @@
             this.btnVenda.Size = new System.Drawing.Size(265, 174);
             this.btnVenda.TabIndex = 0;
             this.btnVenda.Text = "Liberação Vendas";
-            this.btnVenda.Click += new System.EventHandler(this.btnVenda_Click);
             // 
             // btnAlocacao
             // 
@@ -53,7 +52,6 @@
             this.btnAlocacao.Size = new System.Drawing.Size(265, 174);
             this.btnAlocacao.TabIndex = 1;
             this.btnAlocacao.Text = "Guardar Volumes";
-            this.btnAlocacao.Click += new System.EventHandler(this.btnCompra_Click);
             // 
             // painelFrmAcao
             // 
@@ -114,7 +112,7 @@
             this.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width, MainConfig.ScreenSize.Height);
             this.BackColor = System.Drawing.SystemColors.Control;
             this.Text = "Próxima ação";
-
+           
             //Menus 
 
             ////menuItem Opções
@@ -150,6 +148,7 @@
             this.btnVenda.Size = new System.Drawing.Size(MainConfig.ScreenSize.Width - 40, MainConfig.ScreenSize.Height / 3);
             this.btnVenda.Text = "Liberação Vendas";
             this.btnVenda.Font = MainConfig.FontGrandeBold;
+            this.btnVenda.Click += new System.EventHandler(btnVenda_Click);
             //
             //btnSaida
             //
@@ -158,6 +157,7 @@
             this.btnAlocacao.Text = "Guardar Volumes";
             this.btnAlocacao.BackColor = System.Drawing.SystemColors.Control;
             this.btnAlocacao.Font = MainConfig.FontGrandeBold;
+            this.btnAlocacao.Click += new System.EventHandler(btnAlocacao_Click);
             // 
             // lblPermissaoVenda
             // 
@@ -176,8 +176,7 @@
             this.lblPermissaoAlocacao.Text = "Solicite Permissão";
 
         }
-
-
+        
         #endregion
 
         private System.Windows.Forms.MenuItem mnuAcao_Opcoes;

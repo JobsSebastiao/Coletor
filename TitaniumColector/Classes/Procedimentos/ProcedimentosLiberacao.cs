@@ -9,23 +9,25 @@ using System.Xml;
 using System.Xml.Linq;
 using TitaniumColector.Classes.Model;
 using TitaniumColector.Forms;
+using TitaniumColector.Classes.Dao;
+using System.Data.SqlServerCe;
 
 namespace TitaniumColector.Classes.Procedimentos
 {
      static class ProcedimentosLiberacao
      {
-        private static Double totalItens;
-        private static Double totalPecas;
-        private static Int32 totalVolumes;
-        private static Double pesoTotalProdutos;
-        private static Double qtdPecasItem;
-        private static Double pesoTotalEmbalagens;
-        private static Double pesoTotalPedido;
-        private static List<Etiqueta> listEtiquetasLidas;
-        private static List<Etiqueta> listEtiquetas;
-        private static List<EmbalagemSeparacao> listEmbalagensSeparacao;
-        private static Array arrayStringToEtiqueta;
-        private static String mensagem;
+        public static Double TotalItens { get; set; }
+        public static Double TotalPecas { get; set; }
+        public static Double QtdPecasItem { get; set; }
+        public static Double PesoTotalProdutos { get; set; }
+        public static Double PesoTotalEmbalagens { get; set; }
+        public static Double PesoTotalPedido { get; set; }
+        public static Int32 TotalVolumes { get; set; }
+        public static String Mensagem { get; set; }
+        public static Array ArrayStringToEtiqueta { get; set; }
+        public static List<Etiqueta> ListEtiquetasLidas { get; set; }
+        public static List<Etiqueta> ListEtiquetas { get; set; }
+        public static List<EmbalagemSeparacao> ListEmbalagensSeparacao { get; set; }
         
         /// <summary>
         /// Carrega as a serem trabalhadas durante o procedimento de liiberção dos itens da proposta.
@@ -37,30 +39,30 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             TotalItens = tItens;
             TotalPecas = tPecas;
-            qtdPecasItem = pecasItens;
+            QtdPecasItem = pecasItens;
             ProcedimentosLiberacao.setarVolumeInicial();
             ProcedimentosLiberacao.calcularPesoTotalEmbalagens();
 
-            if (ListEtiquetasGeradas != null)
+            if (ListEtiquetas != null)
             {
-                ListEtiquetasGeradas.Clear();
+                ListEtiquetas.Clear();
 
             }
             else 
             {
-                listEtiquetasLidas = new List<Etiqueta>();
+                ListEtiquetasLidas = new List<Etiqueta>();
             }
             
             //ProximaEtiqueta = 0;
 
-            if(ListEtiquetasGeradas != null)
+            if(ListEtiquetas != null)
             {
-                ListEtiquetasGeradas.Clear();
+                ListEtiquetas.Clear();
             }
 
-            if (arrayStringToEtiqueta != null)
+            if (ArrayStringToEtiqueta != null)
             {
-                arrayStringToEtiqueta = null;
+                ArrayStringToEtiqueta = null;
             }
         }
 
@@ -68,17 +70,17 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             TotalItens = tItens;
             TotalPecas = tPecas;
-            qtdPecasItem = pecasItens;
+            QtdPecasItem = pecasItens;
             ProcedimentosLiberacao.inicializaQtdVolumes();
             ProcedimentosLiberacao.calcularPesoTotalEmbalagens();
             //ProcedimentosLiberacao.PesoTotalProdutos = 0;
 
-            listEtiquetasLidas = new List<Etiqueta>();
+            ListEtiquetasLidas = new List<Etiqueta>();
 
             //ProximaEtiqueta = 0;
-            if (arrayStringToEtiqueta != null)
+            if (ArrayStringToEtiqueta != null)
             {
-                arrayStringToEtiqueta = null;
+                ArrayStringToEtiqueta = null;
             }
         }
 
@@ -90,116 +92,116 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             TotalItens = TotalItens;
             TotalPecas = TotalPecas;
-            qtdPecasItem = pecasItens;
+            QtdPecasItem = pecasItens;
 
-            if (listEtiquetasLidas != null)
+            if (ListEtiquetasLidas != null)
             {
-                listEtiquetasLidas.Clear();
+                ListEtiquetasLidas.Clear();
             }
             else
             {
-                listEtiquetasLidas = new List<Etiqueta>();
+                ListEtiquetasLidas = new List<Etiqueta>();
             }
 
             //ProximaEtiqueta = 0;
 
-            if (ListEtiquetasGeradas != null)
+            if (ListEtiquetas != null)
             {
-                ListEtiquetasGeradas.Clear();
+                ListEtiquetas.Clear();
             }
 
-            if (arrayStringToEtiqueta != null)
+            if (ArrayStringToEtiqueta != null)
             {
-                arrayStringToEtiqueta = null;
+                ArrayStringToEtiqueta = null;
             }
         }
 
     #region "GETS E SETS"
 
-        public static Double TotalPecas
-        {
-            get { return totalPecas; }
-            set { totalPecas = value; }
-        }
+        //public static Double TotalPecas
+        //{
+        //    get { return totalPecas; }
+        //    set { totalPecas = value; }
+        //}
 
-        public static Double QtdPecasItem
-        {
-            get { return qtdPecasItem; }
+        //public static Double TotalItens
+        //{
+        //    get { return totalItens; }
+        //    set { totalItens = value; }
+        //}
+
+        //public static Int32 TotalVolumes
+        //{
+        //    get { return ProcedimentosLiberacao.totalVolumes; }
+        //    set { ProcedimentosLiberacao.totalVolumes = value; }
+        //}
+
+        //public static Double QtdPecasItem
+        //{
+        //    get { return qtdPecasItem; }
  
-        }
+        //}
 
-        public static Int32 TotalVolumes
-        {
-            get { return ProcedimentosLiberacao.totalVolumes; }
-            set { ProcedimentosLiberacao.totalVolumes = value; }
-        }
+        //public static Double PesoTotalEmbalagens
+        //{
+        //    get { return ProcedimentosLiberacao.PesoTotalEmbalagens; }
+        //    set { ProcedimentosLiberacao.PesoTotalEmbalagens = value; }
+        //}
+
+        //public static Double PesoTotalProdutos
+        //{
+        //    get { return ProcedimentosLiberacao.PesoTotalProdutos; }
+        //    set { ProcedimentosLiberacao.PesoTotalProdutos = value; }
+        //}
+
+        //public static Double PesoTotalPedido
+        //{
+        //    get { return ProcedimentosLiberacao.PesoTotalPedido; }
+        //    set { ProcedimentosLiberacao.PesoTotalPedido = value; }
+        //}
+
+        //internal static List<Etiqueta> ListEtiquetasLidas
+        //{
+        //    get { return ListEtiquetasLidas; }
+        //    set { ListEtiquetasLidas = value; }
+        //}
+      
+        //internal static List<Etiqueta> ListEtiquetas
+        //{
+        //  get { return ListEtiquetas; }
+        //  set { ListEtiquetas = value; }
+        //}
+
+        //public static Array ArrayStringToEtiqueta
+        //{
+        //    get { return ProcedimentosLiberacao.ArrayStringToEtiqueta; }
+        //    set { ProcedimentosLiberacao.ArrayStringToEtiqueta = value; }
+        //}
+
+        //internal static List<EmbalagemSeparacao> ListEmbalagensSeparacao
+        //{
+        //    get { return ProcedimentosLiberacao.ListEmbalagensSeparacao; }
+        //    set { ProcedimentosLiberacao.ListEmbalagensSeparacao = value; }
+        //}
+
+    #endregion
 
         public static Double subtrairQtdPecasItem(Double value)
         {
-            if (QtdPecasItem - value>= 0)
+            if (QtdPecasItem - value >= 0)
             {
-                return qtdPecasItem -= value;
+                return QtdPecasItem -= value;
             }
-            else 
+            else
             {
-                throw new QuantidadeInvalidaException(String.Format ("O Valor informado é maior que a Quantidade de peças existentes."));
+                throw new QuantidadeInvalidaException(String.Format("O Valor informado é maior que a Quantidade de peças existentes."));
             }
         }
 
         public static void somarQtdPecasItem(Double value)
         {
-            totalPecas = value;
+            TotalPecas = value;
         }
-
-        public static Double TotalItens
-        {
-            get { return totalItens; }
-            set { totalItens = value; }
-        }
-
-        internal static List<Etiqueta> EtiquetasLidas
-        {
-            get { return listEtiquetasLidas; }
-            set { listEtiquetasLidas = value; }
-        }
-      
-        internal static List<Etiqueta> ListEtiquetasGeradas
-        {
-          get { return listEtiquetas; }
-          set { listEtiquetas = value; }
-        }
-
-        public static Array ArrayStringToEtiqueta
-        {
-            get { return ProcedimentosLiberacao.arrayStringToEtiqueta; }
-            set { ProcedimentosLiberacao.arrayStringToEtiqueta = value; }
-        }
-
-        internal static List<EmbalagemSeparacao> ListEmbalagensSeparacao
-        {
-            get { return ProcedimentosLiberacao.listEmbalagensSeparacao; }
-            set { ProcedimentosLiberacao.listEmbalagensSeparacao = value; }
-        }
-
-        public static Double PesoTotalEmbalagens
-        {
-            get { return ProcedimentosLiberacao.pesoTotalEmbalagens; }
-            set { ProcedimentosLiberacao.pesoTotalEmbalagens = value; }
-        }
-
-        public static Double PesoTotalProdutos
-        {
-            get { return ProcedimentosLiberacao.pesoTotalProdutos; }
-            set { ProcedimentosLiberacao.pesoTotalProdutos = value; }
-        }
-
-        public static Double PesoTotalPedido
-        {
-            get { return ProcedimentosLiberacao.pesoTotalPedido; }
-            set { ProcedimentosLiberacao.pesoTotalPedido = value; }
-        }
-     
-    #endregion
 
         /// <summary>
         /// Verifica se a Etiqueta já foi lida.
@@ -210,53 +212,58 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </returns>
         public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta)
         {
-            //Verifica se o List foi iniciado
 
-            switch (objEtiqueta.TipoEtiqueta )
+            try
             {
-                case Etiqueta.Tipo.INVALID:
+                //Verifica se o List foi iniciado
 
-                    return false;
+                switch (objEtiqueta.TipoEtiqueta)
+                {
+                    case Etiqueta.Tipo.INVALID:
 
-                case Etiqueta.Tipo.QRCODE:
+                        return false;
 
-                    if (EtiquetasLidas != null)
-                    {
-                        if (EtiquetasLidas.Count == 0)
+                    case Etiqueta.Tipo.QRCODE:
+
+                        if (ListEtiquetasLidas != null)
                         {
-                            return true;
-                        }
-                        else
-                        {
-                            //Verifica se a etiqueta está na lista de etiquetas lidas.
-                            if (Etiqueta.validarEtiqueta(objEtiqueta, EtiquetasLidas))
+                            if (ListEtiquetasLidas.Count == 0)
                             {
-                                //Caso esteja na lista
-                                return false;
+                                return true;
                             }
                             else
                             {
-                                //caso não esteja na lista.
-                                return true;
+                                //Verifica se a etiqueta já esta na lista de etiquetas Lidas
+                                if (objEtiqueta.buscarEtiqueta(ListEtiquetasLidas))
+                                {
+                                    //Caso esteja na lista
+                                    return false;
+                                }
+                                else
+                                {
+                                    //caso não esteja na lista.
+                                    return true;
+                                }
                             }
                         }
-                    }
-                    else
-                    {
+                        else
+                        {
+                            throw new invalidArgumentException("Não foi possível validar a etiqueta!." + objEtiqueta.SequenciaEtiqueta);
+                        }
+
+
+                    case Etiqueta.Tipo.BARRAS:
+
                         return true;
-                    }
 
-
-                case Etiqueta.Tipo.BARRAS:
-
-                    return true;
-
-                default :
-                    return false;
+                    default:
+                        return false;
+                }
             }
-
-
-            
+            catch (invalidArgumentException ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -311,7 +318,7 @@ namespace TitaniumColector.Classes.Procedimentos
 
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
             Etiqueta objEtiqueta = new EtiquetaVenda();
-            objEtiqueta = new EtiquetaVenda(arrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
+            objEtiqueta = new EtiquetaVenda(ArrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
         }
       
@@ -330,7 +337,7 @@ namespace TitaniumColector.Classes.Procedimentos
         {
             tbMensagem.Text = "";
             ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
-            Etiqueta objEtiqueta = new EtiquetaVenda(arrayStringToEtiqueta, tipoEtiqueta);
+            Etiqueta objEtiqueta = new EtiquetaVenda(ArrayStringToEtiqueta, tipoEtiqueta);
             efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
         }
         
@@ -364,7 +371,7 @@ namespace TitaniumColector.Classes.Procedimentos
                             tbLote.Text = objEtiqueta.LoteEtiqueta;
                             tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
                             tbQuantidade.Text = (subtrairQtdPecasItem(objEtiqueta.QuantidadeEtiqueta)).ToString();
-                            objEtiqueta.VolumeEtiqueta = ProcedimentosLiberacao.totalVolumes;
+                            objEtiqueta.VolumeEtiqueta = ProcedimentosLiberacao.TotalVolumes;
                             addToListEtiquetasLidas(objEtiqueta);
                         }
                     }
@@ -375,9 +382,9 @@ namespace TitaniumColector.Classes.Procedimentos
                 }
                 else
                 {
-                    if (ProcedimentosLiberacao.mensagem != "" || ProcedimentosLiberacao.mensagem != null)
+                    if (ProcedimentosLiberacao.Mensagem != "" || ProcedimentosLiberacao.Mensagem != null)
                     {
-                        tbMensagem.Text = ProcedimentosLiberacao.mensagem;
+                        tbMensagem.Text = ProcedimentosLiberacao.Mensagem;
                     }
                     else 
                     {
@@ -429,18 +436,18 @@ namespace TitaniumColector.Classes.Procedimentos
                                 }
                                 else 
                                 {
-                                    mensagem = "Quantidade da etiqueta não confere com a Quantidade de itens da embalagem do produto.";
+                                    Mensagem = "Quantidade da etiqueta não confere com a Quantidade de itens da embalagem do produto.";
                                 }
                             }
                             else 
                             {
-                                mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
+                                Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
                             }
                         }
                     }
                     else 
                     {
-                        mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
+                        Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
                     }
 
                     break;
@@ -457,13 +464,13 @@ namespace TitaniumColector.Classes.Procedimentos
                             }
                             else
                             {
-                                mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
+                                Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
                             }
                         }
                     }
                     else
                     {
-                        mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
+                        Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
                     }
                     
                     break;
@@ -487,7 +494,7 @@ namespace TitaniumColector.Classes.Procedimentos
          /// <param name="etiquetaLida"></param>
         public static void addToListEtiquetasLidas(Etiqueta etiquetaLida)
         {
-            EtiquetasLidas.Add(etiquetaLida);
+            ListEtiquetasLidas.Add(etiquetaLida);
         }
 
         /// <summary>
@@ -495,9 +502,9 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </summary>
         public static void clearListEtiquetasLidas() 
         {
-            EtiquetasLidas.Clear();
-            EtiquetasLidas = null;
-            EtiquetasLidas = new List<Etiqueta>();
+            ListEtiquetasLidas.Clear();
+            ListEtiquetasLidas = null;
+            ListEtiquetasLidas = new List<Etiqueta>();
         }
 
         /// <summary>
@@ -850,7 +857,7 @@ namespace TitaniumColector.Classes.Procedimentos
          /// <returns> quantidade total de cvolumes.</returns>
        
         private static bool podeDecremetar() {
-           return ProcedimentosLiberacao.totalVolumes > 1;
+           return ProcedimentosLiberacao.TotalVolumes > 1;
         }
 
         public static int calcularTotalVolumes()
@@ -883,19 +890,348 @@ namespace TitaniumColector.Classes.Procedimentos
 
         public static void limpar() 
         {
-            totalItens = 0;
-            totalPecas = 0;
-            totalVolumes = 0;
-            pesoTotalProdutos = 0.0;
-            qtdPecasItem = 0.0;
-            pesoTotalEmbalagens = 0.0;
-            pesoTotalPedido = 0.0;
-            listEtiquetasLidas = null;
-            listEtiquetas = null;
-            listEmbalagensSeparacao = null;
-            arrayStringToEtiqueta = null;
-            mensagem="";
+            TotalItens = 0;
+            TotalPecas = 0;
+            TotalVolumes = 0;
+            PesoTotalProdutos = 0.0;
+            QtdPecasItem = 0.0;
+            PesoTotalEmbalagens = 0.0;
+            PesoTotalPedido = 0.0;
+            ListEtiquetasLidas = null;
+            ListEtiquetas = null;
+            ListEmbalagensSeparacao = null;
+            ArrayStringToEtiqueta = null;
+            Mensagem="";
 
         }
+
+        public static string montarXmlProcedimento()
+        {
+            string result = "";
+
+            try
+            {
+                System.IO.StringWriter str = new System.IO.StringWriter();
+
+                //Variável que irá receber o Xml na forma de String.
+                XmlTextWriter writer = new XmlTextWriter(str);
+
+                //inicia o documento xml
+                writer.WriteStartDocument();
+
+                //define a indentação do arquivo
+                writer.Formatting = Formatting.Indented;
+
+                //escreve o elemento raiz
+                writer.WriteStartElement("Item");
+                //escrever o atributo para o Elemento Raiz Item
+
+                //writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
+
+                foreach (var item in ListEtiquetasLidas)
+                {
+                    //Elemento Raiz Seq
+                    writer.WriteStartElement("Seq");
+                    //Escreve atributos IdEtiqueta
+                    writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
+                    //Escreve atributos TIPO Etiqueta
+                    writer.WriteAttributeString("TIPO", item.TipoEtiqueta.ToString());
+                    //Escreve elemento entre a tag Seq
+                    writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
+                    writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
+                    writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
+                    writer.WriteElementString("Usuario", MainConfig.UserOn.Codigo.ToString());
+                    //Encerra o elemento Seq
+                    writer.WriteEndElement();
+                }
+
+                //Encerra o elemento Item
+                writer.WriteEndDocument();
+
+                // O resultado é uma string.
+                return result = str.ToString();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public static void finalizarProposta(Proposta objProposta,FrmProposta frmProposta)
+        {
+            try
+            {    
+                FrmProposta.mostrarMensagem(TitaniumColector.Forms.FrmProposta.enumCor.BLUE, "Gravando informações na base de dados!", TitaniumColector.Forms.FrmProposta.enumCursor.WAIT);
+                var daoItemProposta = new DaoProdutoProposta();
+                var daoProposta = new DaoProposta();
+                var daoEmbalagem = new DaoEmbalagem();
+
+                daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.FINALIZADO, true, true);
+                daoItemProposta.updateItemPropostaRetorno();
+                daoProposta.updateVolumeProposta(objProposta.Codigo);
+                daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.UserOn.Codigo);
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("finalizarProposta()\n " + ex.Message);
+            }
+            finally
+            {
+                FrmAcao frm = new FrmAcao();
+                FrmProposta.mostrarMensagem(TitaniumColector.Forms.FrmProposta.enumCor.RED, "", TitaniumColector.Forms.FrmProposta.enumCursor.DEFAULT);
+                frmProposta.Dispose();
+                frmProposta.Close();
+                frm.Show();
+            }
+        }
+
+        /// <summary>
+        /// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
+        /// </summary>
+        /// 
+        /// <returns>
+        ///          TRUE --> caso exista um próximo item a ser trabalhado
+        ///          FALSE --> caso não exista mais items para serem trabalhados.
+        /// </returns>
+        public static bool nextItemProposta(Proposta objProposta,FrmProposta frm)
+        {
+            bool hasItem = false;
+            var daoItemProposta = new DaoProdutoProposta();
+            var daoEtiqueta = new DaoEtiqueta();
+            var objTransacoes = new BaseMobile();
+
+            try
+            {
+                frm.clearParaProximoItem();
+
+                tratarParaProximoItem(objProposta);
+                //grava informações do item na base de dados mobile
+                daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
+                //inseri informações das etiquetas referente ao produto liberado em formato Xml
+                daoItemProposta.updateXmlItemProposta(montarXmlProcedimento(), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+
+                //carrega próximo item
+                if (frm.temItensConferir())
+                {
+                    var prod = daoItemProposta.itemATrabalhar();
+                    var daoEmbalagem = new DaoEmbalagem();
+
+                    if (prod != null)
+                    {
+                        //Carrega informações de Embalagem para o produto que será trabalhado.
+                        prod.Embalagens = daoEmbalagem.carregarEmbalagensProduto(prod);
+
+                        hasItem = true;
+
+                        objProposta.setNextItemProposta(prod);
+                    }
+                    else
+                    {
+                        hasItem = false;
+                    }
+                }
+                else // CASO não tenha um próximo item 
+                {
+                    hasItem = false;
+                }
+
+                //Se existir um próximo item
+                if (hasItem)
+                {
+                    //seta Parametros para iniciar leitura do próximo item
+                    inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
+
+                    //recarrega o form com as informações do próximo item.
+                    frm.fillCamposForm(objProposta, TotalPecas, TotalItens);
+                }
+                else
+                {
+                    frm.clearFormulario(true, true);
+                }
+            }
+            catch (SqlCeException Ex)
+            {
+                MessageBox.Show(Ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao carregar próximo item!", ex);
+            }
+            finally
+            {
+                daoEtiqueta = null;
+                daoItemProposta = null;
+                objTransacoes = null;
+            }
+
+            return hasItem;
+        }
+
+        /// <summary>
+        /// Reliza todos os processos nescessários para efetuar a carga de dados na base Mobile.
+        /// </summary>
+        public static void carregaBaseMobile(FrmProposta frm)
+        {
+
+            var objTransacoes = new BaseMobile();
+            var objProposta = new Proposta();
+            var daoItemProposta = new DaoProdutoProposta();
+            var daoProposta = new DaoProposta();
+            var daoProduto = new DaoProduto();
+            var daoEmbalagem = new DaoEmbalagem();
+
+            //LIMPA INFORMAÇÕES RESULTANTE DE OUTROS PRODUTOS JÁ CONFERIDOS
+            ProcedimentosLiberacao.limpar();
+
+            try
+            {
+                //Limpa a Base.
+                objTransacoes.clearBaseMobile();
+
+                //Carrega um objeto Proposta e inicia todo o procedimento.
+                //Caso não exista propostas a serem liberadas gera um exception 
+                //onde será feito os tratamentos para evitar o travamento do sistema.
+                if ((objProposta = daoProposta.fillTop1PropostaServidor()) != null)
+                {
+                    daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.UserOn.Codigo, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
+
+                    //recupera o codigoPickingMobile da proposta trabalhada.
+                    objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
+
+                    //Realiza o Insert na Base Mobile
+                    daoProposta.insertProposta(objProposta, MainConfig.UserOn.Codigo);
+
+                    //Recupera List com itens da proposta
+                    //Insert na Base Mobile tabela tb0002_ItensProposta
+                    daoItemProposta.carregarBaseMobileItens(daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>());
+
+                    //Insert na base Mobile tabela tb0003_Produtos
+                    //Recupera informações sobre os produtos existentes na proposta
+                    daoProduto.insertProdutoBaseMobile(daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>());
+
+                    //Armazena informações de embalagens do produto na base mobile.
+                    daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
+
+                    //Carrega Informações das Embalagens de Separação.
+                    //Carrega Quantidade das Embalagens utilizadas nos volumes da separação
+                    ProcedimentosLiberacao.ListEmbalagensSeparacao = daoEmbalagem.carregarInformacoesEmbalagensUtilizadas((Int32)objProposta.CodigoPikingMobile, daoEmbalagem.carregarEmbalagensSeparacao());
+
+                }
+                else
+                {
+                    throw new NoNewPropostaException("Não existem novas propostas a serem liberadas!!");
+                }
+            }
+            catch (SqlQueryExceptions ex)
+            {
+                frm.exitOnError(ex.Message, "Próxima Proposta", false);
+            }
+            catch (NoNewPropostaException ex)
+            {
+                frm.exitOnError(ex.Message, "Próxima Proposta", false);
+            }
+            catch (SqlCeException sqlEx)
+            {
+                ProcedimentosLiberacao.interromperLiberacao(objProposta);
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
+                StringBuilder strBuilder = new StringBuilder();
+                strBuilder.Append("O procedimento não pode ser concluído.\n");
+                strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
+                strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
+                frm.exitOnError(strBuilder.ToString(), "SqlException!!", false);
+            }
+            catch (Exception ex)
+            {
+                ProcedimentosLiberacao.interromperLiberacao(objProposta);
+                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
+                StringBuilder strBuilder = new StringBuilder();
+                strBuilder.Append("O procedimento não pode ser concluído.\n");
+                strBuilder.AppendFormat(" Descrição: {0}", ex.Message);
+                strBuilder.Append("\nContate o Administrador do sistema.");
+                frm.exitOnError(strBuilder.ToString(), "SqlException!!", false);
+            }
+            finally
+            {
+                objTransacoes = null;
+                objProposta = null;
+                daoProposta = null;
+                daoProduto = null;
+                daoItemProposta = null;
+                daoEmbalagem = null;
+            }
+
+        }
+
+        /// <summary>
+        /// Realiza todo o processo de liberação para o produto lido
+        /// </summary>
+        /// <param name="inputText">Valor captado pelo Leitor</param>
+        /// <param name="tipoEtiqueta">Tipo de Etiqueta a ser validada</param>
+        public static void liberarItem(String inputText, Etiqueta.Tipo tipoEtiqueta,Proposta objProposta,FrmProposta frm)
+        {
+            try
+            {
+                ProcedimentosLiberacao.lerEtiqueta(inputText, tipoEtiqueta, objProposta.ListObjItemProposta[0], frm.tbProduto, frm.tbLote, frm.tbSequencia, frm.tbQuantidade, FrmProposta.tbMensagem);
+
+                if (ProcedimentosLiberacao.QtdPecasItem == 0)
+                {
+                    if (!ProcedimentosLiberacao.nextItemProposta(objProposta, frm))
+                    {
+                        ProcedimentosLiberacao.finalizarProposta(objProposta, frm);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static Proposta carregarProposta(FrmProposta frm) 
+        {
+            try
+            {
+                var proposta = new Proposta();
+                var ListInformacoesProposta = new List<string>();
+                var daoProposta = new DaoProposta();
+                var daoEmbalagem = new DaoEmbalagem();
+
+                //Carrega um list com informações gerais sobre a proposta atual na base Mobile.
+                ListInformacoesProposta = daoProposta.fillInformacoesProposta();
+
+                //carrega um obj Proposta com a atual proposta na base mobile 
+                //e com o item top 1 da proposta.
+                proposta = daoProposta.fillPropostaWithTop1Item();
+
+                //Set o total de peças e o total de Itens para o objeto proposta
+                proposta.setTotalValoresProposta(Convert.ToDouble(ListInformacoesProposta[4]), Convert.ToDouble(ListInformacoesProposta[3]));
+
+                //Carrega informações de Embalagem para o produto que será trabalhado.
+                proposta.ListObjItemProposta[0].Embalagens = daoEmbalagem.carregarEmbalagensProduto(proposta);
+
+                //Set os valores para os atributos auxiliares.
+                ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(ListInformacoesProposta[4]), Convert.ToDouble(ListInformacoesProposta[3]), proposta.ListObjItemProposta[0].Quantidade, proposta.Volumes);
+
+                //Carrega o formulário com as informações que serão manusueadas para a proposta e o item da proposta
+                //this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
+                frm.fillCamposForm(proposta);
+
+                //Retorna o objeto proposta o qual terá suas informações trabalhadas do processo de conferencia do item.
+                return proposta;
+            }
+            catch (ArithmeticException ex) 
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

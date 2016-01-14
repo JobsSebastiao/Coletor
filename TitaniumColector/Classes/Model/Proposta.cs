@@ -6,7 +6,7 @@ using System.Text;
 namespace TitaniumColector.Classes
 {
 
-    class Proposta
+    public class Proposta
     {
         private Int64 codigo;
         private String numero;

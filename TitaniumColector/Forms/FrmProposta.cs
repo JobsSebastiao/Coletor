@@ -20,17 +20,9 @@ namespace TitaniumColector.Forms
     {
         //OBJECTS
         private Proposta objProposta;
-        private BaseMobile objTransacoes;
         private String inputText;
         private Parametro paramValidarSequencia;
-        private List<String> listInfoProposta;
-
-        //OBJETOS DAO
-        private DaoEtiqueta daoEtiqueta;
-        private DaoProdutoProposta daoItemProposta;
-        private DaoProposta daoProposta;
-        private DaoProduto daoProduto;
-        private DaoEmbalagem daoEmbalagem;
+        private List<String> ListInformacoesProposta { get; set; }
 
         //ENUM
         public enum enumCor { RED = 0, BLACK = 1, BLUE = 2 }
@@ -42,15 +34,17 @@ namespace TitaniumColector.Forms
         {
             InitializeComponent();
             configControls();
-            this.carregaBaseMobile();
+            ProcedimentosLiberacao.carregaBaseMobile(this);
+            //this.carregaBaseMobile();
          }
 
-    #region "EVENTOS"
+    #region "EVENTOS FORM"
 
         private void FrmProposta_Load(object sender, System.EventArgs e)
         {
             this.clearFormulario(true, true);
-            this.carregarDadosProposta();
+            this.carregarProposta();
+            //this.carregarDadosProposta();
             Cursor.Current = Cursors.Default;
         }
 
@@ -64,11 +58,6 @@ namespace TitaniumColector.Forms
             catch (Exception ex)
             {
                 MainConfig.errorMessage(ex.Message, "Logout");
-            }
-            finally
-            {
-                daoItemProposta = null;
-                daoProduto = null;
             }
         }
         
@@ -90,11 +79,7 @@ namespace TitaniumColector.Forms
             {
                 MainConfig.errorMessage(ex.Message, "Logout");
             }
-            finally 
-            {
-                daoItemProposta = null;
-                daoProduto = null;
-            }
+            
         }
      
         /// <summary>
@@ -118,8 +103,6 @@ namespace TitaniumColector.Forms
             {
                 if (inputText != "" && inputText != null)
                 {
-
-                    //Etiqueta.Tipo tipoEtiqueta = ProcedimentosLiberacao.validaInputValueEtiqueta(inputText);
                     Etiqueta.Tipo tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText,new EtiquetaVenda());
 
                     switch (tipoEtiqueta)
@@ -201,147 +184,17 @@ namespace TitaniumColector.Forms
 
     #endregion
 
-    #region "CARGA BASE DE DADOS MOBILE"
-
-        /// <summary>
-        /// Reliza todos os processos nescessários para efetuar a carga de dados na base Mobile.
-        /// </summary>
-        private void carregaBaseMobile()
-        {
-
-            objTransacoes = new BaseMobile();
-            objProposta = new Proposta();
-            daoItemProposta = new DaoProdutoProposta();
-            daoProposta = new DaoProposta();
-            daoProduto = new DaoProduto();
-            daoEmbalagem = new DaoEmbalagem();
-
-            //LIMPA INFORMAÇÕES RESULTANTE DE OUTROS PRODUTOS JÁ CONFERIDOS
-            ProcedimentosLiberacao.limpar();
-
-            try
-            {
-                //Limpa a Base.
-                objTransacoes.clearBaseMobile();
-
-                //Carrega um objeto Proposta e inicia todo o procedimento.
-                //Caso não exista propostas a serem liberadas gera um exception 
-                //onde será feito os tratamentos para evitar o travamento do sistema.
-                if ((objProposta = daoProposta.fillTop1PropostaServidor()) != null)
-                {
-                    daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.UserOn.Codigo, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
-
-                    //recupera o codigoPickingMobile da proposta trabalhada.
-                    objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
-
-                    //Realiza o Insert na Base Mobile
-                    daoProposta.insertProposta(objProposta, MainConfig.UserOn.Codigo);
-                     
-                    //Recupera List com itens da proposta
-                    //Insert na Base Mobile tabela tb0002_ItensProposta
-                    daoItemProposta.insertItemProposta(daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>());
-
-                    //Insert na base Mobile tabela tb0003_Produtos
-                    //Recupera informações sobre os produtos existentes na proposta
-                    daoProduto.insertProdutoBaseMobile(daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>());
-
-                    //Armazena informações de embalagens do produto na base mobile.
-                    daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
-
-                    //Carrega Informações das Embalagens de Separação.
-                    //Carrega Quantidade das Embalagens utilizadas nos volumes da separação
-                    ProcedimentosLiberacao.ListEmbalagensSeparacao = daoEmbalagem.carregarInformacoesEmbalagensUtilizadas((Int32)objProposta.CodigoPikingMobile, daoEmbalagem.carregarEmbalagensSeparacao());
-
-                }
-                else
-                {
-                    throw new NoNewPropostaException("Não existem novas propostas a serem liberadas!!");
-                }
-            }
-            catch (SqlQueryExceptions ex) 
-            {
-                this.exitOnError(ex.Message, "Próxima Proposta",false);
-            }
-            catch (NoNewPropostaException ex)
-            {
-                this.exitOnError(ex.Message, "Próxima Proposta",false);
-            }
-            catch (SqlCeException sqlEx)
-            {
-                ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
-                StringBuilder strBuilder = new StringBuilder();
-                strBuilder.Append("O procedimento não pode ser concluído.\n");
-                strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
-                strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
-                this.exitOnError(strBuilder.ToString(), "SqlException!!",false);
-            }
-            catch (Exception ex)
-            {
-                ProcedimentosLiberacao.interromperLiberacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true,false);
-                StringBuilder strBuilder = new StringBuilder();
-                strBuilder.Append("O procedimento não pode ser concluído.\n");
-                strBuilder.AppendFormat(" Descrição: {0}", ex.Message);
-                strBuilder.Append("\nContate o Administrador do sistema.");
-                this.exitOnError(strBuilder.ToString(), "SqlException!!",false);
-            }
-            finally
-            {
-                objTransacoes = null;
-                objProposta = null;
-                daoProposta = null;
-                daoProduto = null;
-                daoItemProposta = null;
-                daoEmbalagem = null;
-            }
-
-        }
-
-    #endregion 
-      
     #region "CARGA INICIAL DE INFORMAÇÕES DO PRODUTO A SER TRABALHADO E DO FORMULÁRIO"
-
-        private void carregarDadosProposta()
-        {
-            objProposta = new Proposta(this.fillProposta());
-        }
 
         /// <summary>
         ///  Preenche um objeto proposta com todas as informações contidas na base de dados da Proposta e de todos os seus itens.
         /// </summary>
         /// <returns> Objeto Proposta </returns>
-        private Proposta fillProposta()
+        private void carregarProposta()
         {
-            Proposta proposta = null;
-            objTransacoes = new BaseMobile();
-            daoProposta = new DaoProposta();
-            daoEmbalagem = new DaoEmbalagem();
-
             try
             {
-                //Carrega um list com informações gerais sobre a proposta atual na base Mobile.
-                listInfoProposta = daoProposta.fillInformacoesProposta();
-
-                //carrega um obj Proposta com a atual proposta na base mobile 
-                //e com o item top 1 da proposta.
-                proposta = daoProposta.fillPropostaWithTop1Item();
-
-                //Set o total de peças e o total de Itens para o objeto proposta
-                proposta.setTotalValoresProposta(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]));
-
-                //Carrega informações de Embalagem para o produto que será trabalhado.
-                proposta.ListObjItemProposta[0].Embalagens = daoEmbalagem.carregarEmbalagensProduto(proposta);
-
-                //Set os valores para os atributos auxiliares.
-                ProcedimentosLiberacao.inicializarProcedimentos(Convert.ToDouble(listInfoProposta[4]), Convert.ToDouble(listInfoProposta[3]), proposta.ListObjItemProposta[0].Quantidade, proposta.Volumes);
-
-                //Carrega o formulário com as informações que serão manusueadas para a proposta e o item da proposta
-                //this.fillCamposForm(proposta.Numero, (string)proposta.RazaoCliente, proposta.Totalpecas, proposta.TotalItens, (string)proposta.ListObjItemProposta[0].Partnumber, (string)proposta.ListObjItemProposta[0].Descricao, (string)proposta.ListObjItemProposta[0].NomeLocalLote, proposta.ListObjItemProposta[0].Quantidade.ToString());
-                this.fillCamposForm(proposta);
-
-                //Retorna o objeto proposta o qual terá suas informações trabalhadas do processo de conferencia do item.
-                return proposta;
+                objProposta = ProcedimentosLiberacao.carregarProposta(this);
             }
             catch (ArithmeticException ex) 
             {
@@ -349,7 +202,6 @@ namespace TitaniumColector.Forms
                 sbMsg.Append("Problemas durante o processamento de informações sobre a proposta.\n");
                 sbMsg.AppendFormat("Error : {0}", ex.Message);
                 MainConfig.errorMessage(sbMsg.ToString(), "Operação Inválida!");
-                return null;
             }
             catch (Exception ex)
             {
@@ -358,19 +210,8 @@ namespace TitaniumColector.Forms
                 sbMsg.AppendFormat("Error : {0}", ex.Message);
                 sbMsg.Append("Contate o Administrador do sistema.");
                 MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
-                return null;
             }
-            finally 
-            {
-                objTransacoes = null;
-                daoProposta = null;
-                proposta = null;
-            }
-
         }
-
-        ////CARREGA AS INFORMAÇÔES PARA O FORMULÁRIO
-
         /// <summary>
         /// Carrega o form com as informações nescessárias para separação do próximo item.
         /// </summary>
@@ -380,7 +221,7 @@ namespace TitaniumColector.Forms
         /// <remarks > O objeto proposta já deve ter sido carregado com o próximo item que será trabalhado pois as informações serão retira
         ///           retiradas do item de index [0] na ListObjItemProsta
         /// </remarks>
-        private void fillCamposForm(Proposta objProposta,Double qtdPecas, Double qtdItens)
+        public void fillCamposForm(Proposta objProposta,Double qtdPecas, Double qtdItens)
         {
             lbNumeroPedido.Text = objProposta.Numero.ToString();
             lbNomeCliente.Text = objProposta.RazaoCliente;
@@ -392,45 +233,11 @@ namespace TitaniumColector.Forms
             {
                 tbLocal.Font = MainConfig.FontGrandeBold;
             }
-
             tbLocal.Text = objProposta.ListObjItemProposta[0].NomeLocalLote;
             tbQuantidade.Text = objProposta.ListObjItemProposta[0].Quantidade.ToString();
         }
 
-        /// <summary>
-        /// Carrega os campo do Fomulário de Propostas
-        /// </summary>
-        /// <param name="numeroPedido">Numero da Proposta</param>
-        /// <param name="nomeCliente">Cliente Proposta</param>
-        /// <param name="qtdPecas">Total de peças da porposta</param>
-        /// <param name="qtdItens">Total de itens na proposta</param>
-        /// <param name="partnumber">Partnumber no item a ser manipulado</param>
-        /// <param name="produto">Descrição(NOME) do produto a ser manipulado</param>
-        /// <param name="local">local de armazenagem do produto</param>
-        /// <param name="quantidadeItem">Quantidade de item do produto atual a ser manipulado.</param>
-        private void fillCamposForm(String numeroProposta, String nomeCliente, Double qtdPecas, Double qtdItens,String partnumber,String produto,String local,String quantidadeItem)
-        {
-                    
-            System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
-
-            lbNumeroPedido.Text = numeroProposta.ToString();
-            lbNomeCliente.Text = nomeCliente;
-            lbQtdPecas.Text = MainConfig.intOrDecimal(ProcedimentosLiberacao.TotalPecas.ToString()) + " Pçs";
-            lbQtdVolumes.Text = ProcedimentosLiberacao.TotalVolumes.ToString();
-            lbQtdItens.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
-            tbPartNumber.Text = partnumber;
-            tbDescricao.Text = produto;
-            if (local.Contains(','))
-            {
-                tbLocal.Font = MainConfig.FontGrandeBold;
-            }
-            tbLocal.Text = local;
-
-            tbQuantidade.Text = MainConfig.intOrDecimal(quantidadeItem);
-
-        }
-
-        private void fillCamposForm(Proposta prop)
+        public void fillCamposForm(Proposta prop)
         {
 
             System.Globalization.CultureInfo culture = new System.Globalization.CultureInfo("pt-BR");
@@ -450,95 +257,7 @@ namespace TitaniumColector.Forms
             tbQuantidade.Text = MainConfig.intOrDecimal(prop.ListObjItemProposta[0].Quantidade);
 
         }
-     
-        /// <summary>
-        /// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
-        /// </summary>
-        /// 
-        /// <returns>
-        ///          TRUE --> caso exista um próximo item a ser trabalhado
-        ///          FALSE --> caso não exista mais items para serem trabalhados.
-        /// </returns>
-        private bool nextItemProposta()
-        {
-            bool hasItem = false;
-            daoItemProposta = new DaoProdutoProposta();
-            daoEtiqueta = new DaoEtiqueta();
-            objTransacoes = new BaseMobile();
-
-            try
-            {
-                this.clearParaProximoItem();
-                
-                ProcedimentosLiberacao.tratarParaProximoItem(objProposta);
-                //grava informações do item na base de dados mobile
-                daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
-                //inseri informações das etiquetas referente ao produto liberado em formato Xml
-
-                using (var etiqueta = new EtiquetaVenda()) 
-                {
-                    daoItemProposta.updateXmlItemProposta(etiqueta.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
-                }
-
-                //daoItemProposta.updateXmlItemProposta(EtiquetaVenda.gerarXmlItensEtiquetas(ProcedimentosLiberacao.EtiquetasLidas), objProposta.ListObjItemProposta[0].CodigoItemProposta);
-               
-                //carrega próximo item
-                if (ProcedimentosLiberacao.TotalItens > 0)
-                {
-                    ProdutoProposta prod = daoItemProposta.fillTop1ItemProposta();
-
-                   
-
-                    if (prod != null)
-                    {
-                        //Carrega informações de Embalagem para o produto que será trabalhado.
-                        prod.Embalagens = daoEmbalagem.carregarEmbalagensProduto(prod);
-
-                        hasItem = true;
-
-                        objProposta.setNextItemProposta(prod);
-                    }
-                    else
-                    {
-                        hasItem = false;
-                    }
-                }
-                else // CASO não tenha um próximo item 
-                {
-                    hasItem = false;
-                }
-
-                //Se existir um próximo item
-                if (hasItem)
-                {
-                    //seta Parametros para iniciar leitura do próximo item
-                    ProcedimentosLiberacao.inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
-
-                    //recarrega o form com as informações do próximo item.
-                    this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
-                }
-                else
-                {
-                    this.clearFormulario(true, true);
-                }
-            }
-            catch (SqlCeException Ex)
-            {
-                MessageBox.Show(Ex.Message);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Erro ao carregar próximo item!",ex);
-            }
-            finally
-            {
-                daoEtiqueta = null;
-                daoItemProposta = null;
-            }
-
-            return hasItem;
-        }
-
+    
     #endregion
 
     #region "MÉTODOS GERAIS"
@@ -546,7 +265,7 @@ namespace TitaniumColector.Forms
         /// <summary>
         /// Limpa todos os campos que possuem valores manipuláveis.
         /// </summary>
-        private void clearFormulario()
+        public void clearFormulario()
         {
             foreach (Control ctrl in this.Controls)
             {
@@ -585,7 +304,7 @@ namespace TitaniumColector.Forms
         /// </summary>
         /// <param name="boolPnPrincipal">Limpa apenas o painel Principal (TRUE)</param>
         /// <param name="boolPnCentral"> limpa apenas o painel central (TRUE)</param>
-        private void clearFormulario(bool boolPnPrincipal, bool boolPnCentral)
+        public void clearFormulario(bool boolPnPrincipal, bool boolPnCentral)
         {
             //Entra no painelPrincipal
             foreach (Control ctrl in this.Controls)
@@ -623,7 +342,7 @@ namespace TitaniumColector.Forms
         /// <summary>
         /// Limpar formulário para preencher informações de um próximo item.
         /// </summary>
-        private void clearParaProximoItem()
+        public void clearParaProximoItem()
         {
             this.clearFormulario(false, true);
             this.tbProduto.Text = "";
@@ -641,25 +360,11 @@ namespace TitaniumColector.Forms
         {
             try
             {
-                ProcedimentosLiberacao.lerEtiqueta(inputText,tipoEtiqueta, objProposta.ListObjItemProposta[0], tbProduto, tbLote, tbSequencia, tbQuantidade, tbMensagem);
-
-                if (ProcedimentosLiberacao.QtdPecasItem == 0)
-                {
-                    if (!this.nextItemProposta())
-                    {
-                        this.finalizarProposta();
-                    }
-
-                }
+                ProcedimentosLiberacao.liberarItem(inputText, tipoEtiqueta, objProposta, this);
             }
             catch (Exception ex)
             {
                 MainConfig.errorMessage(ex.Message, "Liberação!");
-            }
-            finally
-            {
-                daoProposta = null;
-                daoItemProposta = null;
             }
         }
 
@@ -694,9 +399,9 @@ namespace TitaniumColector.Forms
                 if (resp == DialogResult.Yes)
                 {
                     //Classes para trabalhar com as bases de dados.
-                    daoItemProposta = new DaoProdutoProposta();
-                    daoProposta = new DaoProposta();
-                    daoEmbalagem = new DaoEmbalagem();
+                    var daoItemProposta = new DaoProdutoProposta();
+                    var daoProposta = new DaoProposta();
+                    var daoEmbalagem = new DaoEmbalagem();
 
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
                     daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, true);
@@ -707,7 +412,7 @@ namespace TitaniumColector.Forms
                 }
                 else if (resp == DialogResult.No)
                 {
-                    daoProposta = new DaoProposta();
+                    var daoProposta = new DaoProposta();
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
                     daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
                     this.Dispose();
@@ -722,9 +427,6 @@ namespace TitaniumColector.Forms
             }
             finally 
             {
-                daoItemProposta = null;
-                daoProposta = null;
-                daoEmbalagem = null;
                 Cursor.Current = Cursors.Default;
                 formulario.call();
             }
@@ -738,8 +440,6 @@ namespace TitaniumColector.Forms
         /// <returns>resposta do Dialog Result</returns>
         private DialogResult exitForm(bool showQuestion)
         {
-            //RETIREI BOOL RETORNO AINDA SOB SUBERVISÃO
-
             try
             {
                 DialogResult resp;
@@ -757,9 +457,9 @@ namespace TitaniumColector.Forms
 
                 if (resp == DialogResult.Yes)
                 {
-                    daoItemProposta = new DaoProdutoProposta();
-                    daoProposta = new DaoProposta();
-                    daoEmbalagem = new DaoEmbalagem();
+                    var daoItemProposta = new DaoProdutoProposta();
+                    var daoProposta = new DaoProposta();
+                    var daoEmbalagem = new DaoEmbalagem();
 
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
                     daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, true);
@@ -770,7 +470,7 @@ namespace TitaniumColector.Forms
                 }
                 else if (resp == DialogResult.No)
                 {
-                    daoProposta = new DaoProposta();
+                    var daoProposta = new DaoProposta();
                     ProcedimentosLiberacao.interromperLiberacao(objProposta);
                     daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
                     this.Dispose();
@@ -786,9 +486,6 @@ namespace TitaniumColector.Forms
             }
             finally
             {
-                daoItemProposta = null;
-                daoProposta = null;
-                daoEmbalagem = null;
                 Cursor.Current = Cursors.Default;
             }
         }
@@ -798,7 +495,7 @@ namespace TitaniumColector.Forms
         /// </summary>
         /// <param name="mensagem"></param>
         /// <param name="headForm"></param>
-        private void exitOnError(String mensagem, String headForm,bool showQuestion)
+        public  void exitOnError(String mensagem, String headForm,bool showQuestion)
         {   
             //MOSTRA MENSAGEM DE ERRO AO USUÁRIO
             MainConfig.errorMessage(mensagem, headForm);
@@ -811,41 +508,6 @@ namespace TitaniumColector.Forms
             this.Close();
         }
 
-        /// <summary>
-        /// Finaliza o processo de conferência de uma proposta como um todo.
-        /// </summary>
-        private void finalizarProposta() 
-        {
-            try
-            {
-                mostrarMensagem(enumCor.BLUE,"Gravando informações na base de dados!",enumCursor.WAIT);
-                daoItemProposta = new DaoProdutoProposta();
-                daoProposta = new DaoProposta();
-                daoEmbalagem = new DaoEmbalagem();
-
-                daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
-                daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.FINALIZADO,true,true);
-                daoItemProposta.updateItemPropostaRetorno();
-                daoProposta.updateVolumeProposta(objProposta.Codigo);
-                daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.UserOn.Codigo);
-                
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("finalizarProposta()\n " + ex.Message);
-            }
-            finally 
-            {
-                FrmAcao frm = new FrmAcao();
-                mostrarMensagem(enumCor.RED, "",enumCursor.DEFAULT);
-                daoItemProposta = null;
-                daoProposta = null;
-                this.Dispose();
-                this.Close();
-                frm.Show();
-            }
-        }
-
         public static void mostrarMensagem(enumCor corMensagem,String mensagem,enumCursor modoCursor) 
         {
             Cursor.Current = estadoCursor[(int)modoCursor];
@@ -853,17 +515,236 @@ namespace TitaniumColector.Forms
             tbMensagem.Text = mensagem;
         }
 
-    #endregion
-
-    #region "GET E SET"
-
-        public List<String> ListInformacoesProposta
+        public bool temItensConferir() 
         {
-            get { return listInfoProposta; }
-            set { listInfoProposta = value; }
+            return ProcedimentosLiberacao.TotalItens > 0;
         }
 
     #endregion
+
+    #region "Realocados para a classe ProcedimentosLiberacao"
+
+        ////#region "GET E SET"
+
+        ////    public List<String> ListInformacoesProposta
+        ////    {
+        ////        get { return ListInformacoesProposta; }
+        ////        set { ListInformacoesProposta = value; }
+        ////    }
+
+        ////#endregion
+
+        ///// <summary>
+        ///// Finaliza o processo de conferência de uma proposta como um todo.
+        ///// </summary>
+        //private void finalizarProposta()
+        //{
+        //    try
+        //    {
+        //        mostrarMensagem(enumCor.BLUE, "Gravando informações na base de dados!", enumCursor.WAIT);
+        //        daoItemProposta = new DaoProdutoProposta();
+        //        daoProposta = new DaoProposta();
+        //        daoEmbalagem = new DaoEmbalagem();
+
+        //        daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
+        //        daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.FINALIZADO, true, true);
+        //        daoItemProposta.updateItemPropostaRetorno();
+        //        daoProposta.updateVolumeProposta(objProposta.Codigo);
+        //        daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.UserOn.Codigo);
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("finalizarProposta()\n " + ex.Message);
+        //    }
+        //    finally
+        //    {
+        //        FrmAcao frm = new FrmAcao();
+        //        mostrarMensagem(enumCor.RED, "", enumCursor.DEFAULT);
+        //        daoItemProposta = null;
+        //        daoProposta = null;
+        //        this.Dispose();
+        //        this.Close();
+        //        frm.Show();
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
+        ///// </summary>
+        ///// 
+        ///// <returns>
+        /////          TRUE --> caso exista um próximo item a ser trabalhado
+        /////          FALSE --> caso não exista mais items para serem trabalhados.
+        ///// </returns>
+        //private bool nextItemProposta()
+        //{
+        //    bool hasItem = false;
+        //    daoItemProposta = new DaoProdutoProposta();
+        //    daoEtiqueta = new DaoEtiqueta();
+        //    objTransacoes = new BaseMobile();
+
+        //    try
+        //    {
+        //        this.clearParaProximoItem();
+
+        //        ProcedimentosLiberacao.tratarParaProximoItem(objProposta);
+        //        //grava informações do item na base de dados mobile
+        //        daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
+        //        //inseri informações das etiquetas referente ao produto liberado em formato Xml
+        //        daoItemProposta.updateXmlItemProposta(ProcedimentosLiberacao.montarXmlProcedimento(), objProposta.ListObjItemProposta[0].CodigoItemProposta);
+
+        //        //carrega próximo item
+        //        if (temItensConferir())
+        //        {
+        //            var prod = daoItemProposta.itemATrabalhar();
+
+        //            if (prod != null)
+        //            {
+        //                //Carrega informações de Embalagem para o produto que será trabalhado.
+        //                prod.Embalagens = daoEmbalagem.carregarEmbalagensProduto(prod);
+
+        //                hasItem = true;
+
+        //                objProposta.setNextItemProposta(prod);
+        //            }
+        //            else
+        //            {
+        //                hasItem = false;
+        //            }
+        //        }
+        //        else // CASO não tenha um próximo item 
+        //        {
+        //            hasItem = false;
+        //        }
+
+        //        //Se existir um próximo item
+        //        if (hasItem)
+        //        {
+        //            //seta Parametros para iniciar leitura do próximo item
+        //            ProcedimentosLiberacao.inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
+
+        //            //recarrega o form com as informações do próximo item.
+        //            this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
+        //        }
+        //        else
+        //        {
+        //            this.clearFormulario(true, true);
+        //        }
+        //    }
+        //    catch (SqlCeException Ex)
+        //    {
+        //        MessageBox.Show(Ex.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Erro ao carregar próximo item!", ex);
+        //    }
+        //    finally
+        //    {
+        //        daoEtiqueta = null;
+        //        daoItemProposta = null;
+        //    }
+
+        //    return hasItem;
+        //}
+
+        ///// <summary>
+        ///// Reliza todos os processos nescessários para efetuar a carga de dados na base Mobile.
+        ///// </summary>
+        //private void carregaBaseMobile()
+        //{
+
+        //    objTransacoes = new BaseMobile();
+        //    objProposta = new Proposta();
+        //    daoItemProposta = new DaoProdutoProposta();
+        //    daoProposta = new DaoProposta();
+        //    daoProduto = new DaoProduto();
+        //    daoEmbalagem = new DaoEmbalagem();
+
+        //    //LIMPA INFORMAÇÕES RESULTANTE DE OUTROS PRODUTOS JÁ CONFERIDOS
+        //    ProcedimentosLiberacao.limpar();
+
+        //    try
+        //    {
+        //        //Limpa a Base.
+        //        objTransacoes.clearBaseMobile();
+
+        //        //Carrega um objeto Proposta e inicia todo o procedimento.
+        //        //Caso não exista propostas a serem liberadas gera um exception 
+        //        //onde será feito os tratamentos para evitar o travamento do sistema.
+        //        if ((objProposta = daoProposta.fillTop1PropostaServidor()) != null)
+        //        {
+        //            daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.UserOn.Codigo, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
+
+        //            //recupera o codigoPickingMobile da proposta trabalhada.
+        //            objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
+
+        //            //Realiza o Insert na Base Mobile
+        //            daoProposta.insertProposta(objProposta, MainConfig.UserOn.Codigo);
+
+        //            //Recupera List com itens da proposta
+        //            //Insert na Base Mobile tabela tb0002_ItensProposta
+        //            daoItemProposta.carregarBaseMobileItens(daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>());
+
+        //            //Insert na base Mobile tabela tb0003_Produtos
+        //            //Recupera informações sobre os produtos existentes na proposta
+        //            daoProduto.insertProdutoBaseMobile(daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>());
+
+        //            //Armazena informações de embalagens do produto na base mobile.
+        //            daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
+
+        //            //Carrega Informações das Embalagens de Separação.
+        //            //Carrega Quantidade das Embalagens utilizadas nos volumes da separação
+        //            ProcedimentosLiberacao.ListEmbalagensSeparacao = daoEmbalagem.carregarInformacoesEmbalagensUtilizadas((Int32)objProposta.CodigoPikingMobile, daoEmbalagem.carregarEmbalagensSeparacao());
+
+        //        }
+        //        else
+        //        {
+        //            throw new NoNewPropostaException("Não existem novas propostas a serem liberadas!!");
+        //        }
+        //    }
+        //    catch (SqlQueryExceptions ex)
+        //    {
+        //        this.exitOnError(ex.Message, "Próxima Proposta", false);
+        //    }
+        //    catch (NoNewPropostaException ex)
+        //    {
+        //        this.exitOnError(ex.Message, "Próxima Proposta", false);
+        //    }
+        //    catch (SqlCeException sqlEx)
+        //    {
+        //        ProcedimentosLiberacao.interromperLiberacao(objProposta);
+        //        daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
+        //        StringBuilder strBuilder = new StringBuilder();
+        //        strBuilder.Append("O procedimento não pode ser concluído.\n");
+        //        strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
+        //        strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
+        //        this.exitOnError(strBuilder.ToString(), "SqlException!!", false);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ProcedimentosLiberacao.interromperLiberacao(objProposta);
+        //        daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
+        //        StringBuilder strBuilder = new StringBuilder();
+        //        strBuilder.Append("O procedimento não pode ser concluído.\n");
+        //        strBuilder.AppendFormat(" Descrição: {0}", ex.Message);
+        //        strBuilder.Append("\nContate o Administrador do sistema.");
+        //        this.exitOnError(strBuilder.ToString(), "SqlException!!", false);
+        //    }
+        //    finally
+        //    {
+        //        objTransacoes = null;
+        //        objProposta = null;
+        //        daoProposta = null;
+        //        daoProduto = null;
+        //        daoItemProposta = null;
+        //        daoEmbalagem = null;
+        //    }
+
+        //}
+
+        #endregion
 
     }
 

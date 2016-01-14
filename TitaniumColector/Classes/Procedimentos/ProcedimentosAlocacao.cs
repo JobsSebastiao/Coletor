@@ -273,7 +273,7 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 if (this.etiquetaJaValidada(etiquetaAlocar))
                 {
-                    etiquetaAlocar.montarXmlEtiqueta();
+                    etiquetaAlocar.montarXml();
                     this.ListEtiquetasAlocadas.Add(etiquetaAlocar);
                     this.ListEtiquetas.Remove(etiquetaAlocar);
                 }

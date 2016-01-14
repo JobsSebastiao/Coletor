@@ -6,7 +6,7 @@ using TitaniumColector.Classes.Model;
 
 namespace TitaniumColector.Classes
 {
-    internal class Produto
+    public class Produto
     {
         private Int32 codigoProduto;
         private String ean13;

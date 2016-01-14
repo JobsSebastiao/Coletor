@@ -8,10 +8,11 @@ using TitaniumColector.Classes.Utility;
 using TitaniumColector.Classes.Dao;
 using System.Xml;
 using System.IO;
+using TitaniumColector.Classes.Exceptions;
 
 namespace TitaniumColector.Classes.Model
 {
-    public class EtiquetaVenda : Etiqueta,IDisposable
+    public class EtiquetaVenda : Etiqueta
     {
         DaoProduto daoProduto;
 
@@ -121,32 +122,6 @@ namespace TitaniumColector.Classes.Model
 
         }
 
-        public override bool Equals(object obj)
-        {
-            if(base.Equals(obj))
-            {
-                switch (((EtiquetaVenda)obj).TipoEtiqueta)
-                {
-                    case Tipo.QRCODE:
-
-                        return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
-
-                    case Tipo.BARRAS:
-
-                        return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta);
-
-                    default:
-                        return false;
-                }
-            }
-            return false;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
         /// <summary>
         /// Valida as informações passadas na string capturada pelo coletor de dados.
         /// </summary>
@@ -212,16 +187,12 @@ namespace TitaniumColector.Classes.Model
             return tipoEtiqueta;
         }
 
-        /// <summary>
-        /// Monta Xml para detalhar as estiquetas equivalentes ao item passado como parâmetro
-        /// </summary>
-        /// <param name="listaEtiquetas">Lista de Etiquetas dos item que foi separado</param>
-        /// <returns>String no formato de Xml</returns>
-        /// <remarks> Na forma em que etá o código abaixo o trabalho é feito em uma lista que contém informações de apenas um item liberado
-        ///           --Para se trabalhar com uma lista que possua informações de mais de um item é nescessário alterção do código ou 
-        ///           criação de outro método mais  apropriado.
-        /// </remarks>
-        public override string gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
+        public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
+        {
+            return new EtiquetaVenda(arrayEtiqueta, tipoEtiqueta);
+        }
+
+        public override string montarXml()
         {
             string result = "";
 
@@ -244,42 +215,102 @@ namespace TitaniumColector.Classes.Model
 
                 //writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
 
-                foreach (var item in listaEtiquetas)
-                {
-                    //Elemento Raiz Seq
-                    writer.WriteStartElement("Seq");
-                    //Escreve atributos IdEtiqueta
-                    writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
-                    //Escreve atributos TIPO Etiqueta
-                    writer.WriteAttributeString("TIPO", item.TipoEtiqueta.ToString());
-                    //Escreve elemento entre a tag Seq
-                    writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
-                    writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
-                    writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
-                    writer.WriteElementString("Usuario", MainConfig.UserOn.Codigo.ToString());
-                    //Encerra o elemento Seq
-                    writer.WriteEndElement();
-                }
+                //Elemento Raiz Seq
+                writer.WriteStartElement("Seq");
+                //Escreve atributos IdEtiqueta
+                writer.WriteAttributeString("ID", this.SequenciaEtiqueta.ToString());
+                //Escreve atributos TIPO Etiqueta
+                writer.WriteAttributeString("TIPO", this.TipoEtiqueta.ToString());
+                //Escreve elemento entre a tag Seq
+                writer.WriteElementString("Qtd", this.QuantidadeEtiqueta.ToString());
+                writer.WriteElementString("Vol", this.VolumeEtiqueta.ToString());
+                writer.WriteElementString("Time", this.DataHoraValidacao.ToString());
+                writer.WriteElementString("Usuario", MainConfig.UserOn.Codigo.ToString());
+                //Encerra o elemento Seq
+                writer.WriteEndElement();
 
-                //Encerra o elemento Item
+                //Encerra o elemento ItemS
                 writer.WriteEndDocument();
 
                 // O resultado é uma string.
                 return result = str.ToString();
-
             }
-            catch (Exception)
+            catch(Exception)
             {
-                throw;
+                throw new CreateXmlException("Não foi possivel criar o xml para a etiqueta " + this.SequenciaEtiqueta );
             }
         }
 
+        public override bool buscarEtiqueta(List<Etiqueta> listEtiquetas)
+        {
+            switch (this.TipoEtiqueta)
+            {
+                case Tipo.QRCODE:
+
+                    foreach (EtiquetaVenda itemList in listEtiquetas)
+                    {
+
+                        if (itemList.Equals(this))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+
+                case Tipo.BARRAS:
+
+                    foreach (EtiquetaVenda itemList in listEtiquetas)
+                    {
+                        if (this.Equals(itemList))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+
+                default:
+                    return false;
+
+            }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (base.Equals(obj))
+            {
+                switch (((EtiquetaVenda)obj).TipoEtiqueta)
+                {
+                    case Tipo.QRCODE:
+
+                        return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
+
+                    case Tipo.BARRAS:
+
+                        return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta);
+
+                    default:
+                        return false;
+                }
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "EAN13:" + Ean13Etiqueta;
+        }
+       
         #region "Idisposable"
 
         private Stream _resource;
         private bool _disposed;
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
 
@@ -288,7 +319,7 @@ namespace TitaniumColector.Classes.Model
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             // If you need thread safety, use a lock around these 
             // operations, as well as in your methods that use the resource.
@@ -308,214 +339,5 @@ namespace TitaniumColector.Classes.Model
 
         #endregion
 
-        #region "ainda sem uso "
-
-        //public override void realizaAcao(string inputText,Etiqueta.Tipo tipoEtiqueta)
-        //{
-        //    switch (tipoEtiqueta)
-        //    {
-        //        case Etiqueta.Tipo.INVALID:
-
-        //            inputText = string.Empty;
-        //             FrmProposta.mostrarMensagem(TitaniumColector.Forms.FrmProposta.enumCor.RED, " Tipo de Etiqueta inválida!!!", TitaniumColector.Forms.FrmProposta.enumCursor.DEFAULT);
-        //            break;
-
-        //        case Etiqueta.Tipo.QRCODE:
-
-        //            liberarItem(inputText, tipoEtiqueta);
-        //            inputText = string.Empty;
-        //            break;
-
-        //        case Etiqueta.Tipo.BARRAS:
-
-        //            paramValidarSequencia = MainConfig.Permissoes_TB1210.retornarParametro("ValidarSequencia");
-
-        //            if (paramValidarSequencia.Valor == "1")
-        //            {
-        //                this.liberarItem(inputText, tipoEtiqueta);
-        //                inputText = string.Empty;
-        //                break;
-        //            }
-        //            else
-        //            {
-        //                inputText = string.Empty;
-        //                FrmProposta.mostrarMensagem(TitaniumColector.Forms.FrmProposta.enumCor.RED, "As configurações atuais não permitem validar etiquetas do tipo Ean13!", TitaniumColector.Forms.FrmProposta.enumCursor.DEFAULT);
-        //                break;
-        //            }
-
-        //        default:
-
-        //            inputText = string.Empty;
-        //            FrmProposta.mostrarMensagem(TitaniumColector.Forms.FrmProposta.enumCor.RED, " Tipo de Etiqueta inválida!!!", TitaniumColector.Forms.FrmProposta.enumCursor.DEFAULT);
-        //            break;
-        //    }
-        //}
-
-        /////<summary>
-        ///// Recebe um array de strings referentes aos atributos do obj Etiqueta.
-        ///// retorna Um objeto do tipo Etiqueta
-        ///// </summary>
-        ///// <param name="array">Array de String referentes aos atributos de uma etiqueta</param>
-        //public static Etiqueta arrayToEtiqueta(Array array)
-        //{
-        //    Etiqueta objEtiqueta = new Etiqueta();
-
-        //    foreach (string item in array)
-        //    {
-        //        string strItem = item.Substring(0, item.IndexOf(":", 0));
-
-        //        if (strItem == "PNUMBER")
-        //        {
-        //            objEtiqueta.PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-        //        }
-        //        else if (strItem == "DESCRICAO")
-        //        {
-        //            objEtiqueta.DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-        //        }
-        //        else if (strItem == "EAN13")
-        //        {
-        //            objEtiqueta.Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
-        //        }
-        //        else if (strItem == "LOTE")
-        //        {
-        //            objEtiqueta.LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-        //        }
-        //        else if (strItem == "SEQ")
-        //        {
-        //            objEtiqueta.SequenciaEtiqueta = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-        //        }
-        //        else if (strItem == "QTD")
-        //        {
-        //            objEtiqueta.QuantidadeEtiqueta = Convert.ToDouble(item.Substring(item.IndexOf(":", 0) + 1));
-        //        }
-        //    }
-        //    return objEtiqueta;
-        //}
-
-        ///// <summary>
-        ///// Verifica se a Etiqueta já foi lida.
-        ///// </summary>
-        ///// <returns>
-        /////          FALSE --> se a etiqueta for encontrada na list
-        /////          TRUE --> se a etiqueta ainda não foii lida.
-        ///// </returns>
-        //public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta, List<Etiqueta> listEtiquetas)
-        //{
-        //    //Verifica se o List foi iniciado
-        //    if (listEtiquetas != null)
-        //    {
-        //        if (listEtiquetas.Count == 0)
-        //        {
-        //            return true;
-        //        }
-        //        else
-        //        {
-        //            //Verifica se a etiqueta está na lista de etiquetas lidas.
-        //            if (validarEtiqueta(objEtiqueta, listEtiquetas))
-        //            {
-        //                //Caso esteja na lista
-        //                return false;
-        //            }
-        //            else
-        //            {
-        //                //caso não esteja na lista.
-        //                return true;
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        return true;
-        //    }
-        //}
-
-        //public static bool validarEtiqueta(Etiqueta etiqueta, List<Etiqueta> listEtiquetas)
-        //{
-        //    switch (etiqueta.TipoEtiqueta)
-        //    {
-        //        case Tipo.QRCODE:
-
-        //            foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
-        //            {
-
-        //                if (itemList.Equals(etiqueta))
-        //                {
-        //                    return true;
-        //                }
-        //            }
-        //            return false;
-
-        //        case Tipo.BARRAS:
-
-        //            foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
-        //            {
-        //                if (etiqueta.Equals(itemList))
-        //                {
-        //                    return true;
-        //                }
-        //            }
-        //            return false;
-
-        //        default:
-        //            return false;
-
-        //    }
-
-        //}
-
-        //public static String gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
-        //{
-        //    String result = "";
-        //    try
-        //    {
-        //        System.IO.StringWriter str = new System.IO.StringWriter();
-
-        //        Variável que irá receber o Xml na forma de String.
-        //        System.IO.XmlTextWriter writer = new XmlTextWriter(str);
-
-        //        inicia o documento xml
-        //        writer.WriteStartDocument();
-
-        //        define a indentação do arquivo
-        //        writer.Formatting = Formatting.Indented;
-
-        //        escreve o elemento raiz
-        //        writer.WriteStartElement("Item");
-        //        escrever o atributo para o Elemento Raiz Item
-        //        writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
-
-        //        foreach (var item in listaEtiquetas)
-        //        {
-        //            Elemento Raiz Seq
-        //            writer.WriteStartElement("Seq");
-        //            Escreve atributos IdEtiqueta
-        //            writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
-        //            Escreve atributos TIPO Etiqueta
-        //            writer.WriteAttributeString("TIPO", item.TipoEtiqueta.ToString());
-        //            Escreve elemento entre a tag Seq
-        //            writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
-        //            writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
-        //            writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
-        //            writer.WriteElementString("Usuario", MainConfig.CodigoUsuarioLogado.ToString());
-        //            Encerra o elemento Seq
-        //            writer.WriteEndElement();
-        //        }
-
-        //        Encerra o elemento Item
-        //        writer.WriteEndDocument();
-
-        //         O resultado é uma string.
-        //        return result = str.ToString();
-
-        //    }
-        //    catch (Exception)
-        //    {
-        //        throw;
-        //    }
-        //}
-
-        #endregion 
-
-      
     }  
 } 

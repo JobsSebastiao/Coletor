@@ -26,6 +26,41 @@ namespace TitaniumColector.Forms
 
         void FrmAcao_Load(object sender, System.EventArgs e)
         {
+            validaPermissoes();
+        }
+
+        private void mnuAcao_Logout_Click(object sender, EventArgs e)
+        {
+            MainConfig.UserOn.registrarAcesso(TitaniumColector.Classes.Usuario.statusLogin.NAOLOGADO);
+            frmLogin login = new frmLogin();
+            login.Show();
+            this.Close();
+        }
+
+        private void mnuAcao_Exit_Click(object sender, EventArgs e)
+        {
+            MainConfig.UserOn.registrarAcesso(TitaniumColector.Classes.Usuario.statusLogin.NAOLOGADO);
+            Application.Exit();
+        }
+
+        void btnAlocacao_Click(object sender, System.EventArgs e)
+        {
+            FrmAlocacao frm = new FrmAlocacao();
+            frm.Show();
+        }
+
+        void btnVenda_Click(object sender, System.EventArgs e)
+        {
+            this.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+            FrmProposta proposta = new FrmProposta();
+            proposta.Show();
+            this.Hide();
+            this.Enabled = true;
+        }
+
+        private void validaPermissoes()
+        {
 
             try
             {
@@ -56,7 +91,7 @@ namespace TitaniumColector.Forms
                 this.btnAlocacao.Enabled = false;
                 this.btnVenda.Enabled = false;
             }
-            finally 
+            finally
             {
                 this.btnAlocacao.Enabled = this.permissaoAlocacao;
                 this.lblPermissaoAlocacao.Visible = !this.permissaoAlocacao;
@@ -65,35 +100,6 @@ namespace TitaniumColector.Forms
             }
         }
 
-        private void mnuAcao_Logout_Click(object sender, EventArgs e)
-        {
-            MainConfig.UserOn.registrarAcesso(TitaniumColector.Classes.Usuario.statusLogin.NAOLOGADO);
-            frmLogin login = new frmLogin();
-            login.Show();
-            this.Close();
-        }
-
-        private void mnuAcao_Exit_Click(object sender, EventArgs e)
-        {
-            MainConfig.UserOn.registrarAcesso(TitaniumColector.Classes.Usuario.statusLogin.NAOLOGADO);
-            Application.Exit();
-        }
-
-        private void btnVenda_Click(object sender, EventArgs e)
-        {
-            this.Enabled = false;
-            Cursor.Current = Cursors.WaitCursor;
-            FrmProposta proposta = new FrmProposta();
-            proposta.Show();
-            this.Hide();
-            this.Enabled = true;
-        }
-
-        private void btnCompra_Click(object sender, EventArgs e)
-        {
-            FrmAlocacao frm = new FrmAlocacao();
-            frm.Show();
-        }
 
         #region ICall Members
 

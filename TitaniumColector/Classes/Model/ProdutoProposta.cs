@@ -5,7 +5,7 @@ using System.Text;
 
 namespace TitaniumColector.Classes
 {
-    class ProdutoProposta : Produto
+    public class ProdutoProposta : Produto
     {
         private int codigoItemProposta;
         private int propostaItemProposta;

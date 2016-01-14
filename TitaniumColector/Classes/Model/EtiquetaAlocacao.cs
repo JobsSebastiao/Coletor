@@ -18,7 +18,74 @@ namespace TitaniumColector.Classes.Model
         public string DescricaoCompletaProduto { get; set; }
         public bool JaAlocado { get; set; }
         public Usuario UsuarioAlocacao { get; set; }
-        
+
+        public EtiquetaAlocacao() { }
+
+        public EtiquetaAlocacao(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
+        {
+            try
+            {
+                switch (tipoEtiqueta)
+                {
+                    case Tipo.QRCODE:
+
+                        foreach (string item in arrayEtiqueta)
+                        {
+                            string strItem = item.Substring(0, item.IndexOf(":", 0));
+
+                            if (strItem == "CODIGOITEM")
+                            {
+                                this.CodigoItemAlocacao = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
+                            else if (strItem == "CODIGOPRODUTO")
+                            {
+                                this.CodigoProduto = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
+                            else if (strItem == "CODIGOLOTE")
+                            {
+                                this.CodigoLote = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
+                            else if (strItem == "NOMELOTE")
+                            {
+                                base.LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "PARTNUMBER")
+                            {
+                                base.PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "NOMEPRODUTO")
+                            {
+                                base.DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "LOCAISLOTE")
+                            {
+                                this.LocaisLote = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                            else if (strItem == "VOLUME")
+                            {
+                                this.VolumeItemAlocacao = item.Substring(item.IndexOf(":", 0) + 1);
+                            }
+                        }
+
+                        this.DescricaoCompletaProduto = String.Format("{0}-{1}", base.PartnumberEtiqueta, base.DescricaoProdutoEtiqueta);
+
+                        break;
+
+                    default:
+                        MainConfig.errorMessage("Tipo de Etiqueta indefinido!!", "Leitura Etiquetas");
+                        break;
+                }
+
+                base.DataHoraValidacao = DateTime.Now;
+                base.TipoEtiqueta = tipoEtiqueta;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// Valida informações do inputText no acionamento da "pistola"
         /// </summary>
@@ -104,79 +171,12 @@ namespace TitaniumColector.Classes.Model
             return tipoEtiqueta;
         }
 
-        public EtiquetaAlocacao() { }
-
-        public EtiquetaAlocacao(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
-        {
-            try
-            {
-                switch (tipoEtiqueta)
-                {
-                    case Tipo.QRCODE:
-
-                        foreach (string item in arrayEtiqueta)
-                        {
-                            string strItem = item.Substring(0, item.IndexOf(":", 0));
-
-                            if (strItem == "CODIGOITEM")
-                            {
-                                this.CodigoItemAlocacao = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                            }
-                            else if (strItem == "CODIGOPRODUTO")
-                            {
-                                this.CodigoProduto = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                            }
-                            else if (strItem == "CODIGOLOTE")
-                            {
-                                this.CodigoLote = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
-                            }
-                            else if (strItem == "NOMELOTE")
-                            {
-                                base.LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "PARTNUMBER")
-                            {
-                                base.PartnumberEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "NOMEPRODUTO")
-                            {
-                                base.DescricaoProdutoEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "LOCAISLOTE")
-                            {
-                                this.LocaisLote = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                            else if (strItem == "VOLUME")
-                            {
-                                this.VolumeItemAlocacao = item.Substring(item.IndexOf(":", 0) + 1);
-                            }
-                        }
-
-                        this.DescricaoCompletaProduto = String.Format("{0}-{1}", base.PartnumberEtiqueta, base.DescricaoProdutoEtiqueta);
-
-                        break;
-
-                    default:
-                        MainConfig.errorMessage("Tipo de Etiqueta indefinido!!", "Leitura Etiquetas");
-                        break;
-                }
-
-                base.DataHoraValidacao = DateTime.Now;
-                base.TipoEtiqueta = tipoEtiqueta;
-
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
         {
             return new EtiquetaAlocacao( arrayEtiqueta,  tipoEtiqueta);
         }
 
-        public override string montarXmlEtiqueta()
+        public override string montarXml()
         {
             string result = "";
 

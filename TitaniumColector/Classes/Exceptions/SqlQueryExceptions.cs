@@ -86,4 +86,24 @@ namespace TitaniumColector.Classes.Exceptions
         }
     }
 
+    class CreateXmlException: Exception
+    {
+        public CreateXmlException()
+        {
+
+        }
+
+        public CreateXmlException(string message)
+            : base(message)
+        {
+
+        }
+
+        public CreateXmlException(string message, Exception inner)
+            : base(message, inner)
+        {
+
+        }
+    }
+
 }

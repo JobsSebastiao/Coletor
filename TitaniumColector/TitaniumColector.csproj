@@ -189,7 +189,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram2.cd" />
     <None Include="Diagramas de Classe\ClassDiagram1.cd" />
     <None Include="Properties\DataSources\TitaniumColector.Classes.ItemProposta.datasource" />
   </ItemGroup>

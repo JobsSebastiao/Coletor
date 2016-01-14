@@ -99,7 +99,7 @@ namespace TitaniumColector.Classes.Dao
         /// <remarks>
         ///       Caso a query não retorne valores da base mobile o método retorna um Valor NULL
         /// </remarks>
-        public ProdutoProposta fillTop1ItemProposta()
+        public ProdutoProposta itemATrabalhar()
         {
             Object obj = null;
 
@@ -160,7 +160,7 @@ namespace TitaniumColector.Classes.Dao
         /// Insert na base Mobile tabela de itens da proposta
         /// </summary>
         /// <param name="listProposta">List com objetos do tipo ItemProposta </param>
-        public void insertItemProposta(List<ProdutoProposta> listProdutoProposta)
+        public void carregarBaseMobileItens(List<ProdutoProposta> listProdutoProposta)
         {
 
             try

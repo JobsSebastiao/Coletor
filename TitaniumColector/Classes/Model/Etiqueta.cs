@@ -5,10 +5,11 @@ using System.Text;
 using System.Xml;
 using TitaniumColector.Classes.Dao;
 using TitaniumColector.Classes.Model;
+using System.IO;
 
 namespace TitaniumColector.Classes 
 {
-    public class Etiqueta
+    public class Etiqueta:IDisposable
     {
         
         //PROPRIEDADES EM COMUM ''
@@ -47,7 +48,6 @@ namespace TitaniumColector.Classes
 
             PartnumberEtiqueta = partnumber;
             DescricaoProdutoEtiqueta = descricao;
-            //Ean13Etiqueta = ean13;
             LoteEtiqueta = lote;
             QuantidadeEtiqueta = quantidade;
             DataHoraValidacao = DateTime.Now;
@@ -81,7 +81,41 @@ namespace TitaniumColector.Classes
         public virtual Etiqueta.Tipo validaInputValueEtiqueta(String inputValue) { return Tipo.INVALID;}
         public virtual void realizaAcao(string inputText,Etiqueta.Tipo tipoEtiqueta){}
         public virtual Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta) { return new Etiqueta(); }
-        public virtual string montarXmlEtiqueta(){ return null;}
+        public virtual string montarXml(){ return null;}
+        
+        public virtual bool buscarEtiqueta(List<Etiqueta> listEtiquetas)
+        {
+            switch (this.TipoEtiqueta)
+            {
+                case Tipo.QRCODE:
+
+                    foreach (var itemList in listEtiquetas.ToList<Etiqueta>())
+                    {
+
+                        if (itemList.Equals(this))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+
+                case Tipo.BARRAS:
+
+                    foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
+                    {
+                        if (this.Equals(itemList))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+
+                default:
+                    return false;
+
+            }
+
+        }
 
         /// <summary>
         /// Verifica se já existe um determinado Objeto Etiqueta em um list.
@@ -124,127 +158,98 @@ namespace TitaniumColector.Classes
              
         }
 
-        /// <summary>
-        /// Verifica se a Etiqueta já foi lida.
-        /// </summary>
-        /// <returns>FALSE --> se a etiqueta for encontrada na list
-        ///          TRUE --> se a etiqueta ainda não foii lida.
-        /// </returns>
-        public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta, List<Etiqueta> listEtiquetas)
-        {
-            //Verifica se o List foi iniciado
-            if (listEtiquetas != null)
-            {
-                if (listEtiquetas.Count == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    //Verifica se a etiqueta está na lista de etiquetas lidas.
-                    if (validarEtiqueta(objEtiqueta, listEtiquetas))
-                    {
-                        //Caso esteja na lista
-                        return false;
-                    }
-                    else
-                    {
-                        //caso não esteja na lista.
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Monta Xml para detalhar as estiquetas equivalentes ao item passado como parâmetro
-        /// </summary>
-        /// <param name="listaEtiquetas">Lista de Etiquetas dos item que foi separado</param>
-        /// <returns>String no formato de Xml</returns>
-        /// <remarks> Na forma em que etá o código abaixo o trabalho é feito em uma lista que contém informações de apenas um item liberado
-        ///           --Para se trabalhar com uma lista que possua informações de mais de um item é nescessário alterção do código ou 
-        ///           criação de outro método mais  apropriado.
-        /// </remarks>
-        public virtual string gerarXmlItensEtiquetas(List<Etiqueta> listaEtiquetas)
-        {
-            string result = "";
-            //return result;
-            try
-            {
-                System.IO.StringWriter str = new System.IO.StringWriter();
-
-                //Variável que irá receber o Xml na forma de String.
-                XmlTextWriter writer = new XmlTextWriter(str);
-
-                //inicia o documento xml
-                writer.WriteStartDocument();
-
-                //define a indentação do arquivo
-                writer.Formatting = Formatting.Indented;
-
-                //escreve o elemento raiz
-                writer.WriteStartElement("Item");
-                //escrever o atributo para o Elemento Raiz Item
-
-                //writer.WriteAttributeString("Ean", listaEtiquetas[0].Ean13Etiqueta.ToString());
-
-                foreach (var item in listaEtiquetas)
-                {
-                    //Elemento Raiz Seq
-                    writer.WriteStartElement("Seq");
-                    //Escreve atributos IdEtiqueta
-                    writer.WriteAttributeString("ID", item.SequenciaEtiqueta.ToString());
-                    //Escreve atributos TIPO Etiqueta
-                    writer.WriteAttributeString("TIPO", item.TipoEtiqueta.ToString());
-                    //Escreve elemento entre a tag Seq
-                    writer.WriteElementString("Qtd", item.QuantidadeEtiqueta.ToString());
-                    writer.WriteElementString("Vol", item.VolumeEtiqueta.ToString());
-                    writer.WriteElementString("Time", item.DataHoraValidacao.ToString());
-                    writer.WriteElementString("Usuario", MainConfig.UserOn.Codigo.ToString());
-                    //Encerra o elemento Seq
-                    writer.WriteEndElement();
-                }
-
-                //Encerra o elemento Item
-                writer.WriteEndDocument();
-
-                // O resultado é uma string.
-                return result = str.ToString();
-
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         public override bool Equals(object obj)
-        {
-            
+        {  
              System.Type type = obj.GetType();
 
              return (obj == null || (type.BaseType != typeof(Etiqueta)))? false : true;
         }
 
-        //public override string ToString()
-        //{
-        //    return String.Format("PNUMBER:{0}|DESCRICAO:{1}|EAN13:{2}|LOTE:{3}|SEQ:{4}|QTD:{5}",PartnumberEtiqueta,DescricaoProdutoEtiqueta, Ean13Etiqueta, LoteEtiqueta, SequenciaEtiqueta, QuantidadeEtiqueta);
-        //}
-
         public override string ToString()
         {
-            return String.Format("PNUMBER:{0}|DESCRICAO:{1}|LOTE:{2}", PartnumberEtiqueta, DescricaoProdutoEtiqueta,LoteEtiqueta);
+            return String.Format("PNUMBER:{0}|DESCRICAO:{1}|LOTE:{2}|TIPO:{3}|HORA_VALIDACAO:{4}"
+                , PartnumberEtiqueta, DescricaoProdutoEtiqueta, LoteEtiqueta,TipoEtiqueta,DataHoraValidacao.ToString());
         }
 
         public override int GetHashCode()
         {
             return this.SequenciaEtiqueta;
         }
-    }
 
-    #endregion 
+    #region IDisposable Members
+
+        private Stream _resource;
+        private bool _disposed;
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+
+            // Use SupressFinalize in case a subclass
+            // of this type implements a finalizer.
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // If you need thread safety, use a lock around these 
+            // operations, as well as in your methods that use the resource.
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    if (_resource != null)
+                        _resource.Dispose();
+                }
+
+                // Indicate that the instance has been disposed.
+                _resource = null;
+                _disposed = true;
+            }
+        }
+
+    #endregion
+
+    }
+    #endregion
+
+    #region "Sob Visão"
+
+    ///// <summary>
+        ///// Verifica se a Etiqueta já foi lida.
+        ///// </summary>
+        ///// <returns>FALSE --> se a etiqueta for encontrada na list
+        /////          TRUE --> se a etiqueta ainda não foii lida.
+        ///// </returns>
+        //public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta, List<Etiqueta> listEtiquetas)
+        //{
+        //    //Verifica se o List foi iniciado
+        //    if (listEtiquetas != null)
+        //    {
+        //        if (listEtiquetas.Count == 0)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            //Verifica se a etiqueta está na lista de etiquetas lidas.
+        //            if (validarEtiqueta(objEtiqueta, listEtiquetas))
+        //            {
+        //                //Caso esteja na lista
+        //                return false;
+        //            }
+        //            else
+        //            {
+        //                //caso não esteja na lista.
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+        //}
+
+    #endregion
 }
