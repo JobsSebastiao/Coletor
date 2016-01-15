@@ -29,43 +29,6 @@ namespace TitaniumColector.Classes.Procedimentos
         public static List<Etiqueta> ListEtiquetas { get; set; }
         public static List<EmbalagemSeparacao> ListEmbalagensSeparacao { get; set; }
         
-        /// <summary>
-        /// Carrega as a serem trabalhadas durante o procedimento de liiberção dos itens da proposta.
-        /// </summary>
-        /// <param name="tItens">Total de Itens da Proposta</param>
-        /// <param name="tPecas">Total de peças na Proposta</param>
-        /// <param name="pecasItens">Quantidade de pecas do item a ser trabalhado.</param>
-        public static void inicializarProcedimentos(Double tItens, Double tPecas, Double pecasItens)
-        {
-            TotalItens = tItens;
-            TotalPecas = tPecas;
-            QtdPecasItem = pecasItens;
-            ProcedimentosLiberacao.setarVolumeInicial();
-            ProcedimentosLiberacao.calcularPesoTotalEmbalagens();
-
-            if (ListEtiquetas != null)
-            {
-                ListEtiquetas.Clear();
-
-            }
-            else 
-            {
-                ListEtiquetasLidas = new List<Etiqueta>();
-            }
-            
-            //ProximaEtiqueta = 0;
-
-            if(ListEtiquetas != null)
-            {
-                ListEtiquetas.Clear();
-            }
-
-            if (ArrayStringToEtiqueta != null)
-            {
-                ArrayStringToEtiqueta = null;
-            }
-        }
-
         public static void inicializarProcedimentos(Double tItens, Double tPecas, Double pecasItens,Int32 qtdVolumes)
         {
             TotalItens = tItens;
@@ -116,76 +79,6 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-    #region "GETS E SETS"
-
-        //public static Double TotalPecas
-        //{
-        //    get { return totalPecas; }
-        //    set { totalPecas = value; }
-        //}
-
-        //public static Double TotalItens
-        //{
-        //    get { return totalItens; }
-        //    set { totalItens = value; }
-        //}
-
-        //public static Int32 TotalVolumes
-        //{
-        //    get { return ProcedimentosLiberacao.totalVolumes; }
-        //    set { ProcedimentosLiberacao.totalVolumes = value; }
-        //}
-
-        //public static Double QtdPecasItem
-        //{
-        //    get { return qtdPecasItem; }
- 
-        //}
-
-        //public static Double PesoTotalEmbalagens
-        //{
-        //    get { return ProcedimentosLiberacao.PesoTotalEmbalagens; }
-        //    set { ProcedimentosLiberacao.PesoTotalEmbalagens = value; }
-        //}
-
-        //public static Double PesoTotalProdutos
-        //{
-        //    get { return ProcedimentosLiberacao.PesoTotalProdutos; }
-        //    set { ProcedimentosLiberacao.PesoTotalProdutos = value; }
-        //}
-
-        //public static Double PesoTotalPedido
-        //{
-        //    get { return ProcedimentosLiberacao.PesoTotalPedido; }
-        //    set { ProcedimentosLiberacao.PesoTotalPedido = value; }
-        //}
-
-        //internal static List<Etiqueta> ListEtiquetasLidas
-        //{
-        //    get { return ListEtiquetasLidas; }
-        //    set { ListEtiquetasLidas = value; }
-        //}
-      
-        //internal static List<Etiqueta> ListEtiquetas
-        //{
-        //  get { return ListEtiquetas; }
-        //  set { ListEtiquetas = value; }
-        //}
-
-        //public static Array ArrayStringToEtiqueta
-        //{
-        //    get { return ProcedimentosLiberacao.ArrayStringToEtiqueta; }
-        //    set { ProcedimentosLiberacao.ArrayStringToEtiqueta = value; }
-        //}
-
-        //internal static List<EmbalagemSeparacao> ListEmbalagensSeparacao
-        //{
-        //    get { return ProcedimentosLiberacao.ListEmbalagensSeparacao; }
-        //    set { ProcedimentosLiberacao.ListEmbalagensSeparacao = value; }
-        //}
-
-    #endregion
-
         public static Double subtrairQtdPecasItem(Double value)
         {
             if (QtdPecasItem - value >= 0)
@@ -198,10 +91,188 @@ namespace TitaniumColector.Classes.Procedimentos
             }
         }
 
-        public static void somarQtdPecasItem(Double value)
-        {
-            TotalPecas = value;
-        }
+        #region "Limpando "
+
+        //public static void somarQtdPecasItem(Double value)
+        //{
+        //    TotalPecas = value;
+        //}
+
+        ///// <summary>
+        ///// Verifica se a Etiqueta já foi lida.
+        ///// </summary>
+        ///// <returns>FALSE --> se a etiqueta for encontrada na list
+        /////          TRUE --> se a etiqueta ainda não foii lida.
+        ///// </returns>
+        //public static bool podeTrabalharEtiqueta(Etiqueta objEtiqueta, List<Etiqueta> listEtiquetas)
+        //{
+        //    //Verifica se o List foi iniciado
+        //    if (listEtiquetas != null)
+        //    {
+        //        if (listEtiquetas.Count == 0)
+        //        {
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            //Verifica se a etiqueta está na lista de etiquetas lidas.
+        //            if (Etiqueta.validarEtiqueta(objEtiqueta, listEtiquetas))
+        //            {
+        //                //Caso esteja na lista
+        //                return false;
+        //            }
+        //            else
+        //            {
+        //                //caso não esteja na lista.
+        //                return true;
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+        //}
+
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="inputValue"></param>
+        ///// <param name="produto"></param>
+        ///// <param name="tbProduto"></param>
+        ///// <param name="tblote"></param>
+        ///// <param name="tbSequencia"></param>
+        ///// <param name="tbQuantidade"></param>
+        ///// <param name="tbMensagem"></param>
+        //public static void lerEtiqueta(String inputValue, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
+        //{
+        //    tbMensagem.Text = "";
+
+        //    ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
+        //    Etiqueta objEtiqueta = new EtiquetaVenda();
+        //    objEtiqueta = new EtiquetaVenda(ArrayStringToEtiqueta, Etiqueta.TipoCode.QRCODE);
+        //    efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
+        //}
+
+        ///// <summary>
+        ///// Limpa a list de Etiquetas Lidas.
+        ///// </summary>
+        //public static void clearListEtiquetasLidas()
+        //{
+        //    ListEtiquetasLidas.Clear();
+        //    ListEtiquetasLidas = null;
+        //    ListEtiquetasLidas = new List<Etiqueta>();
+        //}
+
+        ///// <summary>
+        ///// Valida o tipo de etiqueta lido
+        ///// </summary>
+        ///// <param name="inputValue">informação capturada pelo Leitor</param>
+        ///// <returns>Etiqueta.tipo (EAN13,QRCODE,INVALID)</returns>
+        //public static Etiqueta.TipoCode validaInputValueEtiqueta(String inputValue)
+        //{
+        //    Etiqueta.TipoCode tipoEtiqueta;
+
+        //    int inputLength = inputValue.Length;
+
+        //    if (inputLength == 13)
+        //    {
+        //        tipoEtiqueta = Etiqueta.TipoCode.BARRAS;
+        //    }
+        //    else if (inputLength > 13)
+        //    {
+        //        if (inputValue.Contains("PNUMBER:"))
+        //        {
+        //            if (inputValue.Contains("DESCRICAO:"))
+        //            {
+        //                if (inputValue.Contains("EAN13:"))
+        //                {
+        //                    if (inputValue.Contains("LOTE:"))
+        //                    {
+        //                        if (inputValue.Contains("SEQ:"))
+        //                        {
+        //                            if (inputValue.Contains("QTD:"))
+        //                            {
+        //                                tipoEtiqueta = Etiqueta.TipoCode.QRCODE;
+        //                            }
+        //                            else
+        //                            {
+        //                                tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //                            }
+        //                        }
+        //                        else
+        //                        {
+        //                            tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        tipoEtiqueta = Etiqueta.TipoCode.INVALID;
+        //    }
+
+        //    return tipoEtiqueta;
+        //}
+
+
+        //public static void continuarLiberacao(Proposta proposta)
+        //{
+        //    if (proposta.IsInterrompido)
+        //    {
+        //        proposta.IsInterrompido = false;
+        //    }
+        //}
+
+        //public static EmbalagemSeparacao retornaEmbalagem(int codigo)
+        //{
+        //    foreach (var item in ListEmbalagensSeparacao)
+        //    {
+        //        if (item.Codigo == codigo)
+        //        {
+        //            return item;
+        //        }
+        //    }
+
+        //    return null;
+        //}
+
+        //public static void addPesoProdutos(Double peso)
+        //{
+        //    if (peso > 0.0)
+        //    {
+        //        ProcedimentosLiberacao.PesoTotalProdutos = peso;
+        //    }
+        //}
+
+        //public static void removePesoProdutos(Double peso)
+        //{
+        //    if (peso > 0.0 && (ProcedimentosLiberacao.PesoTotalProdutos - peso > 0))
+        //    {
+        //        ProcedimentosLiberacao.PesoTotalProdutos = peso;
+        //    }
+        //}
+
+        #endregion
 
         /// <summary>
         /// Verifica se a Etiqueta já foi lida.
@@ -210,21 +281,16 @@ namespace TitaniumColector.Classes.Procedimentos
         ///     FALSE --> se a etiqueta for encontrada na list
         ///     TRUE --> se a etiqueta ainda não foii lida.
         /// </returns>
-        public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta)
+        public static bool podeTrabalharEtiqueta(Etiqueta objEtiqueta)
         {
-
             try
             {
                 //Verifica se o List foi iniciado
-
                 switch (objEtiqueta.TipoEtiqueta)
                 {
-                    case Etiqueta.Tipo.INVALID:
-
+                    case Etiqueta.TipoCode.INVALID:
                         return false;
-
-                    case Etiqueta.Tipo.QRCODE:
-
+                    case Etiqueta.TipoCode.QRCODE:
                         if (ListEtiquetasLidas != null)
                         {
                             if (ListEtiquetasLidas.Count == 0)
@@ -250,12 +316,8 @@ namespace TitaniumColector.Classes.Procedimentos
                         {
                             throw new invalidArgumentException("Não foi possível validar a etiqueta!." + objEtiqueta.SequenciaEtiqueta);
                         }
-
-
-                    case Etiqueta.Tipo.BARRAS:
-
+                    case Etiqueta.TipoCode.BARRAS:
                         return true;
-
                     default:
                         return false;
                 }
@@ -265,63 +327,7 @@ namespace TitaniumColector.Classes.Procedimentos
                 throw ex;
             }
         }
-
-        /// <summary>
-        /// Verifica se a Etiqueta já foi lida.
-        /// </summary>
-        /// <returns>FALSE --> se a etiqueta for encontrada na list
-        ///          TRUE --> se a etiqueta ainda não foii lida.
-        /// </returns>
-        public static bool validaEtiquetaNaoLida(Etiqueta objEtiqueta, List<Etiqueta> listEtiquetas)
-        {
-            //Verifica se o List foi iniciado
-            if (listEtiquetas != null)
-            {
-                if (listEtiquetas.Count == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    //Verifica se a etiqueta está na lista de etiquetas lidas.
-                    if (Etiqueta.validarEtiqueta(objEtiqueta, listEtiquetas))
-                    {
-                        //Caso esteja na lista
-                        return false;
-                    }
-                    else
-                    {
-                        //caso não esteja na lista.
-                        return true;
-                    }
-                }
-            }
-            else
-            {
-                return true;
-            }
-        }
   
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="inputValue"></param>
-        /// <param name="produto"></param>
-        /// <param name="tbProduto"></param>
-        /// <param name="tblote"></param>
-        /// <param name="tbSequencia"></param>
-        /// <param name="tbQuantidade"></param>
-        /// <param name="tbMensagem"></param>
-        public static void lerEtiqueta(String inputValue,ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
-        {
-            tbMensagem.Text = "";
-
-            ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
-            Etiqueta objEtiqueta = new EtiquetaVenda();
-            objEtiqueta = new EtiquetaVenda(ArrayStringToEtiqueta,Etiqueta.Tipo.QRCODE);
-            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
-        }
-      
         /// <summary>
         /// Valida as informações lidas pelo coletor e as transformam em um objeto do tipo Etiqueta e continua o procedimento de leitura da etiqueta.
         /// </summary>
@@ -333,12 +339,13 @@ namespace TitaniumColector.Classes.Procedimentos
         /// <param name="tbSequencia">Campo para informações ao usuário</param>
         /// <param name="tbQuantidade">Campo para informações ao usuário</param>
         /// <param name="tbMensagem">Campo para informações ao usuário</param>
-        public static void lerEtiqueta(String inputValue,Etiqueta.Tipo tipoEtiqueta, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
+        public static void lerEtiqueta(String inputValue,Etiqueta.TipoCode tipoEtiqueta, ProdutoProposta produto, TextBox tbProduto, TextBox tblote, TextBox tbSequencia, TextBox tbQuantidade, TextBox tbMensagem)
         {
             tbMensagem.Text = "";
-            ArrayStringToEtiqueta = FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE);
-            Etiqueta objEtiqueta = new EtiquetaVenda(ArrayStringToEtiqueta, tipoEtiqueta);
-            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, (EtiquetaVenda)objEtiqueta);
+            //monta um array de string com os dados lidos na etiqueta
+            //utiliza as informações para montar um objeto do tipo etiquetaVenda
+            var objEtiqueta = new EtiquetaVenda(FileUtility.arrayOfTextFile(inputValue, FileUtility.splitType.PIPE), tipoEtiqueta);
+            efetuaLeituraEtiqueta(produto, tbProduto, tblote, tbSequencia, tbQuantidade, tbMensagem, objEtiqueta);
         }
         
         /// <summary>
@@ -363,14 +370,14 @@ namespace TitaniumColector.Classes.Procedimentos
                     {
                         throw new QuantidadeInvalidaException("A quantidade de produtos informado na embalagem é inválida!");
                     }
-                    if (validaEtiquetaNaoLida(objEtiqueta))
+                     if (podeTrabalharEtiqueta(objEtiqueta))
                     {
                         if (QtdPecasItem > 0)
                         {
                             tbProduto.Text = objEtiqueta.PartnumberEtiqueta.ToString() + " - " + objEtiqueta.DescricaoProdutoEtiqueta.ToString();
                             tbLote.Text = objEtiqueta.LoteEtiqueta;
                             tbSequencia.Text = objEtiqueta.SequenciaEtiqueta.ToString();
-                            tbQuantidade.Text = (subtrairQtdPecasItem(objEtiqueta.QuantidadeEtiqueta)).ToString();
+                            tbQuantidade.Text = MainConfig.intOrDecimal(Convert.ToDouble(subtrairQtdPecasItem(objEtiqueta.QuantidadeEtiqueta)));
                             objEtiqueta.VolumeEtiqueta = ProcedimentosLiberacao.TotalVolumes;
                             addToListEtiquetasLidas(objEtiqueta);
                         }
@@ -413,79 +420,89 @@ namespace TitaniumColector.Classes.Procedimentos
          /// 
         public static bool comparaProdutoEtiquetaProdutoTrabalhado(ProdutoProposta produtoProposta, EtiquetaVenda etiquetaLida)
         {
-            //Verifica se os produtos são iguais
-            switch (etiquetaLida.TipoEtiqueta)
+            try
             {
-                case Etiqueta.Tipo.QRCODE:
+                //Verifica se os produtos são iguais
+                switch (etiquetaLida.TipoEtiqueta)
+                {
+                    case Etiqueta.TipoCode.QRCODE:
 
-                    if (produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
-                    {
-                         if(produtoProposta.Embalagens.Count==0){
-                         
-                         }
-
-
-                        foreach (var item in produtoProposta.Embalagens)
+                        if (produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
                         {
-                            
-                            if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
+                            if (produtoProposta.Embalagens.Count == 0)
                             {
-                                if (etiquetaLida.QuantidadeEtiqueta == item.Quantidade)
+                                throw new QuantidadeInvalidaException("O produto não possui embalagens cadastradas!!");
+                            }
+
+
+                            foreach (var item in produtoProposta.Embalagens)
+                            {
+
+                                if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
+                                {
+                                    if (etiquetaLida.QuantidadeEtiqueta == item.Quantidade)
+                                    {
+                                        return true;
+                                    }
+                                    else
+                                    {
+                                        Mensagem = "Quantidade da etiqueta não confere com a Quantidade de itens da embalagem do produto.";
+                                    }
+                                }
+                                else
+                                {
+                                    Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
+                                }
+                            }
+                        }
+                        else
+                        {
+                            Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
+                        }
+
+                        break;
+
+                    case Etiqueta.TipoCode.BARRAS:
+
+                        if (produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
+                        {
+                            foreach (var item in produtoProposta.Embalagens)
+                            {
+                                if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
                                 {
                                     return true;
                                 }
-                                else 
+                                else
                                 {
-                                    Mensagem = "Quantidade da etiqueta não confere com a Quantidade de itens da embalagem do produto.";
+                                    Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
                                 }
                             }
-                            else 
-                            {
-                                Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
-                            }
                         }
-                    }
-                    else 
-                    {
-                        Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
-                    }
-
-                    break;
-
-                case Etiqueta.Tipo.BARRAS:
-
-                    if(produtoProposta.Partnumber.Equals(etiquetaLida.PartnumberEtiqueta))
-                    {
-                        foreach (var item in produtoProposta.Embalagens)
+                        else
                         {
-                            if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
-                            }
+                            Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
                         }
-                    }
-                    else
-                    {
-                        Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
-                    }
-                    
-                    break;
 
-                case Etiqueta.Tipo.INVALID:
+                        break;
 
-                    break;
+                    case Etiqueta.TipoCode.INVALID:
 
-                default:
+                        break;
 
-                    break;
+                    default:
+
+                        break;
+                }
+
+
+                return false;
+
             }
-
-
-            return false;
+            catch (Exception)
+            {
+                throw;
+            }
+           
         }
 
         /// <summary>
@@ -495,86 +512,6 @@ namespace TitaniumColector.Classes.Procedimentos
         public static void addToListEtiquetasLidas(Etiqueta etiquetaLida)
         {
             ListEtiquetasLidas.Add(etiquetaLida);
-        }
-
-        /// <summary>
-        /// Limpa a list de Etiquetas Lidas.
-        /// </summary>
-        public static void clearListEtiquetasLidas() 
-        {
-            ListEtiquetasLidas.Clear();
-            ListEtiquetasLidas = null;
-            ListEtiquetasLidas = new List<Etiqueta>();
-        }
-
-        /// <summary>
-        /// Valida o tipo de etiqueta lido
-        /// </summary>
-        /// <param name="inputValue">informação capturada pelo Leitor</param>
-        /// <returns>Etiqueta.tipo (EAN13,QRCODE,INVALID)</returns>
-        public static Etiqueta.Tipo validaInputValueEtiqueta(String inputValue)
-        {
-            Etiqueta.Tipo tipoEtiqueta;
-
-            int inputLength = inputValue.Length;
-
-            if (inputLength == 13)
-            {
-                tipoEtiqueta = Etiqueta.Tipo.BARRAS;
-            }
-            else if (inputLength > 13)
-            {
-                if (inputValue.Contains("PNUMBER:"))
-                {
-                    if (inputValue.Contains("DESCRICAO:"))
-                    {
-                        if (inputValue.Contains("EAN13:"))
-                        {
-                            if (inputValue.Contains("LOTE:"))
-                            {
-                                if (inputValue.Contains("SEQ:"))
-                                {
-                                    if (inputValue.Contains("QTD:"))
-                                    {
-                                        tipoEtiqueta = Etiqueta.Tipo.QRCODE;
-                                    }
-                                    else
-                                    {
-                                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
-                                    }
-                                }
-                                else
-                                {
-                                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
-                                }
-                            }
-                            else
-                            {
-                                tipoEtiqueta = Etiqueta.Tipo.INVALID;
-                            }
-                        }
-                        else
-                        {
-                            tipoEtiqueta = Etiqueta.Tipo.INVALID;
-                        }
-                    }
-                    else
-                    {
-                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
-                    }
-                }
-                else
-                {
-                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
-                }
-
-            }
-            else
-            {
-                tipoEtiqueta = Etiqueta.Tipo.INVALID;
-            }
-
-            return tipoEtiqueta;
         }
 
         ///<summary>
@@ -653,27 +590,6 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 proposta.IsInterrompido = true;
             }
-        }
-
-        public static void continuarLiberacao(Proposta proposta)
-        {
-            if (proposta.IsInterrompido)
-            {
-                proposta.IsInterrompido = false;
-            }
-        }
-
-        public static EmbalagemSeparacao retornaEmbalagem(int codigo) 
-        {
-            foreach (var item in ListEmbalagensSeparacao)
-            {
-                if (item.Codigo == codigo) 
-                {
-                    return item;
-                }
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -822,22 +738,6 @@ namespace TitaniumColector.Classes.Procedimentos
 
         }
 
-        public static void addPesoProdutos(Double peso)
-        {
-            if (peso > 0.0)
-            {
-                ProcedimentosLiberacao.PesoTotalProdutos = peso;
-            }
-        }
-
-        public static void removePesoProdutos(Double peso)
-        {
-            if (peso > 0.0 && (ProcedimentosLiberacao.PesoTotalProdutos - peso > 0))
-            {
-                ProcedimentosLiberacao.PesoTotalProdutos = peso;
-            }
-        }
-
         public static void tratarParaProximoItem(Proposta objProposta) 
         {
             //processa Quantidade de itens
@@ -904,7 +804,11 @@ namespace TitaniumColector.Classes.Procedimentos
             Mensagem="";
 
         }
-
+        
+         /// <summary>
+         /// monta o xml para cada codigoitem existente no processo de liberação
+         /// </summary>
+         /// <returns></returns>
         public static string montarXmlProcedimento()
         {
             string result = "";
@@ -1045,7 +949,8 @@ namespace TitaniumColector.Classes.Procedimentos
                     inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
 
                     //recarrega o form com as informações do próximo item.
-                    frm.fillCamposForm(objProposta, TotalPecas, TotalItens);
+                    //frm.fillCamposForm(objProposta, TotalPecas, TotalItens);
+                    frm.fillCamposForm(objProposta);
                 }
                 else
                 {
@@ -1170,7 +1075,7 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </summary>
         /// <param name="inputText">Valor captado pelo Leitor</param>
         /// <param name="tipoEtiqueta">Tipo de Etiqueta a ser validada</param>
-        public static void liberarItem(String inputText, Etiqueta.Tipo tipoEtiqueta,Proposta objProposta,FrmProposta frm)
+        public static void liberarItem(String inputText, Etiqueta.TipoCode tipoEtiqueta,Proposta objProposta,FrmProposta frm)
         {
             try
             {

@@ -13,9 +13,10 @@ namespace TitaniumColector.Classes
     {
         
         //PROPRIEDADES EM COMUM ''
-        public Tipo TipoEtiqueta { get;  set; }
+        public TipoCode TipoEtiqueta { get;  set; }
         public string DescricaoProdutoEtiqueta { get; set; }
         public string PartnumberEtiqueta { get; set; }
+        public int CodigoLote { get; set; }
         public String LoteEtiqueta { get; set; }
         public string Xml { get; protected set; }
         public DateTime DataHoraValidacao { get; set; }
@@ -27,7 +28,7 @@ namespace TitaniumColector.Classes
         public Int32 volumeEtiqueta;
 
         //private DaoProduto daoProduto;
-        public enum Tipo {INVALID=0,QRCODE=1,BARRAS=2 }
+        public enum TipoCode {INVALID=0,QRCODE=1,BARRAS=2 }
 
         public Int32 VolumeEtiqueta
         {
@@ -43,7 +44,7 @@ namespace TitaniumColector.Classes
 
         public Etiqueta() { }
 
-        public Etiqueta(String partnumber, String descricao, String lote, Int32 sequencia, Double quantidade, Tipo tipoEtiqueta)
+        public Etiqueta(String partnumber, String descricao, String lote, Int32 sequencia, Double quantidade, TipoCode tipoEtiqueta)
         {
 
             PartnumberEtiqueta = partnumber;
@@ -54,16 +55,16 @@ namespace TitaniumColector.Classes
 
             switch (tipoEtiqueta)
             {
-                case Tipo.QRCODE:
+                case TipoCode.QRCODE:
 
                     SequenciaEtiqueta = sequencia;
-                    TipoEtiqueta = Tipo.QRCODE;
+                    TipoEtiqueta = TipoCode.QRCODE;
                     break;
 
-                case Tipo.BARRAS:
+                case TipoCode.BARRAS:
 
                     SequenciaEtiqueta = 0;
-                    TipoEtiqueta = Tipo.BARRAS;
+                    TipoEtiqueta = TipoCode.BARRAS;
                     break;
 
                 default:
@@ -76,18 +77,15 @@ namespace TitaniumColector.Classes
 
     #region "METODOS"
 
-        //próxima alteração
-        //metodo abstrato
-        public virtual Etiqueta.Tipo validaInputValueEtiqueta(String inputValue) { return Tipo.INVALID;}
-        public virtual void realizaAcao(string inputText,Etiqueta.Tipo tipoEtiqueta){}
-        public virtual Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta) { return new Etiqueta(); }
+        public virtual Etiqueta.TipoCode validaInputValueEtiqueta(String inputValue) { return TipoCode.INVALID;}
+        public virtual void realizaAcao(string inputText,Etiqueta.TipoCode tipoEtiqueta){}
+        public virtual Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.TipoCode tipoEtiqueta) { return new Etiqueta(); }
         public virtual string montarXml(){ return null;}
-        
         public virtual bool buscarEtiqueta(List<Etiqueta> listEtiquetas)
         {
             switch (this.TipoEtiqueta)
             {
-                case Tipo.QRCODE:
+                case TipoCode.QRCODE:
 
                     foreach (var itemList in listEtiquetas.ToList<Etiqueta>())
                     {
@@ -99,7 +97,7 @@ namespace TitaniumColector.Classes
                     }
                     return false;
 
-                case Tipo.BARRAS:
+                case TipoCode.BARRAS:
 
                     foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
                     {
@@ -128,7 +126,7 @@ namespace TitaniumColector.Classes
         {
             switch (etiqueta.TipoEtiqueta )
             {
-                case Tipo.QRCODE:
+                case TipoCode.QRCODE:
 
                     foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
                     {
@@ -140,7 +138,7 @@ namespace TitaniumColector.Classes
                     }
                     return false;
 
-                case Tipo.BARRAS:
+                case TipoCode.BARRAS:
 
                     foreach (Etiqueta itemList in listEtiquetas.ToList<Etiqueta>())
                     {
@@ -211,6 +209,7 @@ namespace TitaniumColector.Classes
     #endregion
 
     }
+
     #endregion
 
     #region "Sob Visão"

@@ -40,7 +40,7 @@ namespace TitaniumColector.Forms
                         procedimentos = ProcedimentosAlocacao.Instanciar;
                         procedimentos.FormPrincipal = this;
                         //VALIDA O TIPO DE ETIQUETA
-                        Etiqueta.Tipo tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText, new EtiquetaAlocacao());
+                        Etiqueta.TipoCode tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText, new EtiquetaAlocacao());
                         //INICIA O PROCEDIMENTO
                         procedimentos.realizarAcao(inputText, tipoEtiqueta);
                         procedimentos.atualizarListView();

@@ -36,19 +36,19 @@ namespace TitaniumColector.Classes.Model
 
         public EtiquetaVenda() { }
 
-        public EtiquetaVenda(int ean13Etiqueta, string partnumber, string descricao, string identificacaoLote, int sequencia, double qtdEmbalagem, Etiqueta.Tipo tipoEtiqueta)
+        public EtiquetaVenda(int ean13Etiqueta, string partnumber, string descricao, string identificacaoLote, int sequencia, double qtdEmbalagem, Etiqueta.TipoCode tipoEtiqueta)
             : base(partnumber , descricao , identificacaoLote,sequencia, qtdEmbalagem,tipoEtiqueta)
         {
             Ean13Etiqueta = ean13Etiqueta;
         }
 
-        public EtiquetaVenda(Array arrayEtiqueta,Tipo tipoEtiqueta) 
+        public EtiquetaVenda(Array arrayEtiqueta,TipoCode tipoEtiqueta) 
         {
             try
             {
                 switch (tipoEtiqueta)
                 {
-                    case Tipo.QRCODE:
+                    case TipoCode.QRCODE:
 
                         foreach (string item in arrayEtiqueta)
                         {
@@ -66,6 +66,10 @@ namespace TitaniumColector.Classes.Model
                             {
                                 Ean13Etiqueta = Convert.ToInt64(item.Substring(item.IndexOf(":", 0) + 1));
                             }
+                            else if (strItem == "CODIGOLOTE")
+                            {
+                                CodigoLote = Convert.ToInt32(item.Substring(item.IndexOf(":", 0) + 1));
+                            }
                             else if (strItem == "LOTE")
                             {
                                 LoteEtiqueta = item.Substring(item.IndexOf(":", 0) + 1);
@@ -82,13 +86,13 @@ namespace TitaniumColector.Classes.Model
 
                         break;
 
-                    case Tipo.BARRAS:
+                    case TipoCode.BARRAS:
 
                         foreach (string item in arrayEtiqueta)
                         {
                             daoProduto = new DaoProduto();
 
-                            this.TipoEtiqueta = Tipo.BARRAS;
+                            this.TipoEtiqueta = TipoCode.BARRAS;
                             Ean13Etiqueta = Convert.ToInt64(item);
                             EtiquetaVenda aux = (EtiquetaVenda)daoProduto.recuperarInformacoesPorEan13Etiqueta(this);
 
@@ -115,9 +119,8 @@ namespace TitaniumColector.Classes.Model
 
             }
             catch (Exception ex)
-            {
-                
-                throw ex;
+            {   
+                throw new Exception("Problemas durante a validação da etiqueta!\n" + ex);
             }
 
         }
@@ -127,18 +130,18 @@ namespace TitaniumColector.Classes.Model
         /// </summary>
         /// <param name="inputValue">string montada durante a leitura do coletor</param>
         /// <returns>Tipo de etiqueta</returns>
-        public override Etiqueta.Tipo validaInputValueEtiqueta(string inputValue)
+        public override Etiqueta.TipoCode validaInputValueEtiqueta(string inputValue)
         {
-            Etiqueta.Tipo tipoEtiqueta = Etiqueta.Tipo.INVALID;
+            Etiqueta.TipoCode tipoEtiqueta = Etiqueta.TipoCode.INVALID;
 
             int inputLength = inputValue.Length;
 
             if (inputLength == 13)
             {
-                return  Etiqueta.Tipo.BARRAS;
+                return  Etiqueta.TipoCode.BARRAS;
             }
 
-            if (inputLength > 13 && (tipoEtiqueta == Etiqueta.Tipo.INVALID))
+            if (inputLength > 13 && (tipoEtiqueta == Etiqueta.TipoCode.INVALID))
             {
                 if (inputValue.Contains("PNUMBER:"))
                 {
@@ -152,42 +155,42 @@ namespace TitaniumColector.Classes.Model
                                 {
                                     if (inputValue.Contains("QTD:"))
                                     {
-                                        tipoEtiqueta = Etiqueta.Tipo.QRCODE;
+                                        tipoEtiqueta = Etiqueta.TipoCode.QRCODE;
                                     }
                                     else
                                     {
-                                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                        tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                                     }
                                 }
                                 else
                                 {
-                                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                    tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                                 }
                             }
                             else
                             {
-                                tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                             }
                         }
                         else
                         {
-                            tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                            tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                         }
                     }
                     else
                     {
-                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                        tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                     }
                 }
                 else
                 {
-                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                    tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                 }
             }
             return tipoEtiqueta;
         }
 
-        public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
+        public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.TipoCode tipoEtiqueta)
         {
             return new EtiquetaVenda(arrayEtiqueta, tipoEtiqueta);
         }
@@ -245,19 +248,19 @@ namespace TitaniumColector.Classes.Model
         {
             switch (this.TipoEtiqueta)
             {
-                case Tipo.QRCODE:
+                case TipoCode.QRCODE:
 
                     foreach (EtiquetaVenda itemList in listEtiquetas)
                     {
-
                         if (itemList.Equals(this))
                         {
                             return true;
                         }
                     }
+
                     return false;
 
-                case Tipo.BARRAS:
+                case TipoCode.BARRAS:
 
                     foreach (EtiquetaVenda itemList in listEtiquetas)
                     {
@@ -269,6 +272,7 @@ namespace TitaniumColector.Classes.Model
                     return false;
 
                 default:
+
                     return false;
 
             }
@@ -280,11 +284,11 @@ namespace TitaniumColector.Classes.Model
             {
                 switch (((EtiquetaVenda)obj).TipoEtiqueta)
                 {
-                    case Tipo.QRCODE:
+                    case TipoCode.QRCODE:
 
-                        return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta);
+                        return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta && SequenciaEtiqueta == ((Etiqueta)obj).SequenciaEtiqueta && CodigoLote == ((Etiqueta)obj).CodigoLote);
 
-                    case Tipo.BARRAS:
+                    case TipoCode.BARRAS:
 
                         return (Ean13Etiqueta == ((EtiquetaVenda)obj).Ean13Etiqueta);
 

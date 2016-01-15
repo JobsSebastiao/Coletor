@@ -103,23 +103,23 @@ namespace TitaniumColector.Forms
             {
                 if (inputText != "" && inputText != null)
                 {
-                    Etiqueta.Tipo tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText,new EtiquetaVenda());
+                    Etiqueta.TipoCode tipoEtiqueta = Leitor.validaInputValueEtiqueta(inputText,new EtiquetaVenda());
 
                     switch (tipoEtiqueta)
                     {
-                        case Etiqueta.Tipo.INVALID:
+                        case Etiqueta.TipoCode.INVALID:
 
                             inputText = string.Empty;
                             mostrarMensagem(enumCor.RED," Tipo de Etiqueta inválida!!!",enumCursor.DEFAULT);
                             break;
 
-                        case Etiqueta.Tipo.QRCODE:
+                        case Etiqueta.TipoCode.QRCODE:
 
                             this.liberarItem(inputText,tipoEtiqueta);
                             inputText = string.Empty;
                             break;
 
-                        case Etiqueta.Tipo.BARRAS:
+                        case Etiqueta.TipoCode.BARRAS:
                             
                             paramValidarSequencia = MainConfig.Permissoes_TB1210.retornarParametro("ValidarSequencia");
 
@@ -184,8 +184,6 @@ namespace TitaniumColector.Forms
 
     #endregion
 
-    #region "CARGA INICIAL DE INFORMAÇÕES DO PRODUTO A SER TRABALHADO E DO FORMULÁRIO"
-
         /// <summary>
         ///  Preenche um objeto proposta com todas as informações contidas na base de dados da Proposta e de todos os seus itens.
         /// </summary>
@@ -212,6 +210,7 @@ namespace TitaniumColector.Forms
                 MainConfig.errorMessage(sbMsg.ToString(), "Sistem Error!");
             }
         }
+
         /// <summary>
         /// Carrega o form com as informações nescessárias para separação do próximo item.
         /// </summary>
@@ -234,7 +233,7 @@ namespace TitaniumColector.Forms
                 tbLocal.Font = MainConfig.FontGrandeBold;
             }
             tbLocal.Text = objProposta.ListObjItemProposta[0].NomeLocalLote;
-            tbQuantidade.Text = objProposta.ListObjItemProposta[0].Quantidade.ToString();
+            tbQuantidade.Text = MainConfig.intOrDecimal(objProposta.ListObjItemProposta[0].Quantidade);
         }
 
         public void fillCamposForm(Proposta prop)
@@ -244,7 +243,7 @@ namespace TitaniumColector.Forms
 
             lbNumeroPedido.Text = prop.Numero.ToString();        //numeroProposta.ToString();
             lbNomeCliente.Text = prop.RazaoCliente.ToString();  // nomeCliente;
-            lbQtdPecas.Text = MainConfig.intOrDecimal(ProcedimentosLiberacao.TotalPecas.ToString()) + " Pçs";
+            lbQtdPecas.Text = MainConfig.intOrDecimal(ProcedimentosLiberacao.TotalPecas);
             lbQtdVolumes.Text = ProcedimentosLiberacao.TotalVolumes.ToString();
             lbQtdItens.Text = ProcedimentosLiberacao.TotalItens.ToString() + " Itens";
             tbPartNumber.Text = prop.ListObjItemProposta[0].Partnumber.ToString();
@@ -258,8 +257,6 @@ namespace TitaniumColector.Forms
 
         }
     
-    #endregion
-
     #region "MÉTODOS GERAIS"
         
         /// <summary>
@@ -356,7 +353,7 @@ namespace TitaniumColector.Forms
         /// </summary>
         /// <param name="inputText">Valor captado pelo Leitor</param>
         /// <param name="tipoEtiqueta">Tipo de Etiqueta a ser validada</param>
-        private void liberarItem(String inputText,Etiqueta.Tipo tipoEtiqueta)
+        private void liberarItem(String inputText,Etiqueta.TipoCode tipoEtiqueta)
         {
             try
             {
@@ -521,230 +518,6 @@ namespace TitaniumColector.Forms
         }
 
     #endregion
-
-    #region "Realocados para a classe ProcedimentosLiberacao"
-
-        ////#region "GET E SET"
-
-        ////    public List<String> ListInformacoesProposta
-        ////    {
-        ////        get { return ListInformacoesProposta; }
-        ////        set { ListInformacoesProposta = value; }
-        ////    }
-
-        ////#endregion
-
-        ///// <summary>
-        ///// Finaliza o processo de conferência de uma proposta como um todo.
-        ///// </summary>
-        //private void finalizarProposta()
-        //{
-        //    try
-        //    {
-        //        mostrarMensagem(enumCor.BLUE, "Gravando informações na base de dados!", enumCursor.WAIT);
-        //        daoItemProposta = new DaoProdutoProposta();
-        //        daoProposta = new DaoProposta();
-        //        daoEmbalagem = new DaoEmbalagem();
-
-        //        daoEmbalagem.salvarEmbalagensSeparacao(objProposta);
-        //        daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.FINALIZADO, true, true);
-        //        daoItemProposta.updateItemPropostaRetorno();
-        //        daoProposta.updateVolumeProposta(objProposta.Codigo);
-        //        daoProposta.retiraPropostaListaPrioridade(objProposta.Codigo, MainConfig.UserOn.Codigo);
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("finalizarProposta()\n " + ex.Message);
-        //    }
-        //    finally
-        //    {
-        //        FrmAcao frm = new FrmAcao();
-        //        mostrarMensagem(enumCor.RED, "", enumCursor.DEFAULT);
-        //        daoItemProposta = null;
-        //        daoProposta = null;
-        //        this.Dispose();
-        //        this.Close();
-        //        frm.Show();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Realiza todos os procedimentos nescessários para carregar o próximo item a ser separado.
-        ///// </summary>
-        ///// 
-        ///// <returns>
-        /////          TRUE --> caso exista um próximo item a ser trabalhado
-        /////          FALSE --> caso não exista mais items para serem trabalhados.
-        ///// </returns>
-        //private bool nextItemProposta()
-        //{
-        //    bool hasItem = false;
-        //    daoItemProposta = new DaoProdutoProposta();
-        //    daoEtiqueta = new DaoEtiqueta();
-        //    objTransacoes = new BaseMobile();
-
-        //    try
-        //    {
-        //        this.clearParaProximoItem();
-
-        //        ProcedimentosLiberacao.tratarParaProximoItem(objProposta);
-        //        //grava informações do item na base de dados mobile
-        //        daoItemProposta.updateStatusItemProposta(objProposta.ListObjItemProposta[0]);
-        //        //inseri informações das etiquetas referente ao produto liberado em formato Xml
-        //        daoItemProposta.updateXmlItemProposta(ProcedimentosLiberacao.montarXmlProcedimento(), objProposta.ListObjItemProposta[0].CodigoItemProposta);
-
-        //        //carrega próximo item
-        //        if (temItensConferir())
-        //        {
-        //            var prod = daoItemProposta.itemATrabalhar();
-
-        //            if (prod != null)
-        //            {
-        //                //Carrega informações de Embalagem para o produto que será trabalhado.
-        //                prod.Embalagens = daoEmbalagem.carregarEmbalagensProduto(prod);
-
-        //                hasItem = true;
-
-        //                objProposta.setNextItemProposta(prod);
-        //            }
-        //            else
-        //            {
-        //                hasItem = false;
-        //            }
-        //        }
-        //        else // CASO não tenha um próximo item 
-        //        {
-        //            hasItem = false;
-        //        }
-
-        //        //Se existir um próximo item
-        //        if (hasItem)
-        //        {
-        //            //seta Parametros para iniciar leitura do próximo item
-        //            ProcedimentosLiberacao.inicializarProcedimentosProximoItem(objProposta.ListObjItemProposta[0].Quantidade);
-
-        //            //recarrega o form com as informações do próximo item.
-        //            this.fillCamposForm(objProposta, ProcedimentosLiberacao.TotalPecas, ProcedimentosLiberacao.TotalItens);
-        //        }
-        //        else
-        //        {
-        //            this.clearFormulario(true, true);
-        //        }
-        //    }
-        //    catch (SqlCeException Ex)
-        //    {
-        //        MessageBox.Show(Ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new Exception("Erro ao carregar próximo item!", ex);
-        //    }
-        //    finally
-        //    {
-        //        daoEtiqueta = null;
-        //        daoItemProposta = null;
-        //    }
-
-        //    return hasItem;
-        //}
-
-        ///// <summary>
-        ///// Reliza todos os processos nescessários para efetuar a carga de dados na base Mobile.
-        ///// </summary>
-        //private void carregaBaseMobile()
-        //{
-
-        //    objTransacoes = new BaseMobile();
-        //    objProposta = new Proposta();
-        //    daoItemProposta = new DaoProdutoProposta();
-        //    daoProposta = new DaoProposta();
-        //    daoProduto = new DaoProduto();
-        //    daoEmbalagem = new DaoEmbalagem();
-
-        //    //LIMPA INFORMAÇÕES RESULTANTE DE OUTROS PRODUTOS JÁ CONFERIDOS
-        //    ProcedimentosLiberacao.limpar();
-
-        //    try
-        //    {
-        //        //Limpa a Base.
-        //        objTransacoes.clearBaseMobile();
-
-        //        //Carrega um objeto Proposta e inicia todo o procedimento.
-        //        //Caso não exista propostas a serem liberadas gera um exception 
-        //        //onde será feito os tratamentos para evitar o travamento do sistema.
-        //        if ((objProposta = daoProposta.fillTop1PropostaServidor()) != null)
-        //        {
-        //            daoProposta.InsertOrUpdatePickingMobile(objProposta, MainConfig.UserOn.Codigo, Proposta.StatusLiberacao.TRABALHANDO, DateTime.Now);
-
-        //            //recupera o codigoPickingMobile da proposta trabalhada.
-        //            objProposta.CodigoPikingMobile = daoProposta.selectMaxCodigoPickingMobile(objProposta.Codigo);
-
-        //            //Realiza o Insert na Base Mobile
-        //            daoProposta.insertProposta(objProposta, MainConfig.UserOn.Codigo);
-
-        //            //Recupera List com itens da proposta
-        //            //Insert na Base Mobile tabela tb0002_ItensProposta
-        //            daoItemProposta.carregarBaseMobileItens(daoItemProposta.fillListItensProposta((int)objProposta.Codigo).ToList<ProdutoProposta>());
-
-        //            //Insert na base Mobile tabela tb0003_Produtos
-        //            //Recupera informações sobre os produtos existentes na proposta
-        //            daoProduto.insertProdutoBaseMobile(daoProduto.fillListProduto((int)objProposta.Codigo).ToList<Produto>());
-
-        //            //Armazena informações de embalagens do produto na base mobile.
-        //            daoEmbalagem.insertEmbalagemBaseMobile(daoEmbalagem.cargaEmbalagensProduto((int)objProposta.Codigo));
-
-        //            //Carrega Informações das Embalagens de Separação.
-        //            //Carrega Quantidade das Embalagens utilizadas nos volumes da separação
-        //            ProcedimentosLiberacao.ListEmbalagensSeparacao = daoEmbalagem.carregarInformacoesEmbalagensUtilizadas((Int32)objProposta.CodigoPikingMobile, daoEmbalagem.carregarEmbalagensSeparacao());
-
-        //        }
-        //        else
-        //        {
-        //            throw new NoNewPropostaException("Não existem novas propostas a serem liberadas!!");
-        //        }
-        //    }
-        //    catch (SqlQueryExceptions ex)
-        //    {
-        //        this.exitOnError(ex.Message, "Próxima Proposta", false);
-        //    }
-        //    catch (NoNewPropostaException ex)
-        //    {
-        //        this.exitOnError(ex.Message, "Próxima Proposta", false);
-        //    }
-        //    catch (SqlCeException sqlEx)
-        //    {
-        //        ProcedimentosLiberacao.interromperLiberacao(objProposta);
-        //        daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
-        //        StringBuilder strBuilder = new StringBuilder();
-        //        strBuilder.Append("O procedimento não pode ser concluído.\n");
-        //        strBuilder.AppendFormat("Erro : {0}", sqlEx.Errors);
-        //        strBuilder.AppendFormat("Description : {0}", sqlEx.Message);
-        //        this.exitOnError(strBuilder.ToString(), "SqlException!!", false);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ProcedimentosLiberacao.interromperLiberacao(objProposta);
-        //        daoProposta.updatePropostaTbPickingMobile(objProposta, Proposta.StatusLiberacao.NAOFINALIZADO, true, false);
-        //        StringBuilder strBuilder = new StringBuilder();
-        //        strBuilder.Append("O procedimento não pode ser concluído.\n");
-        //        strBuilder.AppendFormat(" Descrição: {0}", ex.Message);
-        //        strBuilder.Append("\nContate o Administrador do sistema.");
-        //        this.exitOnError(strBuilder.ToString(), "SqlException!!", false);
-        //    }
-        //    finally
-        //    {
-        //        objTransacoes = null;
-        //        objProposta = null;
-        //        daoProposta = null;
-        //        daoProduto = null;
-        //        daoItemProposta = null;
-        //        daoEmbalagem = null;
-        //    }
-
-        //}
-
-        #endregion
 
     }
 

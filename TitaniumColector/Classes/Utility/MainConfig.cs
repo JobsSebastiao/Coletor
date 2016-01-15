@@ -453,6 +453,7 @@ namespace TitaniumColector
             {
                 value = String.Format(culture, "{0:0.000}", Convert.ToDouble(value));
             }
+
             return value;
         }
     #endregion

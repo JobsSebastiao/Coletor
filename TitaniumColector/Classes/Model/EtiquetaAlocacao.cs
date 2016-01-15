@@ -11,7 +11,6 @@ namespace TitaniumColector.Classes.Model
         public int CodigoProduto { get; set; }
         public int CodigoItemAlocacao { get; set; }
         public int CodigoLocalAlocacao { get; set; }
-        public int CodigoLote { get; set; }
         public string LocaisLote { get; set; }
         public string VolumeItemAlocacao { get; set; }
         public string LocalAlocacao { get; set; } 
@@ -21,13 +20,13 @@ namespace TitaniumColector.Classes.Model
 
         public EtiquetaAlocacao() { }
 
-        public EtiquetaAlocacao(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
+        public EtiquetaAlocacao(Array arrayEtiqueta, Etiqueta.TipoCode tipoEtiqueta)
         {
             try
             {
                 switch (tipoEtiqueta)
                 {
-                    case Tipo.QRCODE:
+                    case TipoCode.QRCODE:
 
                         foreach (string item in arrayEtiqueta)
                         {
@@ -91,18 +90,18 @@ namespace TitaniumColector.Classes.Model
         /// </summary>
         /// <param name="inputValue">string lida pelo coletor</param>
         /// <returns>Tipo de etiqueta lido</returns>
-        public override Etiqueta.Tipo validaInputValueEtiqueta(string inputValue)
+        public override Etiqueta.TipoCode validaInputValueEtiqueta(string inputValue)
         {
-            Etiqueta.Tipo tipoEtiqueta = Etiqueta.Tipo.INVALID;
+            Etiqueta.TipoCode tipoEtiqueta = Etiqueta.TipoCode.INVALID;
 
             int inputLength = inputValue.Length;
 
             if (inputLength == 13)
             {
-                tipoEtiqueta = Etiqueta.Tipo.BARRAS;
+                tipoEtiqueta = Etiqueta.TipoCode.BARRAS;
             }
 
-            if (inputLength > 13 && (tipoEtiqueta == Etiqueta.Tipo.INVALID))
+            if (inputLength > 13 && (tipoEtiqueta == Etiqueta.TipoCode.INVALID))
             {
                 if (inputValue.Contains("CODIGOITEM:"))
                 {
@@ -120,58 +119,58 @@ namespace TitaniumColector.Classes.Model
                                         {
                                             if (inputValue.Contains("VOLUME:"))
                                             {
-                                                tipoEtiqueta = Etiqueta.Tipo.QRCODE;
+                                                tipoEtiqueta = Etiqueta.TipoCode.QRCODE;
                                             }
                                             else
                                             {
-                                                tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                                tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                                             }
                                         }
                                         else
                                         {
-                                            tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                            tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                                         }
                                     }
                                     else
                                     {
-                                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                        tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                                     }
                                 }
                                 else
                                 {
-                                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                    tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                                 }
                             }
                             else
                             {
-                                tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                                tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                             }
                         }
                         else
                         {
-                            tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                            tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                         }
                     }
                     else
                     {
-                        tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                        tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                     }
                 }
                 else
                 {
-                    tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                    tipoEtiqueta = Etiqueta.TipoCode.INVALID;
                 }
 
             }
             else
             {
-                tipoEtiqueta = Etiqueta.Tipo.INVALID;
+                tipoEtiqueta = Etiqueta.TipoCode.INVALID;
             }
 
             return tipoEtiqueta;
         }
 
-        public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.Tipo tipoEtiqueta)
+        public override Etiqueta criarEtiqueta(Array arrayEtiqueta, Etiqueta.TipoCode tipoEtiqueta)
         {
             return new EtiquetaAlocacao( arrayEtiqueta,  tipoEtiqueta);
         }
@@ -234,7 +233,7 @@ namespace TitaniumColector.Classes.Model
             {
                 switch (((EtiquetaAlocacao)obj).TipoEtiqueta)
                 {
-                    case Tipo.QRCODE:
+                    case TipoCode.QRCODE:
 
                         return ( 
                                     this.CodigoProduto == ((EtiquetaAlocacao)obj).CodigoProduto 

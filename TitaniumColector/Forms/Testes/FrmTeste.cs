@@ -41,8 +41,8 @@ namespace TitaniumColector.Classes.Testes
             {
                 if (inputText != "" && inputText != null)
                 {
-                    Etiqueta.Tipo tipoEtiquetaVenda = Leitor.validaInputValueEtiqueta(inputText,new EtiquetaVenda());
-                    Etiqueta.Tipo tipoEtiquetaAlocacao = Leitor.validaInputValueEtiqueta(inputText, new EtiquetaAlocacao());
+                    Etiqueta.TipoCode tipoEtiquetaVenda = Leitor.validaInputValueEtiqueta(inputText,new EtiquetaVenda());
+                    Etiqueta.TipoCode tipoEtiquetaAlocacao = Leitor.validaInputValueEtiqueta(inputText, new EtiquetaAlocacao());
                     inputText = "";
                 }
             }

@@ -18,10 +18,8 @@
     <NativePlatformName>Windows CE</NativePlatformName>
     <FormFactorID>
     </FormFactorID>
-    <StartupObject>
-    </StartupObject>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <StartupObject>TitaniumColector.Program</StartupObject>
+    <ApplicationIcon>IconColetor.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -191,6 +189,10 @@
   <ItemGroup>
     <None Include="Diagramas de Classe\ClassDiagram1.cd" />
     <None Include="Properties\DataSources\TitaniumColector.Classes.ItemProposta.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="IconColetor.ico" />
+    <Content Include="Properties\DataSources\strConn.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
   <ProjectExtensions>

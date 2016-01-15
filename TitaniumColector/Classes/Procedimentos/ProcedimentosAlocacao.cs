@@ -175,7 +175,6 @@ namespace TitaniumColector.Classes.Procedimentos
                     //trabalho as informações nescessárias para montar  a string  Xml;
                     foreach (var itens in itemSelecionado)
                     {
-
                         if (count == 0)
                         {
                             //Escreve o elemento raiz
@@ -361,19 +360,19 @@ namespace TitaniumColector.Classes.Procedimentos
         /// </summary>
         /// <param name="inputText"></param>
         /// <param name="tipoEtiqueta"></param>
-        public void realizarAcao(string inputText, Etiqueta.Tipo tipoEtiqueta)
+        public void realizarAcao(string inputText, Etiqueta.TipoCode tipoEtiqueta)
         {
             try
             {
                 switch (tipoEtiqueta)
                 {
-                    case Etiqueta.Tipo.INVALID:
+                    case Etiqueta.TipoCode.INVALID:
 
                         inputText = string.Empty;
                         mostrarMensagem(" Tipo de Etiqueta inválida!!!", "Guardar Volumes", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                         break;
 
-                    case Etiqueta.Tipo.QRCODE:
+                    case Etiqueta.TipoCode.QRCODE:
 
                         //MONTA UM ARRAY DE STRING COM AS INFORMACOES PASSADAS NO INPUTTEXT
                         inputStringToEtiqueta = FileUtility.arrayOfTextFile(inputText, FileUtility.splitType.PIPE);
