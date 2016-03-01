@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll" total="5" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2016-03-01" time="18:37:31">
+  <environment nunit-version="2.5.10.11092" clr-version="2.0.50727.8009" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0" machine-name="TECNBK003" user="sebastiao.martins" user-domain="TECWAREBRASIL" />
+  <culture-info current-culture="pt-BR" current-uiculture="pt-BR" />
+  <test-suite type="Assembly" name="C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll" executed="True" result="Failure" success="False" time="0.239" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="TestTitaniumColector" executed="True" result="Failure" success="False" time="0.239" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="TesteDaoUsuario" executed="True" result="Success" success="True" time="0.176" asserts="0">
+            <results>
+              <test-case name="TestTitaniumColector.TesteDaoUsuario.DeveRetornarUmaListaComPeloMenosUmUsuario" executed="True" result="Success" success="True" time="0.175" asserts="1" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="TestGerenciadorPermissoes" executed="True" result="Success" success="True" time="0.008" asserts="0">
+            <results>
+              <test-case name="TestTitaniumColector.TestGerenciadorPermissoes.DeveValidarListaDeParametros" executed="True" result="Success" success="True" time="0.000" asserts="2" />
+              <test-case name="TestTitaniumColector.TestGerenciadorPermissoes.DeveValidarListaPermissoes" executed="True" result="Success" success="True" time="0.000" asserts="3" />
+            </results>
+          </test-suite>
+          <test-suite type="TestFixture" name="TestSqlServerConn" executed="True" result="Failure" success="False" time="0.040" asserts="0">
+            <results>
+              <test-case name="TestTitaniumColector.TestSqlServerConn.DeveEncontrarOArquivoComStrConnection" executed="True" result="Failure" success="False" time="0.002" asserts="1">
+                <failure>
+                  <message><![CDATA[  Expected string length 113 but was 117. Strings differ at index 9.
+  Expected: "Password=*******;Persist Security Info=False;User ID=sa;Initi..."
+  But was:  "Password=tec9TIT16;Persist Security Info=False;User ID=sa;Ini..."
+  --------------------^
+]]></message>
+                  <stack-trace><![CDATA[em TestTitaniumColector.TestSqlServerConn.DeveEncontrarOArquivoComStrConnection() na C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\TestCase\TestSqlServerConn.cs:linha 41
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case name="TestTitaniumColector.TestSqlServerConn.VerificaAConexao" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Text;
-using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlClient;
 using TitaniumColector.Classes.Model;

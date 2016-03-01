@@ -60,7 +60,6 @@ C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Deb
 C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Debug\TitaniumColector.csproj.GenerateResource.Cache
 C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Debug\TitaniumColector.exe
 C:\Users\sebastiao.martins\Desktop\Coletor_0112\Coletor\TitaniumColector\obj\Debug\TitaniumColector.pdb
-C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\TitaniumColector.exe
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\TitaniumColector.pdb
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\System.Data.SqlClient.dll
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\System.Data.SqlServerCe.dll
@@ -73,6 +72,9 @@ C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\Titaniu
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmVolumes.resources
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Properties.Resources.resources
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.csproj.GenerateResource.Cache
-C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.exe
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.pdb
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmInputAlocacao.resources
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\nunit.framework.dll
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\nunit.framework.xml
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\TitaniumColector.exe
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.exe

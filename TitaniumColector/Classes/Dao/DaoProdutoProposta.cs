@@ -5,7 +5,6 @@ using System.Text;
 using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlServerCe;
 using System.Data.SqlClient;
-using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.Exceptions;
 
 namespace TitaniumColector.Classes.Dao

@@ -6,7 +6,6 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using TitaniumColector.SqlServer;
 using TitaniumColector.Classes;
 using TitaniumColector.Classes.SqlServer;
 using TitaniumColector.Forms;
@@ -21,10 +20,9 @@ namespace TitaniumColector
     public partial class frmLogin : Form,ICall
     {   
         
-        private Usuario objUsuario;
+        //private Usuario objUsuario;
         private Usuario objUsuarioLoop;
         private SizeF sizeString;
-        private DaoUsuario daoUsuario;
 
         public frmLogin(bool chamada) { }
         public frmLogin()
@@ -32,7 +30,7 @@ namespace TitaniumColector
             try
             {
 
-                daoUsuario = new DaoUsuario();
+                var daoUsuario = new DaoUsuario();
 
                 //Configurações de criação do form
                 InitializeComponent();
@@ -58,7 +56,6 @@ namespace TitaniumColector
                 bdMsg.Append("\nDescription :" + sqlEx.Message);
                 bdMsg.Append("\nSource :" + sqlEx.Source);
                 MainConfig.errorMessage(bdMsg.ToString(), "Connection error");
-
                 Application.Exit();
 
             }
@@ -69,16 +66,8 @@ namespace TitaniumColector
                 bdMsg.Append("\nFavor contate o administrador do sitema.");
                 bdMsg.Append("\nDescription :" + ex.Message);
                 MainConfig.errorMessage(bdMsg.ToString(), "Application Error.");
-
                 Application.Exit();
-
             }
-            finally 
-            {
-                daoUsuario = null;
-            }
-
-
         }
 
     #region "PRINCIPAIS MÉTODOS DO FORMULÁRIO"
@@ -221,7 +210,7 @@ namespace TitaniumColector
                 {
                     if (cbUsuario.SelectedItem != null)
                     {
-                        objUsuario = new Usuario((Usuario)cbUsuario.SelectedItem);
+                        var objUsuario = new Usuario((Usuario)cbUsuario.SelectedItem);
 
                         if (objUsuario.validaUsuario(cbUsuario.SelectedItem, cbUsuario.Text, txtSenha.Text))
                         {

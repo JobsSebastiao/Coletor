@@ -13,10 +13,9 @@ using System.IO;
 using Microsoft.VisualBasic;
 using TitaniumColector.Classes.Exceptions;
 
-
-namespace TitaniumColector.SqlServer
+namespace TitaniumColector.Classes.SqlServer
 {
-    static class SqlServerConn
+    public static class SqlServerConn
     {
         private static SqlConnection  conn = null;
         private static SqlTransaction transaction = null;
@@ -28,7 +27,6 @@ namespace TitaniumColector.SqlServer
         private static string strConnection;
 
         #region "Get & Set"
-
 
         private static string Password
         {
@@ -95,7 +93,7 @@ namespace TitaniumColector.SqlServer
             }
         }
 
-        private static string StringConection
+        public static string StringConection
         {
             get { return strConnection; }
         }

@@ -3,12 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Data;
-using TitaniumColector.SqlServer;
+using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlClient;
 
 namespace TitaniumColector.Classes.Dao
 {
-    class DaoUsuario
+    public class DaoUsuario
     {
         private StringBuilder sql01;
         private DataTable dt;

@@ -8,7 +8,7 @@ using TitaniumColector.Classes.Utility;
 using TitaniumColector.Classes.Dao;
 
 namespace TitaniumColector
-{
+{   
     public static class MainConfig
     {
 
@@ -66,85 +66,6 @@ namespace TitaniumColector
                 }
             }
         }
-
-        //public static Font FontPequenaRegular
-        //{
-        //    get { return MainConfig.FontPequenaRegular; }
-        //    set { MainConfig.FontPequenaRegular = value; }
-        //}
-
-        //public static Font FontPequenaBold
-        //{
-        //    get { return MainConfig.FontPequenaBold; }
-        //    set { MainConfig.FontPequenaBold = value; }
-        //}
-
-        //public static Font FontPequenaItalic
-        //{
-        //    get { return MainConfig.FontPequenaItalic; }
-        //    set { MainConfig.FontPequenaItalic = value; }
-        //}
-
-        //public static Font FontPequenaItalicBold
-        //{
-        //    get { return MainConfig.FontPequenaItalicBold; }
-        //    set { MainConfig.FontPequenaItalicBold = value; }
-        //}
-
-        //public static Font FontMediaBold
-        //{
-        //    get { return MainConfig.fontMediaBold; }
-        //    set { MainConfig.fontMediaBold = value; }
-        //}
-
-        //public static Font FontPadraoRegular
-        //{
-        //    get  {  return FontPadraoRegular; }
-        //    set  { FontPadraoRegular = value; }
-        //}
-
-        //public static Font FontPadraoBold
-        //{
-        //    get {  return FontPadraoBold; }
-        //    set { FontPadraoBold = value; }
-        //}
-
-        //public static Font FontPadraoItalic
-        //{
-        //    get { return MainConfig.FontPadraoItalic; }
-        //    set { MainConfig.FontPadraoItalic = value; }
-        //}
-
-        //public static Font FontPadraoItalicBold
-        //{
-        //    get { return MainConfig.FontPadraoItalicBold; }
-        //    set { MainConfig.FontPadraoItalicBold = value; }
-        //}
-
-        //public static Font FontGrandeRegular
-        //{
-        //    get { return FontGrandeRegular; }
-        //    set { FontGrandeRegular = value; }
-        //}
-
-        //public static Font FontGrandeBold
-        //{
-        //    get { return MainConfig.FontGrandeBold; }
-        //    set { MainConfig.FontGrandeBold = value; }
-        //}
-
-        //public static Font FontGrandeItalic
-        //{
-        //    get { return MainConfig.FontGrandeItalic; }
-        //    set { MainConfig.FontGrandeItalic = value; }
-        //}
-
-        //public static Font FontMuitoGrandeBold
-        //{
-        //    get { return MainConfig.FontMuitoGrandeBold; }
-        //    set { MainConfig.FontMuitoGrandeBold = value; }
-        //}
-     
 
     #endregion
 

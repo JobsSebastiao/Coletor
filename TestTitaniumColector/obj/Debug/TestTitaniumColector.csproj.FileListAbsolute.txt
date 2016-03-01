@@ -1,0 +1,11 @@
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.pdb
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\nunit.framework.dll
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\nunit.framework.xml
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\obj\Debug\TestTitaniumColector.dll
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\obj\Debug\TestTitaniumColector.pdb
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\System.Data.SqlServerCe.dll
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\System.Data.SqlClient.dll
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TitaniumColector.pdb
+C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TitaniumColector.exe

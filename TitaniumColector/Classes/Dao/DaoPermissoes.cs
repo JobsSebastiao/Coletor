@@ -5,7 +5,7 @@ using System.Text;
 using TitaniumColector.Classes.Utility;
 using System.Data;
 using System.Data.SqlClient;
-using TitaniumColector.SqlServer;
+using TitaniumColector.Classes.SqlServer;
 using TitaniumColector.Classes.Exceptions;
 using TitaniumColector.Classes.Model;
 

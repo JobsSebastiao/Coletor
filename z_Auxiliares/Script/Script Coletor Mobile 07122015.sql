@@ -262,14 +262,12 @@ GO
 	END
 
     GO
-
 	
 --##########################################################################################################################
 --#	Recupera informações do lote de reserva de um item da proposta                                                         #
 --# Sebastiao																											   #		
 --# 07/12/2015																											   #	
 --##########################################################################################################################
-
 
 	IF EXISTS(	SELECT O.name FROM SYSOBJECTS O WHERE O.name = 'fn1211_LotesReservaProduto')
 		DROP FUNCTION fn1211_LotesReservaProduto
@@ -331,7 +329,6 @@ GO
 --# Sebastiao																											   #		
 --# 07/12/2015																											   #	
 --##########################################################################################################################
-
 
 	IF EXISTS(	SELECT O.name FROM SYSOBJECTS O WHERE O.name = 'fn1211_LocaisLoteProduto')
 		DROP FUNCTION fn1211_LocaisLoteProduto
@@ -543,6 +540,27 @@ GO
               END
 	     END
 
+GO
+
+--Permissoes necessárias para trabalhar com o coletor mobile
+
+	IF NOT EXISTS (
+		SELECT metodoMETODO
+		FROM tb0034_Metodos
+		WHERE METODOMETODO IN ('Guarda Volumes Mobile')
+	)
+	BEGIN
+		INSERT INTO tb0034_Metodos VALUES (5,'Guarda Volumes Mobile')
+	END
+GO
+	IF NOT EXISTS (
+		SELECT metodoMETODO
+		FROM tb0034_Metodos
+		WHERE METODOMETODO IN ('Liberacao Vendas Mobile')
+	)
+	BEGIN
+		INSERT INTO tb0034_Metodos VALUES (5,'Liberacao Vendas Mobile')
+	END
 
 
 

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
-using TitaniumColector.SqlServer;
 using TitaniumColector.Classes.SqlServer;
 using System.Data.SqlServerCe;
 using System.Windows.Forms;

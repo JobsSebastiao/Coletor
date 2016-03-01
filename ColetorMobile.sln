@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TitaniumColector", "Titaniu
 EndProject
 Project("{B900F1C2-3D47-4FEC-85B3-04AAF18C3634}") = "Titanium_Mobile_Cab", "Titanium_Mobile_Cab\Titanium_Mobile_Cab.vddproj", "{241F02D1-93CD-4E2D-8FA7-A2361A577A2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestTitaniumColector", "TestTitaniumColector\TestTitaniumColector.csproj", "{2AD352AA-E4F4-4123-8582-848AAFB9762B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{DEA8317C-BAFB-4C24-8122-FFA686155EC3}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{241F02D1-93CD-4E2D-8FA7-A2361A577A2C}.Debug|Any CPU.ActiveCfg = Debug
 		{241F02D1-93CD-4E2D-8FA7-A2361A577A2C}.Release|Any CPU.ActiveCfg = Release
+		{2AD352AA-E4F4-4123-8582-848AAFB9762B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AD352AA-E4F4-4123-8582-848AAFB9762B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AD352AA-E4F4-4123-8582-848AAFB9762B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AD352AA-E4F4-4123-8582-848AAFB9762B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

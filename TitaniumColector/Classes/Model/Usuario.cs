@@ -1,5 +1,5 @@
 ﻿using System;
-using TitaniumColector.SqlServer;
+using TitaniumColector.Classes.SqlServer;
 using System.Text;
 using TitaniumColector.Classes.Model;
 using System.Collections.Generic;
