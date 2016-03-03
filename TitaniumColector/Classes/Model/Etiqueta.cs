@@ -20,7 +20,8 @@ namespace TitaniumColector.Classes
         public String LoteEtiqueta { get; set; }
         public string Xml { get; protected set; }
         public DateTime DataHoraValidacao { get; set; }
-
+        public int Diferencial { get;  set; }
+        
         //PROPRIEDADES DEVEM SER PASSADAS PARA A CLASSE ETIQUETAVENDA
         //public Int64 Ean13Etiqueta { get; set; }
         public Int32 SequenciaEtiqueta { get; set; }

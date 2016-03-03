@@ -1,26 +1,94 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <!--This file represents the results of running a test suite-->
-<test-results name="C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll" total="5" errors="0" failures="1" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2016-03-01" time="18:37:31">
+<test-results name="C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll" total="5" errors="0" failures="2" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2016-03-03" time="11:50:10">
   <environment nunit-version="2.5.10.11092" clr-version="2.0.50727.8009" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Program Files (x86)\NUnit 2.5.10\bin\net-2.0" machine-name="TECNBK003" user="sebastiao.martins" user-domain="TECWAREBRASIL" />
   <culture-info current-culture="pt-BR" current-uiculture="pt-BR" />
-  <test-suite type="Assembly" name="C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll" executed="True" result="Failure" success="False" time="0.239" asserts="0">
+  <test-suite type="Assembly" name="C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\bin\Debug\TestTitaniumColector.dll" executed="True" result="Failure" success="False" time="0.674" asserts="0">
     <results>
-      <test-suite type="Namespace" name="TestTitaniumColector" executed="True" result="Failure" success="False" time="0.239" asserts="0">
+      <test-suite type="Namespace" name="TestTitaniumColector" executed="True" result="Failure" success="False" time="0.674" asserts="0">
         <results>
-          <test-suite type="TestFixture" name="TesteDaoUsuario" executed="True" result="Success" success="True" time="0.176" asserts="0">
+          <test-suite type="TestFixture" name="TesteDaoUsuario" executed="True" result="Failure" success="False" time="0.631" asserts="0">
             <results>
-              <test-case name="TestTitaniumColector.TesteDaoUsuario.DeveRetornarUmaListaComPeloMenosUmUsuario" executed="True" result="Success" success="True" time="0.175" asserts="1" />
+              <test-case name="TestTitaniumColector.TesteDaoUsuario.DeveRetornarUmaListaComPeloMenosUmUsuario" executed="True" result="Failure" success="False" time="0.630" asserts="1">
+                <failure>
+                  <message><![CDATA[  Expected: null
+  But was:  < < Código : 134
+
+ Pasta : 175
+ Senha : 123
+ Nome : acr
+ Nome Completo :ACR REPRESENTACOES LTDA - ME
+ Status Usuario :ATIVO>, < Código : 44
+
+ Pasta : 1741
+ Senha : 91028400
+ Nome : adalberto.oliveira
+ Nome Completo :Adalberto Oliveira
+ Status Usuario :DESATIVADO>, < Código : 0
+
+ Pasta : 95
+ Senha : boss
+ Nome : Administrador
+ Nome Completo :Administrador
+ Status Usuario :ATIVO>, < Código : 67
+
+ Pasta : 95
+ Senha : 412191
+ Nome : Adriano.Zaparolli
+ Nome Completo :Adriano Zaparolli
+ Status Usuario :ATIVO>, < Código : 9
+
+ Pasta : 1741
+ Senha : gabriel
+ Nome : adrielle.oliveira
+ Nome Completo :Adriele de Oliveira
+ Status Usuario :DESATIVADO>, < Código : 165
+
+ Pasta : 175
+ Senha : 123
+ Nome : Aguia
+ Nome Completo :AGUIA REPRESENTACOES AS.E MARKETING LTDA
+ Status Usuario :ATIVO>, < Código : 180
+
+ Pasta : 175
+ Senha : 123
+ Nome : Agvm
+ Nome Completo :M.S.A. DE AQUINO REPRESENTAÇÃO
+ Status Usuario :ATIVO>, < Código : 167
+
+ Pasta : 196
+ Senha : jose
+ Nome : alan.freitas
+ Nome Completo :Alan Freitas
+ Status Usuario :ATIVO>, < Código : 139
+
+ Pasta : 175
+ Senha : 123
+ Nome : Aldo
+ Nome Completo :Aldo Representacoes
+ Status Usuario :ATIVO>, < Código : 98
+
+ Pasta : 200
+ Senha : 301002
+ Nome : alexandra.carrocini
+ Nome Completo :Alexandre Carrocini
+ Status Usuario :ATIVO>... >
+]]></message>
+                  <stack-trace><![CDATA[em TestTitaniumColector.TesteDaoUsuario.DeveRetornarUmaListaComPeloMenosUmUsuario() na C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TestTitaniumColector\TestCase\TesteDaoUsuario.cs:linha 20
+]]></stack-trace>
+                </failure>
+              </test-case>
             </results>
           </test-suite>
-          <test-suite type="TestFixture" name="TestGerenciadorPermissoes" executed="True" result="Success" success="True" time="0.008" asserts="0">
+          <test-suite type="TestFixture" name="TestGerenciadorPermissoes" executed="True" result="Success" success="True" time="0.006" asserts="0">
             <results>
               <test-case name="TestTitaniumColector.TestGerenciadorPermissoes.DeveValidarListaDeParametros" executed="True" result="Success" success="True" time="0.000" asserts="2" />
               <test-case name="TestTitaniumColector.TestGerenciadorPermissoes.DeveValidarListaPermissoes" executed="True" result="Success" success="True" time="0.000" asserts="3" />
             </results>
           </test-suite>
-          <test-suite type="TestFixture" name="TestSqlServerConn" executed="True" result="Failure" success="False" time="0.040" asserts="0">
+          <test-suite type="TestFixture" name="TestSqlServerConn" executed="True" result="Failure" success="False" time="0.011" asserts="0">
             <results>
-              <test-case name="TestTitaniumColector.TestSqlServerConn.DeveEncontrarOArquivoComStrConnection" executed="True" result="Failure" success="False" time="0.002" asserts="1">
+              <test-case name="TestTitaniumColector.TestSqlServerConn.DeveEncontrarOArquivoComStrConnection" executed="True" result="Failure" success="False" time="0.001" asserts="1">
                 <failure>
                   <message><![CDATA[  Expected string length 113 but was 117. Strings differ at index 9.
   Expected: "Password=*******;Persist Security Info=False;User ID=sa;Initi..."
@@ -31,7 +99,7 @@
 ]]></stack-trace>
                 </failure>
               </test-case>
-              <test-case name="TestTitaniumColector.TestSqlServerConn.VerificaAConexao" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+              <test-case name="TestTitaniumColector.TestSqlServerConn.VerificaAConexao" executed="True" result="Success" success="True" time="0.001" asserts="2" />
             </results>
           </test-suite>
         </results>

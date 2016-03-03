@@ -44,7 +44,6 @@ namespace TitaniumColector.Forms
         {
             this.clearFormulario(true, true);
             this.carregarProposta();
-            //this.carregarDadosProposta();
             Cursor.Current = Cursors.Default;
         }
 

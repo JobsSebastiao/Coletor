@@ -182,7 +182,7 @@ namespace TitaniumColector.Classes.SqlServer
 		    }
 	    }
 
-	    public static  void EndTransactionCe(ref bool flag)
+	    public static void EndTransactionCe(ref bool flag)
 	    {
 		    if (flag == false) 
             {

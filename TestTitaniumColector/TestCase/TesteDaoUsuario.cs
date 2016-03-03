@@ -17,7 +17,7 @@ namespace TestTitaniumColector
             conn.starConnection();
             DaoUsuario daoUser = new DaoUsuario();
             var lista = daoUser.retornaListUsuarios();
-            Assert.IsNotNull(lista);
+            Assert.IsNull(lista);
         }
     }
 }

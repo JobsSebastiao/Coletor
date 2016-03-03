@@ -13,7 +13,7 @@ namespace TitaniumColector
         [MTAThread]
         static void Main()
         {
-            Application.Run(new frmLogin());
+             Application.Run(new frmLogin());
         }
     }
 }

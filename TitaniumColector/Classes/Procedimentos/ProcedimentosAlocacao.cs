@@ -125,7 +125,7 @@ namespace TitaniumColector.Classes.Procedimentos
             {
                 if (item.Equals(etiqueta))
                 {
-                    return true;
+                    return true; 
                 }
             }
             return false;

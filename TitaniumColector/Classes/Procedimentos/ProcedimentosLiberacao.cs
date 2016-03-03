@@ -370,7 +370,7 @@ namespace TitaniumColector.Classes.Procedimentos
                     {
                         throw new QuantidadeInvalidaException("A quantidade de produtos informado na embalagem é inválida!");
                     }
-                     if (podeTrabalharEtiqueta(objEtiqueta))
+                    if (podeTrabalharEtiqueta(objEtiqueta))
                     {
                         if (QtdPecasItem > 0)
                         {
@@ -433,11 +433,8 @@ namespace TitaniumColector.Classes.Procedimentos
                             {
                                 throw new QuantidadeInvalidaException("O produto não possui embalagens cadastradas!!");
                             }
-
-
                             foreach (var item in produtoProposta.Embalagens)
                             {
-
                                 if ((etiquetaLida.Ean13Etiqueta.ToString() == item.Ean13Embalagem))
                                 {
                                     if (etiquetaLida.QuantidadeEtiqueta == item.Quantidade)
@@ -451,7 +448,7 @@ namespace TitaniumColector.Classes.Procedimentos
                                 }
                                 else
                                 {
-                                    Mensagem = "Ean informado na Etiqueta não confere com o Ean do produto";
+                                    Mensagem = "Ean informado na Etiqueta não confere com o Ean utilizado no produto";
                                 }
                             }
                         }
@@ -459,7 +456,6 @@ namespace TitaniumColector.Classes.Procedimentos
                         {
                             Mensagem = "Partnumber produto etiqueta não confere com partnumber do item da proposta";
                         }
-
                         break;
 
                     case Etiqueta.TipoCode.BARRAS:
@@ -493,16 +489,12 @@ namespace TitaniumColector.Classes.Procedimentos
 
                         break;
                 }
-
-
                 return false;
-
             }
             catch (Exception)
             {
                 throw;
             }
-           
         }
 
         /// <summary>

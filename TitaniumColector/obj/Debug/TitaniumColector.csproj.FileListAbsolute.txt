@@ -64,7 +64,6 @@ C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\Titaniu
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\System.Data.SqlClient.dll
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\bin\Debug\System.Data.SqlServerCe.dll
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Classes.Testes.FrmTeste.resources
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmAcao.resources
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.Forms.FrmAlocacao.resources
 C:\Users\sebastiao.martins\Documents\Visual Studio 2008\Projects\Coletor\TitaniumColector\obj\Debug\TitaniumColector.frmLogin.resources
